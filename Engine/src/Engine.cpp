@@ -22,12 +22,40 @@ void Engine::InitEngine()
     glClearColor(0.24f, 0.45f, 0.37f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glfwSwapBuffers(window);
+
+    GLfloat vertices[] =
+    {
+        -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, 
+        0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, 
+        0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f
+    };
+
+    vao.Init();
+    vbo.Init(vertices);
+
+    vao.Bind();
+    vbo.Bind();
+
+    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
+    activeShaderProgram = shader.CreateShaders("ss", "dd");
+
+    vao.Unbind();
+    vbo.Unbind();
 }
 
 void Engine::RunEngine()
 {
     while (!glfwWindowShouldClose(window))
     {
+        glClearColor(0.24f, 0.45f, 0.37f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(activeShaderProgram);
+        vao.Bind();
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        glfwSwapBuffers(window);
         glfwPollEvents();
         glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
     }
