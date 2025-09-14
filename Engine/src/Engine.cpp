@@ -19,9 +19,6 @@ void Engine::InitEngine()
     gladLoadGL();
 
     glViewport(0, 0, windowWidth, windowHeight);
-    glClearColor(0.24f, 0.45f, 0.37f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glfwSwapBuffers(window);
 
     GLfloat vertices[] =
     {
@@ -31,13 +28,13 @@ void Engine::InitEngine()
     };
 
     vao.Init();
-    vbo.Init(vertices);
+    vbo.Init(vertices, sizeof(vertices));
 
     vao.Bind();
     vbo.Bind();
 
     vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
-    activeShaderProgram = shader.CreateShaders("ss", "dd");
+    activeShaderProgram = shader.CreateShaders("../shaders/Triangle.vert", "../shaders/Triangle.frag");
 
     vao.Unbind();
     vbo.Unbind();
@@ -52,7 +49,6 @@ void Engine::RunEngine()
 
         glUseProgram(activeShaderProgram);
         vao.Bind();
-
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);

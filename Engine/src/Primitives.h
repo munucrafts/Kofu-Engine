@@ -1,6 +1,8 @@
-#pragma once
+﻿#pragma once
 #include "iostream"
 #include "vector"
+#include <fstream>
+#include <sstream>
 
 struct VBO
 {
@@ -8,11 +10,11 @@ private:
 	GLuint id;
 
 public:
-	void Init(GLfloat vertices[])
+	void Init(GLfloat vertices[], size_t size)
 	{
 		glGenBuffers(1, &id);
 		glBindBuffer(GL_ARRAY_BUFFER, id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 	}
 
 	void Bind()
@@ -40,9 +42,10 @@ public:
 	void Init()
 	{
 		glGenVertexArrays(1, &id);
+		glBindVertexArray(id);
 	}
 
-	void LinkAttribs(VBO& VBO, const GLuint layout, const GLuint numComponents, const GLenum type, const GLsizeiptr stride, void* offset)
+	void LinkAttribs(VBO& VBO, const GLuint layout, const GLuint numComponents, const GLenum type, const GLsizei stride, void* offset)
 	{
 		VBO.Bind();
 		glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, offset);
@@ -75,9 +78,13 @@ private:
 
 
 public:
-	GLuint& CreateShaders(const std::string& vertPath, const std::string& fagPath)
+	GLuint& CreateShaders(const std::string& vertPath, const std::string& fragPath)
 	{
-		LoadShader("ss");
+		std::string vertCode = LoadShader(vertPath);
+		std::string fragCode = LoadShader(fragPath);
+
+		vertShaderSource = vertCode.c_str();
+		fragShaderSource = fragCode.c_str();
 
 		GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertShader, 1, &vertShaderSource, nullptr);
@@ -92,32 +99,36 @@ public:
 		glAttachShader(shaderProgram, fragShader);
 		glLinkProgram(shaderProgram);
 
+		glUseProgram(shaderProgram);
+
+		GLint sizeLoc = glGetUniformLocation(shaderProgram, "size");
+		glUniform1f(sizeLoc, 1.0f);
+
+		GLint colorLoc = glGetUniformLocation(shaderProgram, "color");
+		glUniform4f(colorLoc, 1.0f, 0.0f, 0.0f, 1.0f);
+
 		glDeleteShader(vertShader);
 		glDeleteShader(fragShader);
-
-		glUseProgram(shaderProgram);
 
 		return shaderProgram;
 	}
 
 private:
-	void LoadShader(const std::string& shaderPath)
+	std::string LoadShader(const std::string& shaderPath)
 	{
-		// Vertex Shader source code
-		vertShaderSource = "#version 330 core\n"
-			"layout (location = 0) in vec3 aPos;\n"
-			"uniform float size;\n"
-			"void main()\n"
-			"{\n"
-			"   gl_Position = vec4(size * aPos.x, size * aPos.y, size * aPos.z, 1.0);\n"
-			"}\0";
-		//Fragment Shader source code
-		fragShaderSource = "#version 330 core\n"
-			"out vec4 FragColor;\n"
-			"uniform vec4 color;\n"
-			"void main()\n"
-			"{\n"
-			"   FragColor = color;\n"
-			"}\n\0";
+		std::ifstream in(shaderPath, std::ios::binary);
+
+		if (in)
+		{
+			std::string contents;
+			in.seekg(0, std::ios::end);
+			contents.resize(in.tellg());
+			in.seekg(0, std::ios::beg);
+			in.read(&contents[0], contents.size());
+			in.close();
+			return contents;
+		}
+
+		return "";
 	}
 };
