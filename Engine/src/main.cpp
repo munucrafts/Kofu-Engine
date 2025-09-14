@@ -1,9 +1,12 @@
 #pragma once
 #include "iostream"
+#include "Engine.h"
 
 int main()
 {
-	std::cout << "Okay Sir" << std::endl;
+	Engine::GetEngine().InitEngine();
+	Engine::GetEngine().RunEngine();
+	Engine::GetEngine().QuitEngine();
 
 	return 0;
 }
