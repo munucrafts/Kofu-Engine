@@ -15,7 +15,7 @@ public:
 private:
 	GLFWwindow* window = nullptr;
 	int windowWidth = 1024, windowHeight = 720;
-	GLuint activeShaderProgram = 0;
+	GLuint activeShaderProgram;
 	VAO vao;
 	VBO vbo;
 	Shader shader;

@@ -34,7 +34,7 @@ void Engine::InitEngine()
     vbo.Bind();
 
     vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
-    activeShaderProgram = shader.CreateShaders("../shaders/Triangle.vert", "../shaders/Triangle.frag");
+    activeShaderProgram = shader.CreateShaders("./shaders/vert.glsl", "./shaders/frag.glsl");
 
     vao.Unbind();
     vbo.Unbind();

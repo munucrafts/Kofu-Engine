@@ -98,14 +98,7 @@ public:
 		glAttachShader(shaderProgram, vertShader);
 		glAttachShader(shaderProgram, fragShader);
 		glLinkProgram(shaderProgram);
-
 		glUseProgram(shaderProgram);
-
-		GLint sizeLoc = glGetUniformLocation(shaderProgram, "size");
-		glUniform1f(sizeLoc, 1.0f);
-
-		GLint colorLoc = glGetUniformLocation(shaderProgram, "color");
-		glUniform4f(colorLoc, 1.0f, 0.0f, 0.0f, 1.0f);
 
 		glDeleteShader(vertShader);
 		glDeleteShader(fragShader);
@@ -129,6 +122,31 @@ private:
 			return contents;
 		}
 
-		return "";
+		else return "";
+	}
+
+	void CheckCompileErrors(GLuint shader, const std::string& type)
+	{
+		GLint success;
+		GLchar infoLog[1024];
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+			std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: "
+				<< type << "\n" << infoLog << "\n";
+		}
+	}
+
+	void CheckLinkErrors(GLuint program)
+	{
+		GLint success;
+		GLchar infoLog[1024];
+		glGetProgramiv(program, GL_LINK_STATUS, &success);
+		if (!success)
+		{
+			glGetProgramInfoLog(program, 1024, NULL, infoLog);
+			std::cerr << "ERROR::PROGRAM_LINKING_ERROR\n" << infoLog << "\n";
+		}
 	}
 };
