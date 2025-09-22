@@ -1,102 +1,57 @@
-﻿#pragma once
-#include "iostream"
-#include "vector"
-#include <fstream>
-#include <sstream>
+#pragma once
+#include "stb_image.h"
+#include "Buffers.h"
 
-struct VBO
+struct Texture
 {
 private:
 	GLuint id;
+	int width, height, numChannels;
+	unsigned char* texData;
 
 public:
-	void Init(GLfloat vertices[], size_t size)
+	void LoadTexture(const char* path)
 	{
-		glGenBuffers(1, &id);
-		glBindBuffer(GL_ARRAY_BUFFER, id);
-		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+		stbi_set_flip_vertically_on_load(true);
+		texData = stbi_load(path, &width, &height, &numChannels, STBI_rgb_alpha);
 	}
 
-	void Bind()
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, id);
-	}
-
-	void Unbind()
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	void Delete()
-	{
-		glDeleteBuffers(1, &id);
-	}
-};
-
-struct VAO
-{
-private:
-	GLuint id;
-
-public:
 	void Init()
 	{
-		glGenVertexArrays(1, &id);
-		glBindVertexArray(id);
-	}
+		LoadTexture("./assets/textures/spidey.png");
 
-	void LinkAttribs(VBO& VBO, const GLuint layout, const GLuint numComponents, const GLenum type, const GLsizei stride, void* offset)
-	{
-		VBO.Bind();
-		glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, offset);
-		glEnableVertexAttribArray(layout);
-		VBO.Unbind();
-	}
+		glGenTextures(1, &id);
+		glActiveTexture(GL_TEXTURE0); 
+		glBindTexture(GL_TEXTURE_2D, id);
 
-	void Bind()
-	{
-		glBindVertexArray(id);
-	}
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	void Unbind()
-	{
-		glBindVertexArray(0);
-	}
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	void Delete()
-	{
-		glDeleteVertexArrays(1, &id);
-	}
-};
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
-struct EBO
-{
-private:
-	GLuint id;
+		stbi_image_free(texData);
 
-public:
-	void Init(GLuint* indices, GLsizeiptr size)
-	{
-		glGenBuffers(1, &id);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Bind()
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	void Unbind()
+	void Unind()
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Delete()
 	{
-		glDeleteBuffers(1, &id);
+		glDeleteTextures(1, &id);
 	}
-
 };
 
 struct Shader
@@ -124,7 +79,7 @@ public:
 		glShaderSource(fragShader, 1, &fragShaderSource, nullptr);
 		glCompileShader(fragShader);
 
-	    shaderProgram = glCreateProgram();
+		shaderProgram = glCreateProgram();
 		glAttachShader(shaderProgram, vertShader);
 		glAttachShader(shaderProgram, fragShader);
 		glLinkProgram(shaderProgram);

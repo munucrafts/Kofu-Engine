@@ -2,7 +2,8 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
-#include "Primitives.h"
+#include "Buffers.h"
+#include "Shader.h"
 
 class Engine
 {
@@ -17,6 +18,7 @@ private:
 	int windowWidth = 1024, windowHeight = 720;
 	GLuint activeShaderProgramId;
 	Shader shader;
+	Texture texture;
 	VAO vao;
 	VBO vbo;
 	EBO ebo;

@@ -22,38 +22,41 @@ void Engine::InitEngine()
 
     // Vertices coordinates
     GLfloat vertices[] =
-    { //               COORDINATES                  /     COLORS           //
-        -0.5f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f,     0.2f, 0.73f,  1.00f, // Lower left corner
-         0.5f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f,     0.3f, 1.0f,  0.32f, // Lower right corner
-         0.0f,  0.5f * float(sqrt(3)) * 2 / 3, 0.0f,     0.4f, 0.6f,  0.92f, // Upper corner
-        -0.25f, 0.5f * float(sqrt(3)) * 1 / 6, 0.0f,     0.9f, 0.2f, 0.17f, // Inner left
-         0.25f, 0.5f * float(sqrt(3)) * 1 / 6, 0.0f,     0.39f, 0.5f, 1.00f, // Inner right
-         0.0f, -0.5f * float(sqrt(3)) * 1 / 3, 0.0f,     0.2f, 0.93f,  0.02f  // Inner down
+    {
+    //      COORDINATES              COLORS          TexCoord 
+        -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f,  // Lower left corner
+        -0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f,  // Upper left corner
+         0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f,  // Upper right corner
+         0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f   // Lower right corner
     };
 
     // Indices for vertices order
     GLuint indices[] =
     {
-        0, 3, 5, // Lower left triangle
-        3, 2, 4, // Lower right triangle
-        5, 4, 1 // Upper triangle
+        0, 2, 1, // Upper triangle
+        0, 3, 2  // Lower triangle
     };
+
 
     vao.Init();
     vbo.Init(vertices, sizeof(vertices));
     ebo.Init(indices, sizeof(indices));
+    texture.Init();
 
     vao.Bind();
     vbo.Bind();
     ebo.Bind();
+    texture.Bind();
 
-    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)0);
-    vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, 8 * sizeof(GLfloat), (void*)0);
+    vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+    vao.LinkAttribs(vbo, 2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
     activeShaderProgramId = shader.CreateShaders("./shaders/vert.glsl", "./shaders/frag.glsl");  
 
     vao.Unbind();
     vbo.Unbind();
     ebo.Unbind();
+    texture.Unind();
 }
 
 void Engine::RunEngine()
@@ -69,10 +72,15 @@ void Engine::RunEngine()
 
         float uniScale = glGetUniformLocation(activeShaderProgramId, "scale");
         float uniIntensity = glGetUniformLocation(activeShaderProgramId, "intensity");
+        GLuint uniTex0 = glGetUniformLocation(activeShaderProgramId, "tex0");
+
         glUniform1f(uniScale, 1.5f);
         glUniform1f(uniIntensity, 1.5f);
+        glUniform1i(uniTex0, 0);
 
         vao.Bind();
+        texture.Bind();
+
         glfwSwapBuffers(window);
         glfwPollEvents();
         glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
@@ -84,6 +92,7 @@ void Engine::QuitEngine()
     vbo.Delete();
     vao.Delete();
     ebo.Delete();
+    texture.Delete();
 
     glfwDestroyWindow(window);
     glfwTerminate();
