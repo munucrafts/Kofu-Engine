@@ -69,6 +69,36 @@ public:
 	}
 };
 
+struct EBO
+{
+private:
+	GLuint id;
+
+public:
+	void Init(GLuint* indices, GLsizeiptr size)
+	{
+		glGenBuffers(1, &id);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+	}
+
+	void Bind()
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+	}
+
+	void Unbind()
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
+	void Delete()
+	{
+		glDeleteBuffers(1, &id);
+	}
+
+};
+
 struct Shader
 {
 private:
@@ -121,32 +151,6 @@ private:
 			in.close();
 			return contents;
 		}
-
-		else return "";
-	}
-
-	void CheckCompileErrors(GLuint shader, const std::string& type)
-	{
-		GLint success;
-		GLchar infoLog[1024];
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-		if (!success)
-		{
-			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: "
-				<< type << "\n" << infoLog << "\n";
-		}
-	}
-
-	void CheckLinkErrors(GLuint program)
-	{
-		GLint success;
-		GLchar infoLog[1024];
-		glGetProgramiv(program, GL_LINK_STATUS, &success);
-		if (!success)
-		{
-			glGetProgramInfoLog(program, 1024, NULL, infoLog);
-			std::cerr << "ERROR::PROGRAM_LINKING_ERROR\n" << infoLog << "\n";
-		}
+		else return "No Data";
 	}
 };

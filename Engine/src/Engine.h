@@ -15,10 +15,11 @@ public:
 private:
 	GLFWwindow* window = nullptr;
 	int windowWidth = 1024, windowHeight = 720;
-	GLuint activeShaderProgram;
+	GLuint activeShaderProgramId;
+	Shader shader;
 	VAO vao;
 	VBO vbo;
-	Shader shader;
+	EBO ebo;
 
 private:
 	Engine() = default;

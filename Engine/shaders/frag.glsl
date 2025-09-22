@@ -2,7 +2,10 @@
 
 out vec4 FragColor;
 
+in vec3 color;
+uniform float intensity;
+
 void main()
 {
-    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    FragColor = vec4(color * intensity, 1.0f);
 }
