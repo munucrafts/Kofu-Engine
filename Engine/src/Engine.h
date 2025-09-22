@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include "Buffers.h"
 #include "Shader.h"
+#include <Mesh.h>
 
 class Engine
 {
@@ -14,14 +15,12 @@ public:
 	void QuitEngine();
 
 private:
+	bool engineInitialized = false;
 	GLFWwindow* window = nullptr;
 	int windowWidth = 1024, windowHeight = 720;
-	GLuint activeShaderProgramId;
+	GLuint activeShaderProgramID;
 	Shader shader;
-	Texture texture;
-	VAO vao;
-	VBO vbo;
-	EBO ebo;
+	std::vector<Mesh*> meshes;
 
 private:
 	Engine() = default;

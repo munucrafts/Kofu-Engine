@@ -18,68 +18,33 @@ void Engine::InitEngine()
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
+    Mesh* mesh1 = new Mesh();
+    meshes.push_back(mesh1);
+
+    for (Mesh* mesh : meshes)
+    {
+        mesh->InitMesh();
+    }
+
     glViewport(0, 0, windowWidth, windowHeight);
+    activeShaderProgramID = shader.CreateShaders("./shaders/vert.glsl", "./shaders/frag.glsl");  
 
-    // Vertices coordinates
-    GLfloat vertices[] =
-    {
-    //      COORDINATES              COLORS          TexCoord 
-        -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f,  // Lower left corner
-        -0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f,  // Upper left corner
-         0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f,  // Upper right corner
-         0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f   // Lower right corner
-    };
-
-    // Indices for vertices order
-    GLuint indices[] =
-    {
-        0, 2, 1, // Upper triangle
-        0, 3, 2  // Lower triangle
-    };
-
-
-    vao.Init();
-    vbo.Init(vertices, sizeof(vertices));
-    ebo.Init(indices, sizeof(indices));
-    texture.Init();
-
-    vao.Bind();
-    vbo.Bind();
-    ebo.Bind();
-    texture.Bind();
-
-    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, 8 * sizeof(GLfloat), (void*)0);
-    vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-    vao.LinkAttribs(vbo, 2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
-    activeShaderProgramId = shader.CreateShaders("./shaders/vert.glsl", "./shaders/frag.glsl");  
-
-    vao.Unbind();
-    vbo.Unbind();
-    ebo.Unbind();
-    texture.Unind();
+    engineInitialized = true;
 }
 
 void Engine::RunEngine()
 {
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window) && engineInitialized)
     {
-
         glClearColor(0.24f, 0.15f, 0.37f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(activeShaderProgramId);
-        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
-
-        float uniScale = glGetUniformLocation(activeShaderProgramId, "scale");
-        float uniIntensity = glGetUniformLocation(activeShaderProgramId, "intensity");
-        GLuint uniTex0 = glGetUniformLocation(activeShaderProgramId, "tex0");
-
-        glUniform1f(uniScale, 1.5f);
-        glUniform1f(uniIntensity, 1.5f);
-        glUniform1i(uniTex0, 0);
-
-        vao.Bind();
-        texture.Bind();
+        glUseProgram(activeShaderProgramID);
+        
+        for (Mesh* mesh : meshes)
+        {
+            mesh->DrawMesh(activeShaderProgramID);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -89,11 +54,12 @@ void Engine::RunEngine()
 
 void Engine::QuitEngine()
 {
-    vbo.Delete();
-    vao.Delete();
-    ebo.Delete();
-    texture.Delete();
+    for (Mesh* mesh : meshes)
+    {
+        mesh->ClearMesh();
+    }
 
+    meshes.clear();
     glfwDestroyWindow(window);
     glfwTerminate();
 }
