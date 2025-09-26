@@ -4,7 +4,7 @@
 #include "glm/glm.hpp"
 #include "Buffers.h"
 #include "Shader.h"
-#include <Mesh.h>
+#include "Mesh.h"
 
 class Engine
 {
@@ -13,14 +13,22 @@ public:
 	void InitEngine();
 	void RunEngine();
 	void QuitEngine();
+	float GetAspectRatio();
 
 private:
 	bool engineInitialized = false;
-	GLFWwindow* window = nullptr;
-	int windowWidth = 1024, windowHeight = 720;
-	GLuint activeShaderProgramID;
 	Shader shader;
 	std::vector<Mesh*> meshes;
+
+public:
+	GLFWwindow* window = nullptr;
+	int windowWidth = 1024;
+	int windowHeight = 720;
+	GLuint activeShaderProgramID;
+	float nearClip = 0.1f;
+	float farClip = 100.0f;
+	Camera playerCamera;
+	float FOV = 60.0f;
 
 private:
 	Engine() = default;
@@ -28,4 +36,3 @@ private:
 	Engine(const Engine& instance) = delete;
 	Engine& operator= (const Engine& instance) = delete;
 };
-

@@ -19,6 +19,9 @@ void Engine::InitEngine()
     gladLoadGL();
 
     Mesh* mesh1 = new Mesh();
+    mesh1->transform.location = glm::vec3(0.0f, -0.5f, -2.0f);
+    mesh1->transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
+    mesh1->transform.scale = glm::vec3(3.0f, 3.0f, 3.0f);
     meshes.push_back(mesh1);
 
     for (Mesh* mesh : meshes)
@@ -26,6 +29,7 @@ void Engine::InitEngine()
         mesh->InitMesh();
     }
 
+    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, windowWidth, windowHeight);
     activeShaderProgramID = shader.CreateShaders("./shaders/vert.glsl", "./shaders/frag.glsl");  
 
@@ -40,10 +44,13 @@ void Engine::RunEngine()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(activeShaderProgramID);
-        
+
+        playerCamera.ApplyCamMatrix();
+        playerCamera.NavigateCamera();
+
         for (Mesh* mesh : meshes)
         {
-            mesh->DrawMesh(activeShaderProgramID);
+            mesh->DrawMesh();
         }
 
         glfwSwapBuffers(window);
@@ -62,4 +69,9 @@ void Engine::QuitEngine()
     meshes.clear();
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+float Engine::GetAspectRatio()
+{
+    return ((float)windowWidth/windowHeight);
 }

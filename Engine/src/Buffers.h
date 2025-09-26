@@ -10,6 +10,8 @@ private:
 	GLuint id;
 
 public:
+	VBO() = default;
+
 	void Init(GLfloat* vertices, size_t size)
 	{
 		glGenBuffers(1, &id);
@@ -39,6 +41,8 @@ private:
 	GLuint id;
 
 public:
+	VAO() = default;
+
 	void Init()
 	{
 		glGenVertexArrays(1, &id);
@@ -75,6 +79,8 @@ private:
 	GLuint id;
 
 public:
+	EBO() = default;
+
 	void Init(GLuint* indices, GLsizeiptr size)
 	{
 		glGenBuffers(1, &id);
@@ -96,5 +102,4 @@ public:
 	{
 		glDeleteBuffers(1, &id);
 	}
-
 };

@@ -10,6 +10,8 @@ private:
 	unsigned char* texData;
 
 public:
+	Texture() = default;
+
 	void LoadTexture(const char* path)
 	{
 		stbi_set_flip_vertically_on_load(true);
@@ -63,6 +65,8 @@ private:
 
 
 public:
+	Shader() = default;
+
 	GLuint& CreateShaders(const std::string& vertPath, const std::string& fragPath)
 	{
 		std::string vertCode = LoadShader(vertPath);

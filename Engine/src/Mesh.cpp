@@ -1,4 +1,6 @@
 #include "Mesh.h"
+#include "Engine.h"
+#include <glm/gtc/type_ptr.hpp>
 
 void Mesh::LoadMesh(const std::string& path)
 {
@@ -8,19 +10,23 @@ void Mesh::InitMesh()
 {
     // Vertices coordinates
     GLfloat vertices[] =
-    {
-        //      COORDINATES              COLORS          TexCoord 
-            -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f,  // Lower left corner
-            -0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f,  // Upper left corner
-             0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f,  // Upper right corner
-             0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f   // Lower right corner
+    { //     COORDINATES     /        COLORS      /   TexCoord  //
+        -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+        -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+         0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+         0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+         0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
     };
 
     // Indices for vertices order
     GLuint indices[] =
     {
-        0, 2, 1, // Upper triangle
-        0, 3, 2  // Lower triangle
+        0, 1, 2,
+        0, 2, 3,
+        0, 1, 4,
+        1, 2, 4,
+        2, 3, 4,
+        3, 0, 4
     };
 
     vao.Init();
@@ -51,18 +57,23 @@ void Mesh::ClearMesh()
     texture.Delete();
 }
 
-void Mesh::DrawMesh(const GLuint& shaderProgramID)
+void Mesh::DrawMesh()
 {
-    glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
-
-    float uniScale = glGetUniformLocation(shaderProgramID, "scale");
-    float uniIntensity = glGetUniformLocation(shaderProgramID, "intensity");
-    GLuint uniTex0 = glGetUniformLocation(shaderProgramID, "tex0");
-
-    glUniform1f(uniScale, 1.5f);
-    glUniform1f(uniIntensity, 1.0f);
-    glUniform1i(uniTex0, 0);
-
     vao.Bind();
     texture.Bind();
+
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, transform.location);
+    model = glm::rotate(model, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::scale(model, transform.scale);
+
+    int camMatLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "model");
+    glUniformMatrix4fv(camMatLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    GLuint uniTex0 = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "tex0");
+    glUniform1i(uniTex0, 0);
+
+    glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
 }

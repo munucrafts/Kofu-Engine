@@ -4,24 +4,31 @@
 #include "glm/glm.hpp"
 #include "Buffers.h"
 #include "Shader.h"
-
+#include "Components.h"
+#include "Camera.h"
 
 class Mesh
 {
 public:
 	Mesh() = default;
 	~Mesh() = default;
-
 	virtual void LoadMesh(const std::string& path);
 	virtual void InitMesh();
 	virtual void ClearMesh();
-	virtual void DrawMesh(const GLuint& shaderProgramID);
+	virtual void DrawMesh();
+
+public:
+	Transform transform;
 
 private:
 	Texture texture;
 	VAO vao;
 	VBO vbo;
 	EBO ebo;
+
+	glm::mat4 model;
+	glm::mat4 view;
+	glm::mat4 proj;
 };
 
 
