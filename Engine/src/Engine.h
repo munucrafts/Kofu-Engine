@@ -24,7 +24,7 @@ public:
 	GLFWwindow* window = nullptr;
 	int windowWidth = 1024;
 	int windowHeight = 720;
-	GLuint activeShaderProgramID;
+	GLuint activeShaderProgramID = 0;
 	float nearClip = 0.1f;
 	float farClip = 100.0f;
 	Camera playerCamera;

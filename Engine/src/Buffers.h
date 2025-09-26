@@ -4,6 +4,14 @@
 #include <fstream>
 #include <sstream>
 
+struct Vertex
+{
+	glm::vec3 location;
+	glm::vec3 normal;
+	glm::vec3 color;
+	glm::vec2 texCoord;
+};
+
 struct VBO
 {
 private:
@@ -12,11 +20,11 @@ private:
 public:
 	VBO() = default;
 
-	void Init(GLfloat* vertices, size_t size)
+	void Init(std::vector<Vertex>& vertices)
 	{
 		glGenBuffers(1, &id);
 		glBindBuffer(GL_ARRAY_BUFFER, id);
-		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 	}
 
 	void Bind()
@@ -81,11 +89,11 @@ private:
 public:
 	EBO() = default;
 
-	void Init(GLuint* indices, GLsizeiptr size)
+	void Init(std::vector<GLuint> indices)
 	{
 		glGenBuffers(1, &id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 	}
 
 	void Bind()

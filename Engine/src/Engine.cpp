@@ -18,6 +18,8 @@ void Engine::InitEngine()
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
+    playerCamera.location = glm::vec3(0.0f, 0.0f, 5.0f);
+
     Mesh* mesh1 = new Mesh();
     mesh1->transform.location = glm::vec3(0.0f, -0.5f, -2.0f);
     mesh1->transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
