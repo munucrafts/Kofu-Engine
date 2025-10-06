@@ -5,6 +5,7 @@
 #include "Buffers.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include <Scene.h>
 
 class Engine
 {
@@ -18,7 +19,7 @@ public:
 private:
 	bool engineInitialized = false;
 	Shader shader;
-	std::vector<Mesh*> meshes;
+	Scene activeScene;
 
 public:
 	GLFWwindow* window = nullptr;

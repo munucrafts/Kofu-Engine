@@ -31,7 +31,8 @@ project "Engine"
 		"%{IncludeDir.fastgltf}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.JsonParser}"
 	}
 
 	links 

@@ -8,13 +8,13 @@ layout(location = 3) in vec2 aTexCoord;
 out vec3 color;
 out vec2 texCoord;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 proj;
+uniform mat4 modelMat;
+uniform mat4 viewMat;
+uniform mat4 projMat;
 
 void main()
 {
-    gl_Position = proj * view * model * vec4(aPosition, 1.0f);
+    gl_Position = projMat * viewMat * modelMat * vec4(aPosition, 1.0f);
     color = aColor;
     texCoord = aTexCoord;
 }

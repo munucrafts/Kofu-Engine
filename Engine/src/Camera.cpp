@@ -8,17 +8,17 @@ void Camera::ApplyCamMatrix()
 {
 	Engine& engine = Engine::GetEngine();
 
-	view = glm::mat4(1.0f);
-	view = glm::lookAt(location, location + forward, up);
+	viewMat = glm::mat4(1.0f);
+	viewMat = glm::lookAt(location, location + forward, up);
 
-	proj = glm::mat4(1.0f);
-	proj = glm::perspective(glm::radians(engine.FOV), engine.GetAspectRatio(), engine.nearClip, engine.farClip);
+	projMat = glm::mat4(1.0f);
+	projMat = glm::perspective(glm::radians(engine.FOV), engine.GetAspectRatio(), engine.nearClip, engine.farClip);
 
-	int viewLoc = glGetUniformLocation(engine.activeShaderProgramID, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	int viewLoc = glGetUniformLocation(engine.activeShaderProgramID, "viewMat");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMat));
 
-	int projLoc = glGetUniformLocation(engine.activeShaderProgramID, "proj");
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+	int projLoc = glGetUniformLocation(engine.activeShaderProgramID, "projMat");
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projMat));
 }
 
 void Camera::NavigateCamera()

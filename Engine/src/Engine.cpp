@@ -24,9 +24,11 @@ void Engine::InitEngine()
     mesh1->transform.location = glm::vec3(0.0f, -0.5f, -2.0f);
     mesh1->transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
     mesh1->transform.scale = glm::vec3(3.0f, 3.0f, 3.0f);
-    meshes.push_back(mesh1);
+    Scene* oneScene = new Scene();
+    oneScene->meshes.push_back(mesh1);
+    activeScene.LoadScene(oneScene);
 
-    for (Mesh* mesh : meshes)
+    for (Mesh* mesh : activeScene.meshes)
     {
         mesh->InitMesh();
     }
@@ -50,7 +52,7 @@ void Engine::RunEngine()
         playerCamera.ApplyCamMatrix();
         playerCamera.NavigateCamera();
 
-        for (Mesh* mesh : meshes)
+        for (Mesh* mesh : activeScene.meshes)
         {
             mesh->DrawMesh();
         }
@@ -63,12 +65,7 @@ void Engine::RunEngine()
 
 void Engine::QuitEngine()
 {
-    for (Mesh* mesh : meshes)
-    {
-        mesh->ClearMesh();
-    }
-
-    meshes.clear();
+    activeScene.UnloadScene();
     glfwDestroyWindow(window);
     glfwTerminate();
 }

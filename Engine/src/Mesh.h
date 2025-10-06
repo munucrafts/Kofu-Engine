@@ -25,7 +25,7 @@ private:
 	VAO vao;
 	VBO vbo;
 	EBO ebo;
-	glm::mat4 model;
+	glm::mat4 modelMat;
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 };

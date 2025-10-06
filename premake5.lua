@@ -26,6 +26,7 @@ IncludeDir["Glad"] = "vendor/Glad/include"
 IncludeDir["ImGui"] = "vendor/imgui"
 IncludeDir["glm"] = "vendor/glm"
 IncludeDir["stb_image"] = "vendor/stb_image"
+IncludeDir["JsonParser"] = "vendor/JsonParser"
 
 -- Projects
 group "Dependencies"

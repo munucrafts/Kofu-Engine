@@ -4,10 +4,6 @@
 
 void Mesh::LoadMesh(const std::string& path)
 {
-}
-
-void Mesh::InitMesh()
-{
     // Vertices coordinates
     vertices =
     { //               POSITION                /           NORMAL           /           COLOR           /       TEXCOORD
@@ -64,8 +60,11 @@ void Mesh::InitMesh()
       // Bottom face
      20,21,22, 20,22,23
     };
+}
 
-
+void Mesh::InitMesh()
+{
+    LoadMesh("./assets/mesh/name");
 
     vao.Init();
     vbo.Init(vertices);
@@ -101,15 +100,15 @@ void Mesh::DrawMesh()
     vao.Bind();
     texture.Bind();
 
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, transform.location);
-    model = glm::rotate(model, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::scale(model, transform.scale);
+    modelMat = glm::mat4(1.0f);
+    modelMat = glm::translate(modelMat, transform.location);
+    modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    modelMat = glm::scale(modelMat, transform.scale);
 
-    int camMatLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "model");
-    glUniformMatrix4fv(camMatLoc, 1, GL_FALSE, glm::value_ptr(model));
+    int camMatLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "modelMat");
+    glUniformMatrix4fv(camMatLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
 
     GLuint uniTex0 = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "tex0");
     glUniform1i(uniTex0, 0);

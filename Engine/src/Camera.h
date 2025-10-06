@@ -20,8 +20,8 @@ public:
 	float speed = 0.01f;
 
 private:
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 proj = glm::mat4(1.0f);
+	glm::mat4 viewMat = glm::mat4(1.0f);
+	glm::mat4 projMat = glm::mat4(1.0f);
 
 	bool firstClick = false;
 };
