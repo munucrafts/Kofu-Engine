@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "iostream"
+#include "GLTFLoader.h"
 
 Engine& Engine::GetEngine()
 {
@@ -20,16 +21,14 @@ void Engine::InitEngine()
 
     playerCamera.location = glm::vec3(0.0f, 0.0f, 5.0f);
 
-    Mesh* mesh1 = new Mesh();
-    mesh1->transform.location = glm::vec3(0.0f, -0.5f, -2.0f);
-    mesh1->transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
-    mesh1->transform.scale = glm::vec3(3.0f, 3.0f, 3.0f);
-    Scene* oneScene = new Scene();
-    oneScene->meshes.push_back(mesh1);
-    activeScene.LoadScene(oneScene);
+    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/Avocado.gltf", &activeScene);
 
     for (Mesh* mesh : activeScene.meshes)
     {
+        mesh->transform.location = glm::vec3(0.0f, -0.5f, -2.0f);
+        mesh->transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
+        mesh->transform.scale = glm::vec3(1.0f);
+
         mesh->InitMesh();
     }
 

@@ -12,6 +12,11 @@ private:
 public:
 	Texture() = default;
 
+	Texture(const char* path)
+	{
+		LoadTexture(path);
+	}
+
 	void LoadTexture(const char* path)
 	{
 		stbi_set_flip_vertically_on_load(true);
@@ -20,7 +25,7 @@ public:
 
 	void Init()
 	{
-		LoadTexture("./assets/textures/spidey.png");
+		LoadTexture("./assets/textures/Avocado_baseColor.png");
 
 		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0); 

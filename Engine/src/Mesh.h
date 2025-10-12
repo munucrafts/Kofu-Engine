@@ -11,8 +11,8 @@ class Mesh
 {
 public:
 	Mesh() = default;
+	Mesh(std::vector<Vertex> verts, std::vector<GLuint> inds);
 	~Mesh() = default;
-	virtual void LoadMesh(const std::string& path);
 	virtual void InitMesh();
 	virtual void ClearMesh();
 	virtual void DrawMesh();

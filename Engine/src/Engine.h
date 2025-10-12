@@ -23,8 +23,8 @@ private:
 
 public:
 	GLFWwindow* window = nullptr;
-	int windowWidth = 1024;
-	int windowHeight = 720;
+	int windowWidth = 1920;
+	int windowHeight = 1080;
 	GLuint activeShaderProgramID = 0;
 	float nearClip = 0.1f;
 	float farClip = 100.0f;
