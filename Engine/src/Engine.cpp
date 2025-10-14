@@ -21,7 +21,7 @@ void Engine::InitEngine()
 
     playerCamera.location = glm::vec3(0.0f, 0.0f, 5.0f);
 
-    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/Avocado.gltf", &activeScene);
+    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/Lantern.gltf", &activeScene);
 
     for (Mesh* mesh : activeScene.meshes)
     {

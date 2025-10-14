@@ -104,9 +104,9 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		}
 	}
 
-	if (attribs.find("COLOR") != attribs.end())
+	if (attribs.find("COLOR_0") != attribs.end())
 	{
-		tinygltf::Accessor& accessor = gltfModel.accessors[attribs.at("COLOR")];
+		tinygltf::Accessor& accessor = gltfModel.accessors[attribs.at("COLOR_0")];
 		tinygltf::BufferView& bufferView = gltfModel.bufferViews[accessor.bufferView];
 		tinygltf::Buffer& buffer = gltfModel.buffers[bufferView.buffer];
 

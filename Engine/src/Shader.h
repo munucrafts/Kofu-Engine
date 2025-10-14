@@ -19,13 +19,12 @@ public:
 
 	void LoadTexture(const char* path)
 	{
-		stbi_set_flip_vertically_on_load(true);
-		texData = stbi_load(path, &width, &height, &numChannels, STBI_rgb_alpha);
+		texData = stbi_load(path, &width, &height, &numChannels, 0);
 	}
 
 	void Init()
 	{
-		LoadTexture("./assets/textures/Avocado_baseColor.png");
+		LoadTexture("./assets/models/Lantern_baseColor.png");
 
 		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0); 
