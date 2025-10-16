@@ -24,7 +24,7 @@ public:
 
 	void Init()
 	{
-		LoadTexture("./assets/models/Lantern_baseColor.png");
+		LoadTexture("./assets/models/SpiderMan_baseColor.png");
 
 		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0); 

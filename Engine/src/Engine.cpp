@@ -21,18 +21,20 @@ void Engine::InitEngine()
 
     playerCamera.location = glm::vec3(0.0f, 0.0f, 5.0f);
 
-    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/Lantern.gltf", &activeScene);
+    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/scene.gltf", &activeScene);
 
     for (Mesh* mesh : activeScene.meshes)
     {
-        mesh->transform.location = glm::vec3(0.0f, -0.5f, -2.0f);
-        mesh->transform.rotation = glm::vec3(0.0f, 45.0f, 0.0f);
-        mesh->transform.scale = glm::vec3(1.0f);
+        mesh->transform.location = glm::vec3(0.0f, -2.0f, -2.0f);
+        mesh->transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+        mesh->transform.scale = glm::vec3(0.02f);
 
         mesh->InitMesh();
     }
 
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     glViewport(0, 0, windowWidth, windowHeight);
     activeShaderProgramID = shader.CreateShaders("./shaders/vert.glsl", "./shaders/frag.glsl");  
 
@@ -43,13 +45,16 @@ void Engine::RunEngine()
 {
     while (!glfwWindowShouldClose(window) && engineInitialized)
     {
-        glClearColor(0.24f, 0.15f, 0.37f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(activeShaderProgramID);
 
         playerCamera.ApplyCamMatrix();
         playerCamera.NavigateCamera();
+
+        glUniform1f(glGetUniformLocation(activeShaderProgramID, "nearClip"), nearClip);
+        glUniform1f(glGetUniformLocation(activeShaderProgramID, "farClip"), farClip);
 
         for (Mesh* mesh : activeScene.meshes)
         {
