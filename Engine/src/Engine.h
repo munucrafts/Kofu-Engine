@@ -18,7 +18,6 @@ public:
 
 private:
 	bool engineInitialized = false;
-	Shader shader;
 	Scene activeScene;
 
 public:

@@ -16,6 +16,6 @@ float MakeLinearDepth(float depth)
 
 void main()
 {
-    //FragColor = texture(tex0, texCoord);
-    FragColor = vec4(vec3(MakeLinearDepth(gl_FragCoord.z) / farClip), 1.0f);
+    FragColor = texture(tex0, texCoord);
+    //FragColor = vec4(vec3(MakeLinearDepth(gl_FragCoord.z) / farClip), 1.0f);
 }
