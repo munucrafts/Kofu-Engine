@@ -1,6 +1,7 @@
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "GLTFLoader.h"
+#include "Scene.h"
 
 GLTFLoader& GLTFLoader::GetGltfLoader()
 {
@@ -190,15 +191,39 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 	if (materialIndex >= 0)
 	{
 		tinygltf::Material& material = gltfModel.materials[materialIndex];
-		int texIndex = material.pbrMetallicRoughness.baseColorTexture.index;
 
-		if (texIndex >= 0)
+		int baseTexIndex = material.pbrMetallicRoughness.baseColorTexture.index;
+		if (baseTexIndex >= 0)
 		{
-			int imgIndex = gltfModel.textures[texIndex].source;
+			int imgIndex = gltfModel.textures[baseTexIndex].source;
 			std::string& textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
-			mesh->texture.LoadTexture(textureName.c_str());
+			mesh->baseTex.LoadTexture(textureName.c_str());
+		}
+
+		int metallicTexIndex = material.pbrMetallicRoughness.metallicRoughnessTexture.index;
+		if (metallicTexIndex >= 0)
+		{
+			int imgIndex = gltfModel.textures[metallicTexIndex].source;
+			std::string& textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
+			mesh->metallicTex.LoadTexture(textureName.c_str());
+		}
+
+		int normalTexIndex = material.normalTexture.index;
+		if (normalTexIndex >= 0)
+		{
+			int imgIndex = gltfModel.textures[normalTexIndex].source;
+			std::string& textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
+			mesh->normalTex.LoadTexture(textureName.c_str());
+		}
+
+		int occlusionTexIndex = material.occlusionTexture.index;
+		if (occlusionTexIndex >= 0)
+		{
+			int imgIndex = gltfModel.textures[occlusionTexIndex].source;
+			std::string& textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
+			mesh->occlusionTex.LoadTexture(textureName.c_str());
 		}
 	}
 
-	scenePtr->meshes.push_back(mesh);
+	scenePtr->meshes.emplace_back(mesh);
 }

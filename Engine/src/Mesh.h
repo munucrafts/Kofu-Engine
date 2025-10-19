@@ -19,7 +19,11 @@ public:
 
 public:
 	Transform transform;
-	Texture texture;
+
+	Texture baseTex;
+	Texture normalTex;
+	Texture metallicTex;
+	Texture occlusionTex;
 
 private:
 	VAO vao;

@@ -42,12 +42,13 @@ public:
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Bind()
+	void Bind(int texNum)
 	{
+		glActiveTexture(texNum);
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	void Unind()
+	void Unbind()
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

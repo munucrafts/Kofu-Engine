@@ -5,10 +5,11 @@ out vec4 FragColor;
 in vec4 color;
 in vec2 texCoord;
 
-uniform sampler2D tex0;
+uniform sampler2D baseTex;
 uniform float nearClip;
 uniform float farClip;
 uniform int renderMode;
+
 
 float MakeLinearDepth(float depth)
 {
@@ -20,7 +21,7 @@ void main()
     switch (renderMode)
     {
     case 1:
-        FragColor = texture(tex0, texCoord);
+        FragColor = texture(baseTex, texCoord);
         break;
 
     case 2:

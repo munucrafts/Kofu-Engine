@@ -5,18 +5,12 @@
 struct Scene
 {
 public:
-	void LoadScene(Scene* newScene)
-	{
-		meshes = newScene->meshes;
-	};
-
-	void UnloadScene()
-	{
-		meshes.clear();
-	};
+	void LoadScene();
+	void UnloadScene();
 
 public:
 	std::vector<Mesh*> meshes;
+	std::vector<std::string> modelPaths;
 };
 
 

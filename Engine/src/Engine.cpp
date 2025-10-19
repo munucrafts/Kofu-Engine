@@ -23,7 +23,9 @@ void Engine::InitEngine()
     renderMode = UNLIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
-    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/Medieval.gltf", &activeScene);
+    activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
+    activeScene.modelPaths.push_back("./assets/models/Lantern.gltf");
+    activeScene.LoadScene();
 
     for (Mesh* mesh : activeScene.meshes)
     {

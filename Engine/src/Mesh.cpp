@@ -14,12 +14,18 @@ void Mesh::InitMesh()
     vao.Init();
     vbo.Init(vertices);
     ebo.Init(indices);
-    texture.Init();
+    baseTex.Init();
+    normalTex.Init();
+    metallicTex.Init();
+    occlusionTex.Init();
 
     vao.Bind();
     vbo.Bind();
     ebo.Bind();
-    texture.Bind();
+    baseTex.Bind(GL_TEXTURE0);
+    normalTex.Bind(GL_TEXTURE1);
+    occlusionTex.Bind(GL_TEXTURE2);
+    metallicTex.Bind(GL_TEXTURE3);
 
     vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
     vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
@@ -29,7 +35,10 @@ void Mesh::InitMesh()
     vao.Unbind();
     vbo.Unbind();
     ebo.Unbind();
-    texture.Unind();
+    baseTex.Unbind();
+    normalTex.Unbind();
+    metallicTex.Unbind();
+    occlusionTex.Unbind();
 }
 
 void Mesh::ClearMesh()
@@ -37,13 +46,16 @@ void Mesh::ClearMesh()
     vbo.Delete();
     vao.Delete();
     ebo.Delete();
-    texture.Delete();
+    baseTex.Delete();
 }
 
 void Mesh::DrawMesh()
 {
     vao.Bind();
-    texture.Bind();
+    baseTex.Bind(GL_TEXTURE0);
+    normalTex.Bind(GL_TEXTURE1);
+    occlusionTex.Bind(GL_TEXTURE2);
+    metallicTex.Bind(GL_TEXTURE3);
 
     modelMat = glm::mat4(1.0f);
     modelMat = glm::translate(modelMat, transform.location);
@@ -55,8 +67,17 @@ void Mesh::DrawMesh()
     int camMatLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "modelMat");
     glUniformMatrix4fv(camMatLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
 
-    GLuint uniTex0 = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "tex0");
-    glUniform1i(uniTex0, 0);
+    GLuint baseTexLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "baseTex");
+    glUniform1i(baseTexLoc, 0);
+
+    GLuint normalTexLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "normalTex");
+    glUniform1i(normalTexLoc, 1);
+
+    GLuint occlusionTexLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "occlusionTex");
+    glUniform1i(occlusionTexLoc, 2);
+
+    GLuint metallicTexLoc = glGetUniformLocation(Engine::GetEngine().activeShaderProgramID, "metallicTex");
+    glUniform1i(metallicTexLoc, 3);
 
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
