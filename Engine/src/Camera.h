@@ -11,13 +11,9 @@ public:
 
 public:
 	glm::vec3 location = glm::vec3(0.0f);
-
-	glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
-
+	Direction direction = { glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f) };
 	float sensitivity = 300.0f;
-	float speed = 0.01f;
+	float speed = 0.05f;
 
 private:
 	glm::mat4 viewMat = glm::mat4(1.0f);

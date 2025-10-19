@@ -185,5 +185,20 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 	}
 
 	Mesh* mesh = new Mesh(vertices, indices);
+
+	int materialIndex = subMesh.material;
+	if (materialIndex >= 0)
+	{
+		tinygltf::Material& material = gltfModel.materials[materialIndex];
+		int texIndex = material.pbrMetallicRoughness.baseColorTexture.index;
+
+		if (texIndex >= 0)
+		{
+			int imgIndex = gltfModel.textures[texIndex].source;
+			std::string& textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
+			mesh->texture.LoadTexture(textureName.c_str());
+		}
+	}
+
 	scenePtr->meshes.push_back(mesh);
 }

@@ -19,6 +19,7 @@ public:
 private:
 	bool engineInitialized = false;
 	Scene activeScene;
+	RenderMode renderMode;
 
 public:
 	GLFWwindow* window = nullptr;

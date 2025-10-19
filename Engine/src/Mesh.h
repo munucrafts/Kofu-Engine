@@ -19,9 +19,9 @@ public:
 
 public:
 	Transform transform;
+	Texture texture;
 
 private:
-	Texture texture;
 	VAO vao;
 	VBO vbo;
 	EBO ebo;

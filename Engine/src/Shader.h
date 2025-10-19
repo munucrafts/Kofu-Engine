@@ -19,13 +19,11 @@ public:
 
 	void LoadTexture(const char* path)
 	{
-		texData = stbi_load(path, &width, &height, &numChannels, 0);
+		texData = stbi_load(path, &width, &height, &numChannels, STBI_rgb_alpha);
 	}
 
 	void Init()
 	{
-		LoadTexture("./assets/models/SpiderMan_baseColor.png");
-
 		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0); 
 		glBindTexture(GL_TEXTURE_2D, id);

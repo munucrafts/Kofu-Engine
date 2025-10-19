@@ -9,7 +9,7 @@ void Camera::ApplyCamMatrix()
 	Engine& engine = Engine::GetEngine();
 
 	viewMat = glm::mat4(1.0f);
-	viewMat = glm::lookAt(location, location + forward, up);
+	viewMat = glm::lookAt(location, location + direction.forward, direction.up);
 
 	projMat = glm::mat4(1.0f);
 	projMat = glm::perspective(glm::radians(engine.FOV), engine.GetAspectRatio(), engine.nearClip, engine.farClip);
@@ -49,37 +49,37 @@ void Camera::NavigateCamera()
 		float rotY = sensitivity * (float)(mouseX - engine.windowWidth / 2) / engine.windowWidth;
 
 		glm::vec3 worldUp(0.0f, 1.0f, 0.0f);
-		glm::vec3 newForward = glm::rotate(forward, glm::radians(-rotX), right);
+		glm::vec3 newForward = glm::rotate(direction.forward, glm::radians(-rotX), direction.right);
 
 		if (abs(glm::angle(newForward, worldUp) - glm::radians(90.0f)) <= glm::radians(85.0f))
-			forward = newForward;
+			direction.forward = newForward;
 
-		forward = glm::rotate(forward, glm::radians(-rotY), worldUp);
-		forward = glm::normalize(forward);
+		direction.forward = glm::rotate(direction.forward, glm::radians(-rotY), worldUp);
+		direction.forward = glm::normalize(direction.forward);
 
-		right = glm::normalize(glm::cross(forward, worldUp));
-		up = glm::normalize(glm::cross(right, forward));
+		direction.right = glm::normalize(glm::cross(direction.forward, worldUp));
+		direction.up = glm::normalize(glm::cross(direction.right, direction.forward));
 
 		glfwSetCursorPos(window, engine.windowWidth / 2, engine.windowHeight / 2);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		location += speed * forward;
+		location += speed * direction.forward;
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		location -= speed * forward;
+		location -= speed * direction.forward;
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		location -= speed * glm::normalize(glm::cross(forward, up));
+		location -= speed * glm::normalize(glm::cross(direction.forward, direction.up));
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		location += speed * glm::normalize(glm::cross(forward, up));;
+		location += speed * glm::normalize(glm::cross(direction.forward, direction.up));;
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		location += speed * up;
+		location += speed * direction.up;
 
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		location -= speed * up;
+		location -= speed * direction.up;
 }
 
 

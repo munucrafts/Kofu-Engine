@@ -17,17 +17,19 @@ void Engine::InitEngine()
 
     window = glfwCreateWindow(windowWidth, windowHeight, "Engine", nullptr, nullptr);
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
     gladLoadGL();
 
-    playerCamera.location = glm::vec3(0.0f, 0.0f, 5.0f);
+    renderMode = UNLIT;
+    playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
-    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/scene.gltf", &activeScene);
+    GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/Medieval.gltf", &activeScene);
 
     for (Mesh* mesh : activeScene.meshes)
     {
-        mesh->transform.location = glm::vec3(0.0f, -2.0f, -2.0f);
+        mesh->transform.location = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-        mesh->transform.scale = glm::vec3(0.03f);
+        mesh->transform.scale = glm::vec3(10.0f);
 
         mesh->InitMesh();
     }
@@ -60,15 +62,14 @@ void Engine::RunEngine()
 
         if (timeDiff >= 1.0f / 30.0f)
         {
-            std::string FPS = std::to_string((1.0f / timeDiff) * counter);
-            std::string ms = std::to_string((timeDiff / counter) * 1000.0f);
-            std::string statLine = "Engine  FPS = " + FPS + " : MS = " + ms;
+            std::string FPS = std::to_string((int)(1.0f / timeDiff) * counter);
+            std::string statLine = "Engine : [ FPS = " + FPS + " ]";
             glfwSetWindowTitle(window, statLine.c_str());
             prevTime = currentTime;
             counter = 0;
         }
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.38f, 0.67f, 0.94f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(activeShaderProgramID);
@@ -78,6 +79,7 @@ void Engine::RunEngine()
 
         glUniform1f(glGetUniformLocation(activeShaderProgramID, "nearClip"), nearClip);
         glUniform1f(glGetUniformLocation(activeShaderProgramID, "farClip"), farClip);
+        glUniform1i(glGetUniformLocation(activeShaderProgramID, "renderMode"), (int)renderMode);
 
         for (Mesh* mesh : activeScene.meshes)
         {
