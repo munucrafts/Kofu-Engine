@@ -20,12 +20,15 @@ private:
 	bool engineInitialized = false;
 	Scene activeScene;
 	RenderMode renderMode;
+	FBO fbo;
+	RBO rbo;
+	FrameBufferTexture fbTex;
 
 public:
 	GLFWwindow* window = nullptr;
 	int windowWidth = 1280;
 	int windowHeight = 1024;
-	GLuint activeShaderProgramID = 0;
+	GLuint activeShaderProgram = 0;
 	float nearClip = 0.1f;
 	float farClip = 100.0f;
 	Camera playerCamera;

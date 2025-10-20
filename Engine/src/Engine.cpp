@@ -2,6 +2,19 @@
 #include "iostream"
 #include "GLTFLoader.h"
 
+std::vector<Vertex> screenRectVerts =
+{
+    { glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f), glm::vec4(0.0f), glm::vec2(1.0f, 0.0f) },
+    { glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f), glm::vec4(0.0f), glm::vec2(0.0f, 0.0f) },
+    { glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f), glm::vec4(0.0f), glm::vec2(0.0f, 1.0f) },
+    { glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f), glm::vec4(0.0f), glm::vec2(1.0f, 1.0f) },
+    { glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f), glm::vec4(0.0f), glm::vec2(1.0f, 0.0f) },
+    { glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec3(0.0f), glm::vec4(0.0f), glm::vec2(0.0f, 1.0f) }
+};
+
+VAO screenRectVao;
+VBO screenRectVbo;
+
 Engine& Engine::GetEngine()
 {
     static Engine instance;
@@ -20,7 +33,21 @@ void Engine::InitEngine()
     glfwSwapInterval(1);
     gladLoadGL();
 
-    renderMode = UNLIT;
+    screenRectVao.Init();
+    screenRectVao.Bind();
+    screenRectVbo.Init(screenRectVerts);
+    screenRectVbo.Bind();
+    screenRectVao.LinkAttribs(screenRectVbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
+    screenRectVao.LinkAttribs(screenRectVbo, 1, 2, GL_FLOAT, sizeof(Vertex), (void*)(10 * sizeof(float)));
+
+    fbo.Init();
+    fbo.Bind();
+    rbo.Init(windowWidth, windowHeight);
+    rbo.Bind();
+    fbTex.Init(windowWidth, windowHeight);
+    fbTex.Bind();
+    
+    renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
     activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
@@ -45,8 +72,8 @@ void Engine::InitEngine()
 
     glViewport(0, 0, windowWidth, windowHeight);
 
-    Shader defaultShader;
-    activeShaderProgramID = defaultShader.CreateShaders("./shaders/vert.glsl", "./shaders/frag.glsl");  
+    Shader defaultShader("./shaders/default.vert", "./shaders/default.frag");
+    activeShaderProgram = defaultShader.shaderProgram;  
 
     engineInitialized = true;
 }
@@ -58,7 +85,7 @@ void Engine::RunEngine()
 
     while (!glfwWindowShouldClose(window) && engineInitialized)
     {
-        currentTime = glfwGetTime();
+        currentTime = (float)glfwGetTime();
         timeDiff = currentTime - prevTime;
         counter++;
 
@@ -71,22 +98,34 @@ void Engine::RunEngine()
             counter = 0;
         }
 
+        fbo.Bind();
+
         glClearColor(0.38f, 0.67f, 0.94f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glUseProgram(activeShaderProgramID);
+        glEnable(GL_DEPTH_TEST);
+        glUseProgram(activeShaderProgram);
 
         playerCamera.ApplyCamMatrix();
         playerCamera.NavigateCamera();
 
-        glUniform1f(glGetUniformLocation(activeShaderProgramID, "nearClip"), nearClip);
-        glUniform1f(glGetUniformLocation(activeShaderProgramID, "farClip"), farClip);
-        glUniform1i(glGetUniformLocation(activeShaderProgramID, "renderMode"), (int)renderMode);
+        glUniform1f(glGetUniformLocation(activeShaderProgram, "nearClip"), nearClip);
+        glUniform1f(glGetUniformLocation(activeShaderProgram, "farClip"), farClip);
+        glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
 
         for (Mesh* mesh : activeScene.meshes)
         {
             mesh->DrawMesh();
         }
+
+        fbo.Unbind();
+        Shader frameBufferShader("./shaders/frameBuffer.vert", "./shaders/frameBuffer.frag");
+        activeShaderProgram = frameBufferShader.shaderProgram;
+        screenRectVao.Bind();
+        glDisable(GL_DEPTH_TEST);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        fbTex.Bind();
+        GLuint screenTexLoc = glGetUniformLocation(activeShaderProgram, "screenTexture");
+        glUniform1i(screenTexLoc, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -97,6 +136,11 @@ void Engine::RunEngine()
 void Engine::QuitEngine()
 {
     activeScene.UnloadScene();
+
+    fbo.Delete();
+    rbo.Delete();
+    fbTex.Delete();
+
     glfwDestroyWindow(window);
     glfwTerminate();
 }

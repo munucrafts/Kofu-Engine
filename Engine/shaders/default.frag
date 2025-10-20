@@ -1,11 +1,15 @@
 #version 330 core
 
-out vec4 FragColor;
+out vec4 fragColor;
 
 in vec4 color;
 in vec2 texCoord;
 
 uniform sampler2D baseTex;
+uniform sampler2D normalTex;
+uniform sampler2D occlusionTex;
+uniform sampler2D metallicTex;
+
 uniform float nearClip;
 uniform float farClip;
 uniform int renderMode;
@@ -20,16 +24,24 @@ void main()
 {
     switch (renderMode)
     {
+    case 0:
+        fragColor = texture(baseTex, texCoord);
+        break;
+
     case 1:
-        FragColor = texture(baseTex, texCoord);
+        fragColor = texture(baseTex, texCoord);
         break;
 
     case 2:
-        FragColor = vec4(vec3(MakeLinearDepth(gl_FragCoord.z) / farClip), 1.0);
+        fragColor = vec4(vec3(MakeLinearDepth(gl_FragCoord.z) / farClip), 1.0);
+        break;
+
+    case 3:
+        fragColor = texture(normalTex, texCoord);
         break;
 
     default:
-        FragColor = vec4(1.0f, 0.0f, 1.0f, 1.0f);
+        fragColor = vec4(1.0f, 0.0f, 1.0f, 1.0f);
         break;
     }
 }

@@ -104,3 +104,65 @@ public:
 		glDeleteBuffers(1, &id);
 	}
 };
+
+struct FBO
+{
+private:
+	GLuint id;
+
+public:
+	FBO() = default;
+
+	void Init()
+	{
+		glGenFramebuffers(1, &id);
+		glBindFramebuffer(GL_FRAMEBUFFER, id);
+	}
+
+	void Bind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, id);
+	}
+
+	void Unbind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void Delete()
+	{
+		glDeleteFramebuffers(1, &id);
+	}
+};
+
+struct RBO
+{
+private:
+	GLuint id;
+
+public:
+	RBO() = default;
+
+	void Init(int width, int height)
+	{
+		glGenRenderbuffers(1, &id);
+		glBindRenderbuffer(GL_RENDERBUFFER, id);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	}
+
+	void Bind()
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, id);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, id);
+	}
+
+	void Unbind()
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+
+	void Delete()
+	{
+		glDeleteRenderbuffers(1, &id);
+	}
+};
