@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include <Scene.h>
+#include "Skybox.h"
 
 class Engine
 {
@@ -20,9 +21,7 @@ private:
 	bool engineInitialized = false;
 	Scene activeScene;
 	RenderMode renderMode;
-	FBO fbo;
-	RBO rbo;
-	FrameBufferTexture fbTex;
+	Skybox skyBox;
 
 public:
 	GLFWwindow* window = nullptr;

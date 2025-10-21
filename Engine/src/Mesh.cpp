@@ -12,25 +12,26 @@ Mesh::Mesh(std::vector<Vertex> verts, std::vector<GLuint> inds)
 void Mesh::InitMesh()
 {
     vao.Init();
+    vao.Bind();
     vbo.Init(vertices);
+    vbo.Bind();
     ebo.Init(indices);
+    ebo.Bind();
+
+    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
+    vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
+    vao.LinkAttribs(vbo, 2, 4, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
+    vao.LinkAttribs(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(10 * sizeof(float)));
+
     baseTex.Init();
     normalTex.Init();
     metallicTex.Init();
     occlusionTex.Init();
 
-    vao.Bind();
-    vbo.Bind();
-    ebo.Bind();
     baseTex.Bind(GL_TEXTURE0);
     normalTex.Bind(GL_TEXTURE1);
     occlusionTex.Bind(GL_TEXTURE2);
     metallicTex.Bind(GL_TEXTURE3);
-
-    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
-    vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
-    vao.LinkAttribs(vbo, 2, 4, GL_FLOAT, sizeof(Vertex), (void*)(7 * sizeof(float)));
-    vao.LinkAttribs(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(10 * sizeof(float)));
 
     vao.Unbind();
     vbo.Unbind();
