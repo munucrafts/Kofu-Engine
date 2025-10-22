@@ -72,9 +72,7 @@ void Engine::RunEngine()
         static Shader defaultShader("./shaders/default.vert", "./shaders/default.frag");
         defaultShader.Activate();
 
-        glClearColor(0.38f, 0.67f, 0.94f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glDepthFunc(GL_LESS);
+        ClearWindow();
 
         playerCamera.NavigateCamera();
         playerCamera.ApplyCamMatrix();
@@ -109,4 +107,14 @@ void Engine::QuitEngine()
 float Engine::GetAspectRatio()
 {
     return ((float)windowWidth/windowHeight);
+}
+
+void Engine::ClearWindow()
+{
+    glClearColor(0.38f, 0.67f, 0.94f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
 }

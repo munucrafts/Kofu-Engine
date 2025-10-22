@@ -37,12 +37,12 @@ void Skybox::LoadSkybox()
 
 	std::string cubemapFaceTextures[] =
 	{
-		"./assets/skybox/right.jpg",
-		"./assets/skybox/left.jpg",
-		"./assets/skybox/top.jpg",
-		"./assets/skybox/bottom.jpg",
-		"./assets/skybox/front.jpg",
-		"./assets/skybox/back.jpg"
+		"./assets/skybox/right.png",
+		"./assets/skybox/left.png",
+		"./assets/skybox/top.png",
+		"./assets/skybox/bottom.png",
+		"./assets/skybox/front.png",
+		"./assets/skybox/back.png"
 	};
 
 	vao.Init();
@@ -87,7 +87,9 @@ void Skybox::LoadSkybox()
 void Skybox::DrawSkybox()
 {
 	glUniform1i(glGetUniformLocation(Engine::GetEngine().activeShaderProgram, "skyBox"), 0);
-	glDepthFunc(GL_EQUAL);
+	glDepthFunc(GL_LEQUAL);
+	glDisable(GL_CULL_FACE);
+
 
 	glm::mat4 viewMat = glm::mat4(1.0f);
 	glm::mat4 projectionMat = glm::mat4(1.0f);
