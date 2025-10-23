@@ -96,8 +96,8 @@ void Skybox::DrawSkybox()
 
 	Engine& engine = Engine::GetEngine();
 
-	viewMat = glm::mat4(glm::mat3(glm::lookAt(engine.playerCamera.location,engine.playerCamera.location + engine.playerCamera.direction.forward,engine.playerCamera.direction.up)));
-	projectionMat = glm::perspective(glm::radians(45.0f), (float)engine.windowWidth / (float)engine.windowHeight, engine.nearClip, engine.farClip);
+	viewMat = glm::mat4(glm::mat3(glm::lookAt(engine.playerCamera.location, engine.playerCamera.location + engine.playerCamera.direction.forward, engine.playerCamera.direction.up)));
+	projectionMat = glm::perspective(glm::radians(engine.FOV), engine.GetAspectRatio(), engine.nearClip, engine.farClip);
 
 	glUniformMatrix4fv(glGetUniformLocation(engine.activeShaderProgram, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
 	glUniformMatrix4fv(glGetUniformLocation(engine.activeShaderProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(projectionMat));

@@ -1,4 +1,5 @@
-﻿#include "Engine.h"
+﻿#pragma once
+#include "Engine.h"
 #include "iostream"
 #include "GLTFLoader.h"
 
@@ -20,10 +21,15 @@ void Engine::InitEngine()
     glfwSwapInterval(1);
     gladLoadGL();
 
+    shaders.emplace("default", Shader("./shaders/default.vert", "./shaders/default.frag"));
+    shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag"));
+    shaders.emplace("frameBuffer", Shader("./shaders/frameBuffer.vert", "./shaders/frameBuffer.frag"));
+
     renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
     skyBox.LoadSkybox();
+    fbo.Init(windowWidth, windowHeight);
 
     activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
     activeScene.modelPaths.push_back("./assets/models/Lantern.gltf");
@@ -34,7 +40,6 @@ void Engine::InitEngine()
         mesh->transform.location = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->transform.scale = glm::vec3(10.0f);
-
         mesh->InitMesh();
     }
 
@@ -43,7 +48,6 @@ void Engine::InitEngine()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-
     glViewport(0, 0, windowWidth, windowHeight);
 
     engineInitialized = true;
@@ -69,10 +73,10 @@ void Engine::RunEngine()
             counter = 0;
         }
 
-        static Shader defaultShader("./shaders/default.vert", "./shaders/default.frag");
-        defaultShader.Activate();
+        fbo.Bind();
 
         ClearWindow();
+        shaders.at("default").Activate();
 
         playerCamera.NavigateCamera();
         playerCamera.ApplyCamMatrix();
@@ -86,10 +90,13 @@ void Engine::RunEngine()
             mesh->DrawMesh();
         }
 
-        static Shader skyBoxShader("./shaders/skyBox.vert", "./shaders/skyBox.frag");
-        skyBoxShader.Activate();
-
+        shaders.at("skyBox").Activate();
         skyBox.DrawSkybox();
+
+        fbo.Unbind();
+
+        shaders.at("frameBuffer").Activate();
+        fbo.DrawFrameBuffer();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

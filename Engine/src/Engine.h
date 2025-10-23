@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include <Scene.h>
 #include "Skybox.h"
+#include "map"
 
 class Engine
 {
@@ -22,6 +23,8 @@ private:
 	Scene activeScene;
 	RenderMode renderMode;
 	Skybox skyBox;
+	std::map<std::string, Shader> shaders;
+	FBO fbo;
 
 public:
 	GLFWwindow* window = nullptr;
