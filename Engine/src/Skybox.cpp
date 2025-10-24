@@ -90,7 +90,6 @@ void Skybox::DrawSkybox()
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_CULL_FACE);
 
-
 	glm::mat4 viewMat = glm::mat4(1.0f);
 	glm::mat4 projectionMat = glm::mat4(1.0f);
 

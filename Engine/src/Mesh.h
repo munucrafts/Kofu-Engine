@@ -4,7 +4,7 @@
 #include "glm/glm.hpp"
 #include "Buffers.h"
 #include "Shader.h"
-#include "Textures.h"
+#include "Texture.h"
 #include "Components.h"
 #include "Camera.h"
 

@@ -174,10 +174,12 @@ public:
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
-	void DrawFrameBuffer()
+	void DrawFrameBuffer(const GLuint shaderProgram)
 	{
 		rectVao.Bind();
+		glUniform1i(glGetUniformLocation(shaderProgram, "screenTexture"), 0);
 		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}

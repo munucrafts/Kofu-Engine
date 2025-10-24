@@ -25,7 +25,7 @@ void Engine::InitEngine()
     shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag"));
     shaders.emplace("frameBuffer", Shader("./shaders/frameBuffer.vert", "./shaders/frameBuffer.frag"));
 
-    renderMode = LIT;
+    renderMode = UNLIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
     skyBox.LoadSkybox();
@@ -96,7 +96,7 @@ void Engine::RunEngine()
         fbo.Unbind();
 
         shaders.at("frameBuffer").Activate();
-        fbo.DrawFrameBuffer();
+        fbo.DrawFrameBuffer(activeShaderProgram);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -121,6 +121,7 @@ void Engine::ClearWindow()
     glClearColor(0.38f, 0.67f, 0.94f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
