@@ -3,7 +3,7 @@
 
 void Scene::LoadScene()
 {
-	for (const std::string path : modelPaths)
+	for (const std::string& path : modelPaths)
 	{
 		GLTFLoader::GetGltfLoader().LoadGltfModel(path, this);
 	}

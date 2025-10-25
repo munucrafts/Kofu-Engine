@@ -20,7 +20,6 @@ public:
 
 public:
 	Transform transform;
-
 	Texture baseTex;
 	Texture normalTex;
 	Texture metallicTex;
