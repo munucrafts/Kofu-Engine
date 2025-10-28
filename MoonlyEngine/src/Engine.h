@@ -21,10 +21,12 @@ public:
 private:
 	bool engineInitialized = false;
 	Scene activeScene;
-	RenderMode renderMode;
+	RenderMode renderMode = LIT;
 	Skybox skyBox;
 	std::map<std::string, Shader> shaders;
-	FBO fbo;
+	FBO ppFbo;
+	MSAA_FBO msaaFbo;
+	unsigned int msaaSamples = 8;
 
 public:
 	GLFWwindow* window = nullptr;

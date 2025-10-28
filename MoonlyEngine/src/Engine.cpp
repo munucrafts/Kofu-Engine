@@ -16,7 +16,7 @@ void Engine::InitEngine()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(windowWidth, windowHeight, "Engine", nullptr, nullptr);
+    window = glfwCreateWindow(windowWidth, windowHeight, "Moonly Engine", nullptr, nullptr);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
     gladLoadGL();
@@ -29,7 +29,8 @@ void Engine::InitEngine()
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
     skyBox.LoadSkybox();
-    fbo.Init(windowWidth, windowHeight);
+    msaaFbo.Init(windowWidth, windowHeight, msaaSamples);
+    ppFbo.Init(windowWidth, windowHeight);
 
     activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
     activeScene.modelPaths.push_back("./assets/models/Lantern.gltf");
@@ -67,13 +68,13 @@ void Engine::RunEngine()
         if (timeDiff >= 1.0f / 30.0f)
         {
             std::string FPS = std::to_string((int)(1.0f / timeDiff) * counter);
-            std::string statLine = "Engine : [ FPS = " + FPS + " ]";
+            std::string statLine = "Moonly Engine [ FPS : " + FPS + " ]";
             glfwSetWindowTitle(window, statLine.c_str());
             prevTime = currentTime;
             counter = 0;
         }
 
-        fbo.Bind();
+        msaaFbo.Bind();
 
         ClearWindow();
         shaders.at("default").Activate();
@@ -93,10 +94,11 @@ void Engine::RunEngine()
         shaders.at("skyBox").Activate();
         skyBox.DrawSkybox();
 
-        fbo.Unbind();
+        msaaFbo.DrawMSAA(ppFbo, windowWidth, windowHeight);
+        msaaFbo.Unbind();
 
         shaders.at("frameBuffer").Activate();
-        fbo.DrawFrameBuffer(activeShaderProgram);
+        ppFbo.DrawFBO(activeShaderProgram);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

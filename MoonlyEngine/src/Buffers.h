@@ -22,7 +22,7 @@ public:
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 	}
 
-	void Init(float* vertices, int size)
+	void Init(float* vertices, const int size)
 	{
 		glGenBuffers(1, &id);
 		glBindBuffer(GL_ARRAY_BUFFER, id);
@@ -98,7 +98,7 @@ public:
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 	}
 
-	void Init(unsigned int* indices, int size)
+	void Init(unsigned int* indices, const int size)
 	{
 		glGenBuffers(1, &id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
@@ -127,7 +127,6 @@ private:
 	GLuint id;
 	GLuint texture;
 	GLuint rbo;
-
 	VAO rectVao;
 	VBO rectVbo;
 	float rectVertices[24] =
@@ -145,7 +144,12 @@ private:
 public:
 	FBO() = default;
 
-	void Init(int width, int height)
+	GLuint GetId()
+	{
+		return id;
+	}
+
+	void Init(const int width, const int height)
 	{
 		rectVao.Init();
 		rectVao.Bind();
@@ -174,7 +178,7 @@ public:
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
 
-	void DrawFrameBuffer(const GLuint shaderProgram)
+	void DrawFBO(const GLuint shaderProgram)
 	{
 		rectVao.Bind();
 		glUniform1i(glGetUniformLocation(shaderProgram, "screenTexture"), 0);
@@ -182,6 +186,59 @@ public:
 		glDisable(GL_CULL_FACE);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
+	void Bind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, id);
+	}
+
+	void Unbind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void Delete()
+	{
+		glDeleteFramebuffers(1, &id);
+	}
+};
+
+struct MSAA_FBO
+{
+private:
+	GLuint id;
+	GLuint texture;
+	GLuint rbo;
+
+public:
+	MSAA_FBO() = default;
+
+	void Init(const int width, const int height, const int samples)
+	{
+		glGenFramebuffers(1, &id);
+		glBindFramebuffer(GL_FRAMEBUFFER, id);
+
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, width, height, GL_TRUE);
+		glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture, 0);
+
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	}
+
+	void DrawMSAA(FBO& fbo, const int width, const int height)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, id);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo.GetId());
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	void Bind()
