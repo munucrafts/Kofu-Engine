@@ -1,4 +1,4 @@
-#version 330 core
+﻿#version 330 core
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
@@ -16,9 +16,11 @@ uniform mat4 projMat;
 
 void main()
 {
-    gl_Position = projMat * viewMat * modelMat * vec4(aPosition, 1.0f);
-    color = aColor;
+    vec4 worldPos = modelMat * vec4(aPosition, 1.0);
+    gl_Position = projMat * viewMat * worldPos;
+
+    currentPos = worldPos.xyz;
+    normal = normalize(mat3(transpose(inverse(modelMat))) * aNormal);  // ✅ Correct
     texCoord = aTexCoord;
-    currentPos = vec3(modelMat * vec4(aPosition, 1.0f));
-    normal = aNormal;
+    color = aColor;
 }

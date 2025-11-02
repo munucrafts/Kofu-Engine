@@ -22,7 +22,7 @@ uniform vec3 camPos;
 
 float MakeLinearDepth(float depth)
 {
-    return (2.0 * nearClip * farClip) / (farClip + nearClip - (depth * 2.0 - 1.0) * (farClip - nearClip));
+    return (2.0f * nearClip * farClip) / (farClip + nearClip - (depth * 2.0f - 1.0f) * (farClip - nearClip));
 }
 
 void main()
@@ -37,18 +37,18 @@ void main()
             vec3 norm = normalize(normal);
             vec3 lightDir = normalize(lightPos - currentPos);
 
-            float diffuse = max(dot(norm, lightDir), 0.0);
+            float diffuse = max(dot(norm, lightDir), 0.0f);
 
-            float specularStrength = 0.5;
+            float specularStrength = 0.7f;
             vec3 viewDir = normalize(camPos - currentPos);
             vec3 reflectDir = reflect(-lightDir, norm);
-            float spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 8.0f);
             float specular = specularStrength * spec;
 
-            float ambient = 0.2;
+            float ambient = 0.2f;
 
             vec3 lighting = (ambient + diffuse + specular) * lightCol.rgb;
-            fragColor = vec4(baseColor.rgb * lighting, 1.0);
+            fragColor = vec4(baseColor.rgb * lighting, 1.0f);
         }
         break;
 
@@ -61,18 +61,18 @@ void main()
         case 2:
         {
             float linearDepth = MakeLinearDepth(gl_FragCoord.z);
-            fragColor = vec4(vec3(linearDepth / farClip), 1.0);
+            fragColor = vec4(vec3(linearDepth / farClip), 1.0f);
         }
         break;
 
         // Normal mode
         case 3:
-            fragColor = vec4(normalize(normal) * 0.5 + 0.5, 1.0);
+            fragColor = vec4(normalize(normal) * 0.5f + 0.5f, 1.0f);
             break;
 
         // Default fallback
         default:
-            fragColor = vec4(1.0, 0.0, 1.0, 1.0);
+            fragColor = vec4(1.0f, 0.0f, 1.0f, 1.0f);
             break;
     }
 }

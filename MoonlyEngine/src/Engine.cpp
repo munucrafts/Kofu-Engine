@@ -26,14 +26,14 @@ void Engine::InitEngine()
     shaders.emplace("frameBuffer", Shader("./shaders/frameBuffer.vert", "./shaders/frameBuffer.frag"));
     shaders.emplace("light", Shader("./shaders/light.vert", "./shaders/light.frag"));
 
-    renderMode = UNLIT;
+    renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
     skyBox.LoadSkybox();
     msaaFbo.Init(windowWidth, windowHeight, msaaSamples);
     ppFbo.Init(windowWidth, windowHeight);
 
-    directionalLight = { glm::vec4(0.4f, 0.8f, 0.5f, 1.0f), glm::vec3(10.0f, 15.0f, 0.0f) };
+    directionalLight = { glm::vec4(1.0f), glm::vec3(10.0f, 15.0f, 0.0f) };
     directionalLight.Init();
 
     activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
