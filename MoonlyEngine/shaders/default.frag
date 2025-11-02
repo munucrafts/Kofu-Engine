@@ -25,36 +25,43 @@ float MakeLinearDepth(float depth)
     return (2.0f * nearClip * farClip) / (farClip + nearClip - (depth * 2.0f - 1.0f) * (farClip - nearClip));
 }
 
+vec4 PointLight()
+{
+    vec3 lightVec = lightPos - currentPos;
+    float dist = length(lightVec);
+    float a = 3.0f;
+    float b = 0.05f;
+    float inten = 10.0f / (a * dist * dist + b * dist + 1.0f);
+
+    float ambient = 0.2f;
+
+    vec3 norm = normalize(normal);
+    vec3 lightDir = normalize(lightVec);
+    float diffuse = max(dot(norm, lightDir), 0.0f);
+
+    float specularStrength = 0.7f;
+    vec3 viewDir = normalize(camPos - currentPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 4.0f);
+    float specular = specularStrength * spec;
+
+    return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular)) * lightCol;
+}
+
 void main()
 {
-    vec4 baseColor = texture(baseTex, texCoord);
-
     switch (renderMode)
     {
         // Lit mode
         case 0:
         {
-            vec3 norm = normalize(normal);
-            vec3 lightDir = normalize(lightPos - currentPos);
-
-            float diffuse = max(dot(norm, lightDir), 0.0f);
-
-            float specularStrength = 0.7f;
-            vec3 viewDir = normalize(camPos - currentPos);
-            vec3 reflectDir = reflect(-lightDir, norm);
-            float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 8.0f);
-            float specular = specularStrength * spec;
-
-            float ambient = 0.2f;
-
-            vec3 lighting = (ambient + diffuse + specular) * lightCol.rgb;
-            fragColor = vec4(baseColor.rgb * lighting, 1.0f);
+            fragColor = PointLight();
         }
         break;
 
         // Unlit mode
         case 1:
-            fragColor = baseColor;
+            fragColor = texture(baseTex, texCoord);
             break;
 
         // Depth view mode

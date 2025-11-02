@@ -89,11 +89,9 @@ void Engine::RunEngine()
         glUniform1f(glGetUniformLocation(activeShaderProgram, "nearClip"), nearClip);
         glUniform1f(glGetUniformLocation(activeShaderProgram, "farClip"), farClip);
         glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
-
-        glUniform3f(glGetUniformLocation(activeShaderProgram, "lightPos"), directionalLight.location.x, directionalLight.location.y, directionalLight.location.z);
-        glUniform4f(glGetUniformLocation(activeShaderProgram, "lightCol"), directionalLight.color.r, directionalLight.color.g, directionalLight.color.b, directionalLight.color.a);
-
-        glUniform3f(glGetUniformLocation(activeShaderProgram, "camPos"), playerCamera.location.x, playerCamera.location.y, playerCamera.location.z);
+        glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPos"), 1, &directionalLight.location[0]);
+        glUniform4fv(glGetUniformLocation(activeShaderProgram, "lightCol"), 1, &directionalLight.color[0]);
+        glUniform3fv(glGetUniformLocation(activeShaderProgram, "camPos"), 1, &playerCamera.location[0]);
 
         for (Mesh* mesh : activeScene.meshes)
         {

@@ -20,7 +20,7 @@ void main()
     gl_Position = projMat * viewMat * worldPos;
 
     currentPos = worldPos.xyz;
-    normal = normalize(mat3(transpose(inverse(modelMat))) * aNormal);  // ✅ Correct
+    normal = normalize(mat3(transpose(inverse(modelMat))) * aNormal);
     texCoord = aTexCoord;
     color = aColor;
 }
