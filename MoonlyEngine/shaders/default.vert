@@ -7,6 +7,8 @@ layout(location = 3) in vec2 aTexCoord;
 
 out vec4 color;
 out vec2 texCoord;
+out vec3 currentPos;
+out vec3 normal;
 
 uniform mat4 modelMat;
 uniform mat4 viewMat;
@@ -17,4 +19,6 @@ void main()
     gl_Position = projMat * viewMat * modelMat * vec4(aPosition, 1.0f);
     color = aColor;
     texCoord = aTexCoord;
+    currentPos = vec3(modelMat * vec4(aPosition, 1.0f));
+    normal = aNormal;
 }

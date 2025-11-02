@@ -8,6 +8,7 @@
 #include <Scene.h>
 #include "Skybox.h"
 #include "map"
+#include <Light.h>
 
 class Engine
 {
@@ -27,6 +28,7 @@ private:
 	FBO ppFbo;
 	MSAA_FBO msaaFbo;
 	unsigned int msaaSamples = 8;
+	Light directionalLight;
 
 public:
 	GLFWwindow* window = nullptr;

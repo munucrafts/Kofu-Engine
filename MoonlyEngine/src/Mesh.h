@@ -14,6 +14,7 @@ public:
 	Mesh() = default;
 	Mesh(std::vector<Vertex> verts, std::vector<GLuint> inds);
 	~Mesh() = default;
+	void InitMeshManually();
 	virtual void InitMesh();
 	virtual void ClearMesh();
 	virtual void DrawMesh();

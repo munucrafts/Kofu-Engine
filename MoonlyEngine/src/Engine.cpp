@@ -24,6 +24,7 @@ void Engine::InitEngine()
     shaders.emplace("default", Shader("./shaders/default.vert", "./shaders/default.frag"));
     shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag"));
     shaders.emplace("frameBuffer", Shader("./shaders/frameBuffer.vert", "./shaders/frameBuffer.frag"));
+    shaders.emplace("light", Shader("./shaders/light.vert", "./shaders/light.frag"));
 
     renderMode = UNLIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
@@ -31,6 +32,9 @@ void Engine::InitEngine()
     skyBox.LoadSkybox();
     msaaFbo.Init(windowWidth, windowHeight, msaaSamples);
     ppFbo.Init(windowWidth, windowHeight);
+
+    directionalLight = { glm::vec4(0.4f, 0.8f, 0.5f, 1.0f), glm::vec3(10.0f, 15.0f, 0.0f) };
+    directionalLight.Init();
 
     activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
     activeScene.modelPaths.push_back("./assets/models/Lantern.gltf");
@@ -86,10 +90,19 @@ void Engine::RunEngine()
         glUniform1f(glGetUniformLocation(activeShaderProgram, "farClip"), farClip);
         glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
 
+        glUniform3f(glGetUniformLocation(activeShaderProgram, "lightPos"), directionalLight.location.x, directionalLight.location.y, directionalLight.location.z);
+        glUniform4f(glGetUniformLocation(activeShaderProgram, "lightCol"), directionalLight.color.r, directionalLight.color.g, directionalLight.color.b, directionalLight.color.a);
+
+        glUniform3f(glGetUniformLocation(activeShaderProgram, "camPos"), playerCamera.location.x, playerCamera.location.y, playerCamera.location.z);
+
         for (Mesh* mesh : activeScene.meshes)
         {
             mesh->DrawMesh();
         }
+        
+        shaders.at("light").Activate();
+        playerCamera.ApplyCamMatrix();
+        directionalLight.DrawLightMesh();
 
         shaders.at("skyBox").Activate();
         skyBox.DrawSkybox();
