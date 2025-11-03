@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "iostream"
 #include "GLTFLoader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 Engine& Engine::GetEngine()
 {
@@ -33,12 +34,12 @@ void Engine::InitEngine()
     msaaFbo.Init(windowWidth, windowHeight, msaaSamples);
     ppFbo.Init(windowWidth, windowHeight);
 
-    directionalLight = { glm::vec4(1.0f), glm::vec3(10.0f, 15.0f, 0.0f) };
-    directionalLight.Init();
-
     activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
     activeScene.modelPaths.push_back("./assets/models/Lantern.gltf");
     activeScene.LoadScene();
+
+    Light* light = new Light(glm::vec4(1.0f), glm::vec3(10.0f, 15.0f, 0.0f), SPOT_LIGHT);
+    activeScene.lights.emplace_back(light);
 
     for (Mesh* mesh : activeScene.meshes)
     {
@@ -46,6 +47,11 @@ void Engine::InitEngine()
         mesh->transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->transform.scale = glm::vec3(10.0f);
         mesh->InitMesh();
+    }
+
+    for (Light* light : activeScene.lights)
+    {
+        light->Init();
     }
 
     glEnable(GL_DEPTH_TEST);
@@ -81,27 +87,38 @@ void Engine::RunEngine()
         msaaFbo.Bind();
 
         ClearWindow();
-        shaders.at("default").Activate();
 
-        playerCamera.NavigateCamera();
+        shaders.at("light").Activate();
         playerCamera.ApplyCamMatrix();
+
+        for (Light* light : activeScene.lights)
+        {
+            light->DrawLightMesh();
+        }
+
+        shaders.at("default").Activate();
 
         glUniform1f(glGetUniformLocation(activeShaderProgram, "nearClip"), nearClip);
         glUniform1f(glGetUniformLocation(activeShaderProgram, "farClip"), farClip);
         glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
-        glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPos"), 1, &directionalLight.location[0]);
-        glUniform4fv(glGetUniformLocation(activeShaderProgram, "lightCol"), 1, &directionalLight.color[0]);
-        glUniform3fv(glGetUniformLocation(activeShaderProgram, "camPos"), 1, &playerCamera.location[0]);
+        glUniform3fv(glGetUniformLocation(activeShaderProgram, "camPos"), 1, glm::value_ptr(playerCamera.location));
+
+        for (Light* light : activeScene.lights)
+        {
+            glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPos"), 1, glm::value_ptr(light->location));
+            glUniform4fv(glGetUniformLocation(activeShaderProgram, "lightCol"), 1, glm::value_ptr(light->color));
+            glUniform1i(glGetUniformLocation(activeShaderProgram, "lightType"), (int)light->lightType);
+        }
+
+        playerCamera.NavigateCamera();
+        playerCamera.ApplyCamMatrix();
 
         for (Mesh* mesh : activeScene.meshes)
         {
             mesh->DrawMesh();
         }
-        
-        shaders.at("light").Activate();
-        playerCamera.ApplyCamMatrix();
-        directionalLight.DrawLightMesh();
 
+        
         shaders.at("skyBox").Activate();
         skyBox.DrawSkybox();
 

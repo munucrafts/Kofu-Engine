@@ -9,7 +9,7 @@ GLTFLoader& GLTFLoader::GetGltfLoader()
 	return instance;
 }
 
-void GLTFLoader::LoadGltfModel(const std::string& path, Scene* currentScene)
+std::vector<Mesh*> GLTFLoader::LoadGltfModel(const std::string& path)
 {
 	std::string error, warning;
 	gltfLoader.LoadASCIIFromFile(&gltfModel, &error, &warning, path);
@@ -22,8 +22,6 @@ void GLTFLoader::LoadGltfModel(const std::string& path, Scene* currentScene)
 
 	const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene];
 
-	scenePtr = currentScene;
-
 	for (int i = 0; i < scene.nodes.size(); i++)
 	{
 		if (scene.nodes[i] >= 0 && scene.nodes[i] < gltfModel.nodes.size())
@@ -32,7 +30,10 @@ void GLTFLoader::LoadGltfModel(const std::string& path, Scene* currentScene)
 		}
 	}
 
-	scenePtr = nullptr;
+	std::vector<Mesh*> meshes = meshesArray;
+	meshesArray.clear();
+
+	return meshes;
 }
 
 void GLTFLoader::LoadGltfNode(tinygltf::Node& node)
@@ -225,5 +226,5 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		}
 	}
 
-	scenePtr->meshes.emplace_back(mesh);
+	meshesArray.emplace_back(mesh);
 }

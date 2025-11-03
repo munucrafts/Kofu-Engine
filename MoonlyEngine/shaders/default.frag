@@ -20,6 +20,8 @@ uniform vec3 lightPos;
 uniform vec4 lightCol;
 uniform vec3 camPos;
 
+uniform int lightType;
+
 float MakeLinearDepth(float depth)
 {
     return (2.0f * nearClip * farClip) / (farClip + nearClip - (depth * 2.0f - 1.0f) * (farClip - nearClip));
@@ -48,6 +50,47 @@ vec4 PointLight()
     return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular)) * lightCol;
 }
 
+vec4 DirectionalLight()
+{
+    float ambient = 0.2f;
+
+    vec3 norm = normalize(normal);
+    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f));
+    float diffuse = max(dot(norm, lightDir), 0.0f);
+
+    float specularStrength = 0.7f;
+    vec3 viewDir = normalize(camPos - currentPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 4.0f);
+    float specular = specularStrength * spec;
+
+    return (texture(baseTex, texCoord) * (diffuse + ambient + specular)) * lightCol * 1.f;
+}
+
+vec4 SpotLight()
+{
+    float outerCone = 0.9f;
+    float innerCone = 0.95f;
+
+    float ambient = 0.2f;
+
+    vec3 norm = normalize(normal);
+    vec3 lightVec = lightPos - currentPos;
+    vec3 lightDir = normalize(lightVec);
+    float diffuse = max(dot(norm, lightDir), 0.0f);
+
+    float specularStrength = 0.7f;
+    vec3 viewDir = normalize(camPos - currentPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 4.0f);
+    float specular = specularStrength * spec;
+
+    float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDir);
+    float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
+
+    return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular * inten)) * lightCol;
+}
+
 void main()
 {
     switch (renderMode)
@@ -55,7 +98,7 @@ void main()
         // Lit mode
         case 0:
         {
-            fragColor = PointLight();
+            fragColor = lightType == 0 ? PointLight() : lightType == 1 ? SpotLight() : DirectionalLight();
         }
         break;
 

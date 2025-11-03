@@ -2,10 +2,11 @@
 #include "glad/glad.h"
 
 
-Light::Light(const glm::vec4& col, const glm::vec3& loc)
+Light::Light(const glm::vec4& col, const glm::vec3& loc, const LightType& type)
 {
 	location = loc;
 	color = col;
+    lightType = type;
 
     lightVertices =
     {
@@ -46,5 +47,6 @@ void Light::Init()
 
 void Light::DrawLightMesh()
 {
-	lightMesh.DrawMesh();
+    if (lightType != DIRECTIONAL_LIGHT)
+	    lightMesh.DrawMesh();
 }

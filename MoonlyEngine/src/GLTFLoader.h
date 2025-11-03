@@ -7,13 +7,13 @@
 class GLTFLoader
 {
 public:
-	void LoadGltfModel(const std::string& path, Scene* currentScene);
+	std::vector<Mesh*> LoadGltfModel(const std::string& path);
 	static GLTFLoader& GetGltfLoader();
 
 private:
 	tinygltf::Model gltfModel;
 	tinygltf::TinyGLTF gltfLoader;
-	Scene* scenePtr = nullptr;
+	std::vector<Mesh*> meshesArray;
 
 private:
 	void LoadGltfNode(tinygltf::Node& node);

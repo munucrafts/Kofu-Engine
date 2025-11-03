@@ -5,7 +5,7 @@ void Scene::LoadScene()
 {
 	for (const std::string& path : modelPaths)
 	{
-		GLTFLoader::GetGltfLoader().LoadGltfModel(path, this);
+		meshes = GLTFLoader::GetGltfLoader().LoadGltfModel(path);
 	}
 }
 
@@ -16,5 +16,6 @@ void Scene::UnloadScene()
 		delete mesh;
 	}
 
+	lights.clear();
 	meshes.clear();
 }
