@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <glm/ext/vector_float3.hpp>
 #include <Mesh.h>
+#include "iostream"
+#include "vector"
 
 enum LightType
 {

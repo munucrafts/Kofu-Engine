@@ -19,7 +19,6 @@ uniform int renderMode;
 uniform vec3 lightPos;
 uniform vec4 lightCol;
 uniform vec3 camPos;
-
 uniform int lightType;
 
 float MakeLinearDepth(float depth)
@@ -41,11 +40,15 @@ vec4 PointLight()
     vec3 lightDir = normalize(lightVec);
     float diffuse = max(dot(norm, lightDir), 0.0f);
 
-    float specularStrength = 0.7f;
-    vec3 viewDir = normalize(camPos - currentPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 4.0f);
-    float specular = specularStrength * spec;
+    float specular  = 0.0f;
+	if (diffuse != 0.0f)
+	{
+		float specularLight = 0.50f;
+		vec3 viewDir = normalize(camPos - currentPos);
+		vec3 halfwayVec = normalize(viewDir + lightDir);
+		float specAmount = pow(max(dot(normal, halfwayVec), 0.0f), 16);
+		specular = specAmount * specularLight;
+	};
 
     return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular)) * lightCol;
 }
@@ -58,11 +61,15 @@ vec4 DirectionalLight()
     vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f));
     float diffuse = max(dot(norm, lightDir), 0.0f);
 
-    float specularStrength = 0.7f;
-    vec3 viewDir = normalize(camPos - currentPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 4.0f);
-    float specular = specularStrength * spec;
+    float specular  = 0.0f;
+	if (diffuse != 0.0f)
+	{
+		float specularLight = 0.50f;
+		vec3 viewDir = normalize(camPos - currentPos);
+		vec3 halfwayVec = normalize(viewDir + lightDir);
+		float specAmount = pow(max(dot(normal, halfwayVec), 0.0f), 16);
+		specular = specAmount * specularLight;
+	};
 
     return (texture(baseTex, texCoord) * (diffuse + ambient + specular)) * lightCol * 1.f;
 }
@@ -79,11 +86,15 @@ vec4 SpotLight()
     vec3 lightDir = normalize(lightVec);
     float diffuse = max(dot(norm, lightDir), 0.0f);
 
-    float specularStrength = 0.7f;
-    vec3 viewDir = normalize(camPos - currentPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 4.0f);
-    float specular = specularStrength * spec;
+    float specular  = 0.0f;
+	if (diffuse != 0.0f)
+	{
+		float specularLight = 0.50f;
+		vec3 viewDir = normalize(camPos - currentPos);
+		vec3 halfwayVec = normalize(viewDir + lightDir);
+		float specAmount = pow(max(dot(normal, halfwayVec), 0.0f), 16);
+		specular = specAmount * specularLight;
+	};
 
     float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDir);
     float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);

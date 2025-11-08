@@ -1,6 +1,5 @@
 #pragma once
 #include "stb_image.h"
-#include "Buffers.h"
 
 struct Shader
 {

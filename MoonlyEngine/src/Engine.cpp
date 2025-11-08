@@ -3,6 +3,8 @@
 #include "iostream"
 #include "GLTFLoader.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "RenderTarget.h"
+#include "../ScreenQuad.h"
 
 Engine& Engine::GetEngine()
 {
@@ -24,21 +26,17 @@ void Engine::InitEngine()
 
     shaders.emplace("default", Shader("./shaders/default.vert", "./shaders/default.frag"));
     shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag"));
-    shaders.emplace("frameBuffer", Shader("./shaders/frameBuffer.vert", "./shaders/frameBuffer.frag"));
+    shaders.emplace("screen", Shader("./shaders/screen.vert", "./shaders/screen.frag"));
     shaders.emplace("light", Shader("./shaders/light.vert", "./shaders/light.frag"));
 
     renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
-    skyBox.LoadSkybox();
-    msaaFbo.Init(windowWidth, windowHeight, msaaSamples);
-    ppFbo.Init(windowWidth, windowHeight);
-
     activeScene.modelPaths.push_back("./assets/models/medieval.gltf");
     activeScene.modelPaths.push_back("./assets/models/Lantern.gltf");
     activeScene.LoadScene();
 
-    Light* light = new Light(glm::vec4(1.0f), glm::vec3(10.0f, 15.0f, 0.0f), SPOT_LIGHT);
+    Light* light = new Light(glm::vec4(1.0f), glm::vec3(10.0f, -2.0f, 0.0f), DIRECTIONAL_LIGHT);
     activeScene.lights.emplace_back(light);
 
     for (Mesh* mesh : activeScene.meshes)
@@ -69,6 +67,13 @@ void Engine::RunEngine()
     float prevTime = 0.0f, currentTime = 0.0f, timeDiff = 0.0f;
     int counter = 0;
 
+    Skybox skyBox;
+    skyBox.LoadSkybox();
+    ScreenQuad screenQuad;
+    screenQuad.Init();
+    FBO msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
+    FBO ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
+
     while (!glfwWindowShouldClose(window) && engineInitialized)
     {
         currentTime = (float)glfwGetTime();
@@ -84,7 +89,7 @@ void Engine::RunEngine()
             counter = 0;
         }
 
-        msaaFbo.Bind();
+        msaaSceneFBO.Bind();
 
         ClearWindow();
 
@@ -117,16 +122,23 @@ void Engine::RunEngine()
         {
             mesh->DrawMesh();
         }
-
         
         shaders.at("skyBox").Activate();
         skyBox.DrawSkybox();
 
-        msaaFbo.DrawMSAA(ppFbo, windowWidth, windowHeight);
-        msaaFbo.Unbind();
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ppFBO.id);
+        glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        msaaSceneFBO.Unbind();
 
-        shaders.at("frameBuffer").Activate();
-        ppFbo.DrawFBO(activeShaderProgram);
+        shaders.at("screen").Activate();
+        screenQuad.vao.Bind();
+        glUniform1i(glGetUniformLocation(activeShaderProgram, "screenTexture"), 0);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+        glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        screenQuad.Draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -1,5 +1,7 @@
 #pragma once
-#include "Buffers.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
 class Skybox
 {

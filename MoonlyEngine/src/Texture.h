@@ -1,6 +1,5 @@
 #pragma once
 #include "stb_image.h"
-#include "Buffers.h"
 #include <glad/glad.h>
 
 struct Texture

@@ -2,6 +2,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "GLTFLoader.h"
 #include "Scene.h"
+#include <iostream>
 
 GLTFLoader& GLTFLoader::GetGltfLoader()
 {

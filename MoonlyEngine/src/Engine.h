@@ -2,13 +2,14 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
-#include "Buffers.h"
+#include "FBO.h"
 #include "Shader.h"
 #include "Mesh.h"
 #include <Scene.h>
 #include "Skybox.h"
 #include "map"
 #include <Light.h>
+#include <FBO.h>
 
 class Engine
 {
@@ -23,11 +24,7 @@ private:
 	bool engineInitialized = false;
 	Scene activeScene;
 	RenderMode renderMode = LIT;
-	Skybox skyBox;
 	std::map<std::string, Shader> shaders;
-	FBO ppFbo;
-	MSAA_FBO msaaFbo;
-	unsigned int msaaSamples = 8;
 
 public:
 	GLFWwindow* window = nullptr;
