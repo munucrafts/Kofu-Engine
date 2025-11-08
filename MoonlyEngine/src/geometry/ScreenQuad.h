@@ -1,5 +1,5 @@
 #pragma once
-#include <VAO.h>
+#include <buffers/VAO.h>
 
 class ScreenQuad
 {

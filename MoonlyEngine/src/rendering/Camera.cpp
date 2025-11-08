@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "rendering/Camera.h"
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>

@@ -1,5 +1,5 @@
 #pragma once
-#include "FBO.h"
+#include "buffers/FBO.h"
 
 namespace RenderTarget
 {
@@ -20,14 +20,14 @@ namespace RenderTarget
     FBO CreateShadowTarget(int width, int height)
     {
         FBO fb;
-        FramebufferSpec s;
-        s.width = width;
-        s.height = height;
-        s.hasColor = false;
-        s.hasDepth = true;
-        s.colorInternalFormat = GL_NONE;
-        s.depthInternalFormat = GL_DEPTH_COMPONENT32;
-        fb.Init(s);
+        FramebufferSpec specs;
+        specs.width = width;
+        specs.height = height;
+        specs.hasColor = false;
+        specs.hasDepth = true;
+        specs.colorInternalFormat = GL_NONE;
+        specs.depthInternalFormat = GL_DEPTH_COMPONENT32;
+        fb.Init(specs);
         return fb;
     }
 }

@@ -3,7 +3,7 @@
 #include "vector"
 #include <fstream>
 #include <sstream>
-#include "Components.h"
+#include "components/Components.h"
 #include <glad/glad.h>
 
 class VBO

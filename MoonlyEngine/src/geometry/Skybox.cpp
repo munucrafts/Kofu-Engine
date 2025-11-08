@@ -1,5 +1,5 @@
 #pragma once
-#include "Skybox.h"
+#include "geometry/Skybox.h"
 #include "stb_image.h"
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>

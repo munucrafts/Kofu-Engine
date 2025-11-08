@@ -1,4 +1,4 @@
-#include "VBO.h"
+#include "buffers/VBO.h"
 
 void VBO::Init(std::vector<Vertex>& vertices)
 {

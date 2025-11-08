@@ -1,4 +1,4 @@
-#include "FBO.h"
+#include "buffers/FBO.h"
 
 void FBO::Init(const FramebufferSpec& specData)
 {

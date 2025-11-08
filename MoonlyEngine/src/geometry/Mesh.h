@@ -2,13 +2,13 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
-#include "Shader.h"
-#include "Texture.h"
-#include "Components.h"
-#include "Camera.h"
+#include "buffers/VAO.h"
+#include "buffers/VBO.h"
+#include "buffers/EBO.h"
+#include "rendering/Shader.h"
+#include "rendering/Texture.h"
+#include "components/Components.h"
+#include "rendering/Camera.h"
 
 class Mesh
 {

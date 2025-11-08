@@ -3,10 +3,10 @@
 #include "vector"
 #include <fstream>
 #include <sstream>
-#include "Components.h"
+#include "components/Components.h"
 #include <glad/glad.h>
-#include "VAO.h"
-#include "VBO.h"
+#include "buffers/VAO.h"
+#include "buffers/VBO.h"
 
 struct FramebufferSpec
 {

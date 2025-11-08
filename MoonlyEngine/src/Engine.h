@@ -2,14 +2,13 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
-#include "FBO.h"
-#include "Shader.h"
-#include "Mesh.h"
-#include <Scene.h>
-#include "Skybox.h"
+#include "buffers/FBO.h"
+#include "rendering/Shader.h"
+#include "geometry/mesh.h"
+#include <rendering/scene.h>
+#include "geometry/Skybox.h"
 #include "map"
-#include <Light.h>
-#include <FBO.h>
+#include <rendering/Light.h>
 
 class Engine
 {

@@ -1,5 +1,5 @@
 #pragma once 
-#include "Texture.h"
+#include "rendering/Texture.h"
 
 Texture::Texture(const char* path)
 {

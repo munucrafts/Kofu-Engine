@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "Engine.h"
 #include "iostream"
-#include "GLTFLoader.h"
+#include "geometry/GLTFLoader.h"
 #include <glm/gtc/type_ptr.hpp>
-#include "RenderTarget.h"
-#include "../ScreenQuad.h"
+#include "rendering/RenderTarget.h"
+#include "geometry/ScreenQuad.h"
 
 Engine& Engine::GetEngine()
 {

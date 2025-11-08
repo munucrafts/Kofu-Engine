@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include "Shader.h"
+#include "rendering/Shader.h"
 
 Shader::Shader(const std::string& vertPath, const std::string& fragPath)
 {

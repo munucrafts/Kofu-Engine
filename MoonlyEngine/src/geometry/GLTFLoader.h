@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include <Mesh.h>
+#include <geometry/mesh.h>
 #include "tiny_gltf.h"
-#include <Scene.h>
+#include <rendering/scene.h>
 
 class GLTFLoader
 {

@@ -1,5 +1,5 @@
-#include "Scene.h"
-#include <GLTFLoader.h>
+#include "rendering/scene.h"
+#include <geometry/GLTFLoader.h>
 
 void Scene::LoadScene()
 {

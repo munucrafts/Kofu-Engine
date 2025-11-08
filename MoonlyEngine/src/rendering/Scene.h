@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include <Mesh.h>
-#include <Light.h>
+#include <geometry/mesh.h>
+#include <rendering/Light.h>
 
 struct Scene
 {
