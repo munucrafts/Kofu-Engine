@@ -1,4 +1,4 @@
-project "MoonlyEngine"
+project "KofuEngine"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"

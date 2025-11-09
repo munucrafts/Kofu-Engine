@@ -1,5 +1,4 @@
-#pragma once
-#include "buffers/FBO.h"
+#include "RenderTarget.h"
 
 namespace RenderTarget
 {

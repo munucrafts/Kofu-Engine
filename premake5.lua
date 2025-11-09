@@ -1,7 +1,7 @@
--- MoonlyEngine
-workspace "MoonlyEngine"
+-- KofuEngine
+workspace "KofuEngine"
 	architecture "x64"
-	startproject "MoonlyEngine"
+	startproject "KofuEngine"
 
 	-- Force Visual Studio 2022 toolset toolset "v143"
 	toolset "v143"
@@ -19,7 +19,7 @@ workspace "MoonlyEngine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
--- Include directories relative to MoonlyEngine
+-- Include directories relative to KofuEngine
 IncludeDir = {}
 IncludeDir["GLFW"] = "vendor/GLFW/include"
 IncludeDir["Glad"] = "vendor/Glad/include"
@@ -31,10 +31,10 @@ IncludeDir["tinygltf"] = "vendor/tinygltf"
 
 -- Projects
 group "Dependencies"
-	include "MoonlyEngine/vendor/GLFW"
-	include "MoonlyEngine/vendor/Glad"
-	include "MoonlyEngine/vendor/imgui"
+	include "KofuEngine/vendor/GLFW"
+	include "KofuEngine/vendor/Glad"
+	include "KofuEngine/vendor/imgui"
 group ""
 
-include "MoonlyEngine"
-include "MoonlyEngine"
+include "KofuEngine"
+include "KofuEngine"

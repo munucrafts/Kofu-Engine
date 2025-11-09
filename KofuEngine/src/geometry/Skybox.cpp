@@ -86,7 +86,7 @@ void Skybox::LoadSkybox()
 
 void Skybox::DrawSkybox()
 {
-	glUniform1i(glGetUniformLocation(Engine::GetEngine().activeShaderProgram, "skyBox"), 0);
+	glUniform1i(glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "skyBox"), 0);
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_CULL_FACE);
 
@@ -95,11 +95,11 @@ void Skybox::DrawSkybox()
 
 	Engine& engine = Engine::GetEngine();
 
-	viewMat = glm::mat4(glm::mat3(glm::lookAt(engine.playerCamera.location, engine.playerCamera.location + engine.playerCamera.direction.forward, engine.playerCamera.direction.up)));
-	projectionMat = glm::perspective(glm::radians(engine.FOV), engine.GetAspectRatio(), engine.nearClip, engine.farClip);
+	viewMat = glm::mat4(glm::mat3(glm::lookAt(engine.activeScene->playerCamera.location, engine.activeScene->playerCamera.location + engine.activeScene->playerCamera.direction.forward, engine.activeScene->playerCamera.direction.up)));
+	projectionMat = glm::perspective(glm::radians(engine.activeScene->playerCamera.FOV), engine.GetAspectRatio(), engine.activeScene->playerCamera.nearClip, engine.activeScene->playerCamera.farClip);
 
-	glUniformMatrix4fv(glGetUniformLocation(engine.activeShaderProgram, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
-	glUniformMatrix4fv(glGetUniformLocation(engine.activeShaderProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(projectionMat));
+	glUniformMatrix4fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
+	glUniformMatrix4fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(projectionMat));
 
 	vao.Bind();
 	glActiveTexture(GL_TEXTURE0);

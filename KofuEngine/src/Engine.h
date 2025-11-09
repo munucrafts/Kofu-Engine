@@ -17,28 +17,21 @@ public:
 	void InitEngine();
 	void RunEngine();
 	void QuitEngine();
+	void ClearWindow();
 	float GetAspectRatio();
 
 private:
 	bool engineInitialized = false;
-	Scene activeScene;
-	RenderMode renderMode = LIT;
-	std::map<std::string, Shader> shaders;
 
 public:
 	GLFWwindow* window = nullptr;
+	Scene* activeScene = nullptr;
 	int windowWidth = 1280;
 	int windowHeight = 1024;
-	GLuint activeShaderProgram = 0;
-	float nearClip = 0.1f;
-	float farClip = 500.0f;
-	Camera playerCamera;
-	float FOV = 60.0f;
 
 private:
 	Engine() = default;
 	~Engine() = default;
 	Engine(const Engine& instance) = delete;
 	Engine& operator= (const Engine& instance) = delete;
-	void ClearWindow();
 };

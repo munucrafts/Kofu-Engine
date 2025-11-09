@@ -1,1 +1,1 @@
-![Moonly Engine Logo](MoonlyEngine/assets/others/MoonlyLogo.png)
+![Kofu Engine Logo](KofuEngine/assets/others/Logo.png)
