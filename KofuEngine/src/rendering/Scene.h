@@ -11,12 +11,8 @@ struct Scene
 {
 public:
 	void BeginScene(unsigned int windowWidth, unsigned int windowHeight);
-	void RenderScene(unsigned int windowWidth, unsigned int windowHeight);
+	void RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime);
 	void EndScene();
-
-private:
-	void LoadScene();
-	void UnloadScene();
 
 private:
 	std::vector<std::string> modelPaths;

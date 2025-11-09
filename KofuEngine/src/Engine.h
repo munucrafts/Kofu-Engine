@@ -22,16 +22,18 @@ public:
 
 private:
 	bool engineInitialized = false;
+	static bool windowResized;
 
 public:
 	GLFWwindow* window = nullptr;
-	Scene* activeScene = nullptr;
-	int windowWidth = 1280;
-	int windowHeight = 1024;
+	std::unique_ptr<Scene> activeScene = nullptr;
+	static int windowWidth;
+	static int windowHeight;
 
 private:
 	Engine() = default;
 	~Engine() = default;
 	Engine(const Engine& instance) = delete;
 	Engine& operator= (const Engine& instance) = delete;
+	static void WindowResize(GLFWwindow* window, int width, int height);
 };

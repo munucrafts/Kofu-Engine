@@ -45,6 +45,13 @@ void FBO::Init(const FramebufferSpec& specData)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void FBO::Resize(int width, int height)
+{
+    spec.width = width;
+    spec.height = height;
+    Init(spec);
+}
+
 void FBO::Bind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, id);

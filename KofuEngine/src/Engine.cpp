@@ -6,6 +6,10 @@
 #include "rendering/RenderTarget.h"
 #include "geometry/ScreenQuad.h"
 
+int Engine::windowWidth = 1024;
+int Engine::windowHeight = 724;
+bool Engine::windowResized = false;
+
 Engine& Engine::GetEngine()
 {
     static Engine instance;
@@ -19,12 +23,12 @@ void Engine::InitEngine()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(windowWidth, windowHeight, "Moonly Engine", nullptr, nullptr);
+    window = glfwCreateWindow(windowWidth, windowHeight, "Kofu Engine", nullptr, nullptr);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
     gladLoadGL();
 
-    activeScene = new Scene();
+    activeScene = std::make_unique<Scene>();
     activeScene->BeginScene(windowWidth, windowHeight);
 
     glEnable(GL_DEPTH_TEST);
@@ -35,6 +39,14 @@ void Engine::InitEngine()
     glViewport(0, 0, windowWidth, windowHeight);
 
     engineInitialized = true;
+}
+
+void Engine::WindowResize(GLFWwindow* window, int width, int height)
+{
+    windowWidth = width;
+    windowHeight = height;
+    windowResized = true;
+    glViewport(0, 0, windowWidth, windowHeight);
 }
 
 void Engine::RunEngine()
@@ -53,17 +65,18 @@ void Engine::RunEngine()
 
         if (fpsTimer >= 1.0f)
         {
-            std::string statLine = "Moonly Engine [ " + std::to_string(fps) + " FPS | " + std::to_string(deltaTime * 1000.0f) + " ms ]";
+            std::string statLine = "Kofu Engine [ " + std::to_string(fps) + " FPS | " + std::to_string(deltaTime * 1000.0f) + " ms ]";
             glfwSetWindowTitle(window, statLine.c_str());
             fps = 0;
             fpsTimer = 0.0f;
         }
 
-        activeScene->RenderScene(windowWidth, windowHeight);
+        activeScene->RenderScene(windowWidth, windowHeight, windowResized, deltaTime);
+        windowResized = false;
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-        glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+        glfwSetFramebufferSizeCallback(window, WindowResize);
     }
 }
 

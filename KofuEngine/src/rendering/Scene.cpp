@@ -15,8 +15,12 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
 
     modelPaths.push_back("./assets/models/medieval.gltf");
-    modelPaths.push_back("./assets/models/Lantern.gltf");
-    LoadScene();
+    
+    for (const std::string& path : modelPaths)
+    {
+        std::vector<Mesh*> newMeshes = GLTFLoader::GetGltfLoader().LoadGltfModel(path);
+        meshes.insert(meshes.end(), newMeshes.begin(), newMeshes.end());
+    }
 
     Light* light = new Light(glm::vec4(1.0f), glm::vec3(10.0f, -2.0f, 0.0f), DIRECTIONAL_LIGHT);
     lights.emplace_back(light);
@@ -40,13 +44,20 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
 }
 
-void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight)
+void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime)
 {
+    if (windowResized)
+    {
+        msaaSceneFBO.Resize(windowWidth, windowHeight);
+        ppFBO.Resize(windowWidth, windowHeight);
+    }
+
     msaaSceneFBO.Bind();
 
     Engine::GetEngine().ClearWindow();
 
     shaders.at("light").Activate();
+    playerCamera.NavigateCamera();
     playerCamera.ApplyCamMatrix();
 
     for (Light* light : lights)
@@ -55,7 +66,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight)
     }
 
     shaders.at("default").Activate();
-
+    playerCamera.ApplyCamMatrix();
     glUniform1f(glGetUniformLocation(activeShaderProgram, "nearClip"), playerCamera.nearClip);
     glUniform1f(glGetUniformLocation(activeShaderProgram, "farClip"), playerCamera.farClip);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
@@ -68,9 +79,6 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight)
         glUniform1i(glGetUniformLocation(activeShaderProgram, "lightType"), (int)light->lightType);
     }
 
-    playerCamera.NavigateCamera();
-    playerCamera.ApplyCamMatrix();
-
     for (Mesh* mesh : meshes)
     {
         mesh->DrawMesh();
@@ -78,10 +86,10 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight)
 
     shaders.at("skyBox").Activate();
     skyBox.DrawSkybox();
-
     glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ppFBO.id);
     glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
     msaaSceneFBO.Unbind();
 
     shaders.at("screen").Activate();
@@ -96,29 +104,13 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight)
 
 void Scene::EndScene()
 {
-    UnloadScene();
-}
+    for (Mesh* mesh : meshes)
+    {
+        delete mesh;
+    }
 
-void Scene::LoadScene()
-{
-	for (const std::string& path : modelPaths)
-	{
-		meshes = GLTFLoader::GetGltfLoader().LoadGltfModel(path);
-	}
-}
-
-void Scene::UnloadScene()
-{
-	for (Mesh* mesh : meshes)
-	{
-		delete mesh;
-	}
-
-	for (Light* light : lights)
-	{
-		delete light;
-	}
-
-	lights.clear();
-	meshes.clear();
+    for (Light* light : lights)
+    {
+        delete light;
+    }
 }
