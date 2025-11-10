@@ -31,13 +31,6 @@ void Engine::InitEngine()
     activeScene = std::make_unique<Scene>();
     activeScene->BeginScene(windowWidth, windowHeight);
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
-    glViewport(0, 0, windowWidth, windowHeight);
-
     engineInitialized = true;
 }
 

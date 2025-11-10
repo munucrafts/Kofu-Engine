@@ -14,7 +14,7 @@ class Mesh
 {
 public:
 	Mesh() = default;
-	Mesh(std::vector<Vertex> verts, std::vector<GLuint> inds);
+	Mesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds);
 	~Mesh() = default;
 	void InitMeshManually();
 	virtual void InitMesh();

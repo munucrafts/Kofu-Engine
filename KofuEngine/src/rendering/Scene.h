@@ -10,6 +10,8 @@
 struct Scene
 {
 public:
+	Scene() = default;
+	~Scene() = default;
 	void BeginScene(unsigned int windowWidth, unsigned int windowHeight);
 	void RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime);
 	void EndScene();

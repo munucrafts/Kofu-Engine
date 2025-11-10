@@ -30,7 +30,7 @@ public:
 public:
     FBO() = default;
 	void Init(const FramebufferSpec& specData);
-	void Resize(int width, int height);
+	void Resize(const int width, const int height);
 	void Bind();
 	void Unbind();
 	void Delete();

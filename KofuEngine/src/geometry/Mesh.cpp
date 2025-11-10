@@ -3,7 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-Mesh::Mesh(std::vector<Vertex> verts, std::vector<GLuint> inds)
+Mesh::Mesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
 {
     vertices = verts;
     indices = inds;

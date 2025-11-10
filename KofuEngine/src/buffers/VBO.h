@@ -13,8 +13,8 @@ private:
 
 public:
 	VBO() = default;
-	void Init(std::vector<Vertex>& vertices);
-	void Init(float* vertices, const int size);
+	void Init(const std::vector<Vertex>& vertices);
+	void Init(const float* vertices, const int size);
 	void Bind();
 	void Unbind();
 	void Delete();

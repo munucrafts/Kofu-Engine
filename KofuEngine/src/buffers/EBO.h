@@ -13,8 +13,8 @@ private:
 
 public:
 	EBO() = default;
-	void Init(std::vector<GLuint> indices);
-	void Init(unsigned int* indices, const int size);
+	void Init(const std::vector<GLuint> indices);
+	void Init(const unsigned int* indices, const int size);
 	void Bind();
 	void Unbind();
 	void Delete();

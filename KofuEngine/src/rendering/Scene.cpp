@@ -42,6 +42,13 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     screenQuad.Init();
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+    glViewport(0, 0, windowWidth, windowHeight);
 }
 
 void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime)
