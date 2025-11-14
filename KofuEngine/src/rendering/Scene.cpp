@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "scene.h"
 #include <geometry/GLTFLoader.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -10,6 +10,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag"));
     shaders.emplace("screen", Shader("./shaders/screen.vert", "./shaders/screen.frag"));
     shaders.emplace("light", Shader("./shaders/light.vert", "./shaders/light.frag"));
+    shaders.emplace("shadow", Shader("./shaders/shadow.vert", "./shaders/shadow.frag"));
 
     renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
@@ -22,7 +23,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
         meshes.insert(meshes.end(), newMeshes.begin(), newMeshes.end());
     }
 
-    Light* light = new Light(glm::vec4(1.0f), glm::vec3(10.0f, -2.0f, 0.0f), DIRECTIONAL_LIGHT);
+    Light* light = new Light(glm::vec4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f), DIRECTIONAL_LIGHT);
     lights.emplace_back(light);
 
     for (Mesh* mesh : meshes)
@@ -42,6 +43,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     screenQuad.Init();
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
+    shadowMapFBO = RenderTarget::CreateShadowTarget(shadowMapWidth, shadowMapHeight);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -59,8 +61,25 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         ppFBO.Resize(windowWidth, windowHeight);
     }
 
-    msaaSceneFBO.Bind();
+    shaders.at("shadow").Activate();
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glViewport(0, 0, shadowMapWidth, shadowMapHeight);
+    shadowMapFBO.Bind();
+    glClear(GL_DEPTH_BUFFER_BIT);
 
+    for (Light* light : lights)
+    {
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(light->lightProj));
+    }
+
+    for (Mesh* mesh : meshes)
+    {
+        mesh->DrawMesh();
+    }
+
+    glViewport(0, 0, windowWidth, windowHeight);
+    msaaSceneFBO.Bind();
     Engine::GetEngine().ClearWindow();
 
     shaders.at("light").Activate();
@@ -79,11 +98,21 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
     glUniform3fv(glGetUniformLocation(activeShaderProgram, "camPos"), 1, glm::value_ptr(playerCamera.location));
 
+    glUniform1i(glGetUniformLocation(activeShaderProgram, "baseTex"), 0);
+    glUniform1i(glGetUniformLocation(activeShaderProgram, "normalTex"), 1);
+    glUniform1i(glGetUniformLocation(activeShaderProgram, "occlusionTex"), 2);
+    glUniform1i(glGetUniformLocation(activeShaderProgram, "metallicTex"), 3);
+    glUniform1i(glGetUniformLocation(activeShaderProgram, "shadowMap"), 4);
+
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, shadowMapFBO.depthTex);
+
     for (Light* light : lights)
     {
         glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPos"), 1, glm::value_ptr(light->location));
         glUniform4fv(glGetUniformLocation(activeShaderProgram, "lightCol"), 1, glm::value_ptr(light->color));
         glUniform1i(glGetUniformLocation(activeShaderProgram, "lightType"), (int)light->lightType);
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(light->lightProj));
     }
 
     for (Mesh* mesh : meshes)
@@ -105,7 +134,6 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
     screenQuad.Draw();
 }
 

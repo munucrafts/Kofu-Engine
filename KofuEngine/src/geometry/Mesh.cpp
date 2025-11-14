@@ -91,17 +91,5 @@ void Mesh::DrawMesh()
     int camMatLoc = glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "modelMat");
     glUniformMatrix4fv(camMatLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
 
-    GLuint baseTexLoc = glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "baseTex");
-    glUniform1i(baseTexLoc, 0);
-
-    GLuint normalTexLoc = glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "normalTex");
-    glUniform1i(normalTexLoc, 1);
-
-    GLuint occlusionTexLoc = glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "occlusionTex");
-    glUniform1i(occlusionTexLoc, 2);
-
-    GLuint metallicTexLoc = glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "metallicTex");
-    glUniform1i(metallicTexLoc, 3);
-
     glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 }

@@ -22,10 +22,13 @@ private:
 	std::vector<Mesh*> meshes;
 	std::vector<Light*> lights;
 	Skybox skyBox;
+	RenderMode renderMode = LIT;
 	ScreenQuad screenQuad;
 	FBO msaaSceneFBO;
 	FBO ppFBO;
-	RenderMode renderMode = LIT;
+	FBO shadowMapFBO;
+	int shadowMapWidth = 2048;
+	int shadowMapHeight = 2048;
 
 public:
 	Camera playerCamera;

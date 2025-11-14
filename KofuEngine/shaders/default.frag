@@ -6,11 +6,13 @@ in vec4 color;
 in vec2 texCoord;
 in vec3 currentPos;
 in vec3 normal;
+in vec4 fragPosLight;
 
 uniform sampler2D baseTex;
 uniform sampler2D normalTex;
 uniform sampler2D occlusionTex;
 uniform sampler2D metallicTex;
+uniform sampler2D shadowMap;
 
 uniform float nearClip;
 uniform float farClip;
@@ -58,21 +60,47 @@ vec4 DirectionalLight()
     float ambient = 0.2f;
 
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f));
-    float diffuse = max(dot(norm, lightDir), 0.0f);
+    vec3 lightDir = normalize(vec3(1.0, 1.0, 0.0));
+    float diffuse = max(dot(norm, lightDir), 0.0);
 
-    float specular  = 0.0f;
-	if (diffuse != 0.0f)
-	{
-		float specularLight = 0.50f;
-		vec3 viewDir = normalize(camPos - currentPos);
-		vec3 halfwayVec = normalize(viewDir + lightDir);
-		float specAmount = pow(max(dot(normal, halfwayVec), 0.0f), 16);
-		specular = specAmount * specularLight;
-	};
+    float specular = 0.0;
+    if (diffuse > 0.0)
+    {
+        float specularStrength = 0.5;
+        vec3 viewDir = normalize(camPos - currentPos);
+        vec3 halfway = normalize(viewDir + lightDir);
+        specular = pow(max(dot(norm, halfway), 0.0), 16.0) * specularStrength;
+    }
 
-    return (texture(baseTex, texCoord) * (diffuse + ambient + specular)) * lightCol * 1.f;
+    // Shadow calculation
+    float shadow = 0.0;
+    vec3 lightCoords = fragPosLight.xyz / fragPosLight.w;
+    if (lightCoords.z <= 1.0)
+    {
+        lightCoords = (lightCoords + 1.0) / 2.0;
+        float currentDepth = lightCoords.z;
+        float bias = max(0.025 * (1.0 - dot(norm, lightDir)), 0.0005);
+
+        int sampleRadius = 2;
+        vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
+
+        for (int y = -sampleRadius; y <= sampleRadius; y++)
+            for (int x = -sampleRadius; x <= sampleRadius; x++)
+            {
+                float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+                if (currentDepth > closestDepth + bias)
+                    shadow += 1.0;
+            }
+
+        shadow /= pow((sampleRadius * 2 + 1), 2);
+    }
+
+    // Combine
+    vec4 texColor = texture(baseTex, texCoord);
+    vec3 lighting = vec3(ambient + (1.0 - shadow) * (diffuse + specular));
+    return texColor * vec4(lighting, 1.0) * lightCol;
 }
+
 
 vec4 SpotLight()
 {

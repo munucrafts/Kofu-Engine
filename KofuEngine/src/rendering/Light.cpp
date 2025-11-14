@@ -1,6 +1,6 @@
+#pragma once
 #include "rendering/Light.h"
 #include "glad/glad.h"
-
 
 Light::Light(const glm::vec4& col, const glm::vec3& loc, const LightType& type)
 {
@@ -43,6 +43,10 @@ void Light::Init()
 	lightMesh.transform.location = location;
 	lightMesh.transform.scale = glm::vec3(5.0f);
 	lightMesh.InitMeshManually();
+
+    glm::mat4 orthgonalProjection = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, 0.1f, 75.0f);
+    glm::mat4 lightView = glm::lookAt(20.0f * location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    lightProj = orthgonalProjection * lightView;
 }
 
 void Light::DrawLightMesh()

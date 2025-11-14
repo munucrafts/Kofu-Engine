@@ -12,11 +12,10 @@ struct FramebufferSpec
 {
 	int width = 0;
 	int height = 0;
+	int samples = 1;
 	bool hasColor = true;
 	bool hasDepth = true;
-	int samples = 1;
-	GLenum colorInternalFormat = GL_RGBA8;
-	GLenum depthInternalFormat = GL_DEPTH24_STENCIL8;
+	bool depthAsTexture = false;
 };
 
 class FBO
@@ -24,6 +23,7 @@ class FBO
 public:
     GLuint id = 0;
     GLuint colorTex = 0;
+    GLuint depthTex = 0;
     GLuint depthRBO = 0;
     FramebufferSpec spec;
 

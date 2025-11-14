@@ -5,14 +5,14 @@ namespace RenderTarget
     FBO CreateSceneTarget(int width, int height)
     {
         FBO fb;
-        fb.Init({ width, height, true, true });
+        fb.Init({ .width = width, .height = height, .hasColor = true, .hasDepth = true });
         return fb;
     }
 
     FBO CreateMSAATarget(int width, int height, int samples)
     {
         FBO fb;
-        fb.Init({ width, height, true, true, samples });
+        fb.Init({ .width = width, .height = height, .samples = samples, .hasColor = true, .hasDepth = true });
         return fb;
     }
 
@@ -24,8 +24,7 @@ namespace RenderTarget
         specs.height = height;
         specs.hasColor = false;
         specs.hasDepth = true;
-        specs.colorInternalFormat = GL_NONE;
-        specs.depthInternalFormat = GL_DEPTH_COMPONENT32;
+        specs.depthAsTexture = true;
         fb.Init(specs);
         return fb;
     }

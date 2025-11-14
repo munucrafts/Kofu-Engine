@@ -13,30 +13,59 @@ void FBO::Init(const FramebufferSpec& specData)
         if (spec.samples > 1)
         {
             glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, colorTex);
-            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, spec.samples, spec.colorInternalFormat, spec.width, spec.height, GL_TRUE);
+            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, spec.samples, GL_RGBA, spec.width, spec.height, GL_TRUE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, colorTex, 0);
         }
         else
         {
             glBindTexture(GL_TEXTURE_2D, colorTex);
-            glTexImage2D(GL_TEXTURE_2D, 0, spec.colorInternalFormat, spec.width, spec.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, spec.width, spec.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
         }
     }
 
     if (spec.hasDepth)
     {
-        glGenRenderbuffers(1, &depthRBO);
-        glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
+        if (spec.depthAsTexture)
+        {
+            glGenTextures(1, &depthTex);
+            glBindTexture(GL_TEXTURE_2D, depthTex);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, spec.width, spec.height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-        if (spec.samples > 0)
-            glRenderbufferStorageMultisample(GL_RENDERBUFFER, spec.samples, spec.depthInternalFormat, spec.width, spec.height);
+            float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+
+            if (!spec.hasColor)
+            {
+                glDrawBuffer(GL_NONE);
+                glReadBuffer(GL_NONE);
+            }
+        }
         else
-            glRenderbufferStorage(GL_RENDERBUFFER, spec.depthInternalFormat, spec.width, spec.height);
+        {
+            glGenRenderbuffers(1, &depthRBO);
+            glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
 
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+            if (spec.samples > 1)
+            {
+                glRenderbufferStorageMultisample(GL_RENDERBUFFER, spec.samples, GL_DEPTH24_STENCIL8, spec.width, spec.height);
+            }
+            else
+            {
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, spec.width, spec.height);
+            }
+
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+        }
     }
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -66,5 +95,6 @@ void FBO::Delete()
 {
     glDeleteFramebuffers(1, &id);
     glDeleteTextures(1, &colorTex);
+    glDeleteTextures(1, &depthTex);
     glDeleteRenderbuffers(1, &depthRBO);
 }

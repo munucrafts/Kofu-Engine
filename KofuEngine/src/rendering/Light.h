@@ -14,6 +14,7 @@ class Light
 public:
 	glm::vec3 location;
     glm::vec4 color;
+    glm::mat4 lightProj;
     LightType lightType = DIRECTIONAL_LIGHT;
 
 private:
