@@ -54,5 +54,6 @@ public:
 	~Light() = default;
 	void Init();
 	void DrawLightMesh();
+    void CalculateLightProjection();
 };
 

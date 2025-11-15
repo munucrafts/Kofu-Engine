@@ -88,8 +88,7 @@ void Mesh::DrawMesh()
     modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     modelMat = glm::scale(modelMat, transform.scale);
 
-    int camMatLoc = glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "modelMat");
-    glUniformMatrix4fv(camMatLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
+    glUniformMatrix4fv(glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
 
     glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 }

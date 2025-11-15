@@ -42,6 +42,7 @@ void FBO::Init(const FramebufferSpec& specData)
 
             float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
             glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+            glBindFramebuffer(GL_FRAMEBUFFER, depthTex);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
 
             if (!spec.hasColor)

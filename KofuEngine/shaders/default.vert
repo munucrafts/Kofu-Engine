@@ -19,11 +19,11 @@ uniform mat4 lightProjection;
 void main()
 {
     vec4 worldPos = modelMat * vec4(aPosition, 1.0);
-    gl_Position = projMat * viewMat * worldPos;
-
     currentPos = worldPos.xyz;
     normal = normalize(mat3(transpose(inverse(modelMat))) * aNormal);
     texCoord = aTexCoord;
     color = aColor;
     fragPosLight = lightProjection * vec4(currentPos, 1.0f);
+
+    gl_Position = projMat * viewMat * worldPos;
 }

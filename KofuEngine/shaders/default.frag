@@ -60,7 +60,7 @@ vec4 DirectionalLight()
     float ambient = 0.2f;
 
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(vec3(1.0, 1.0, 0.0));
+    vec3 lightDir = normalize(lightPos);
     float diffuse = max(dot(norm, lightDir), 0.0);
 
     float specular = 0.0;
@@ -96,9 +96,7 @@ vec4 DirectionalLight()
     }
 
     // Combine
-    vec4 texColor = texture(baseTex, texCoord);
-    vec3 lighting = vec3(ambient + (1.0 - shadow) * (diffuse + specular));
-    return texColor * vec4(lighting, 1.0) * lightCol;
+    return (texture(baseTex, texCoord) * (diffuse * (1.0f - shadow) + ambient) + specular  * (1.0f - shadow)) * lightCol;
 }
 
 
