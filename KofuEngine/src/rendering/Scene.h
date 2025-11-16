@@ -26,7 +26,7 @@ private:
 	ScreenQuad screenQuad;
 	FBO msaaSceneFBO;
 	FBO ppFBO;
-	FBO shadowMapFBO;
+	std::vector<FBO> shadowMapFBOs;
 	int shadowMapWidth = 2048;
 	int shadowMapHeight = 2048;
 

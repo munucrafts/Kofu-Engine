@@ -1,4 +1,5 @@
 ﻿#version 330 core
+#define MAX_LIGHTS 16
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
@@ -9,12 +10,13 @@ out vec4 color;
 out vec2 texCoord;
 out vec3 currentPos;
 out vec3 normal;
-out vec4 fragPosLight;
+
+out vec4 fragPosLight[MAX_LIGHTS];
+uniform mat4 lightProjection[MAX_LIGHTS];
 
 uniform mat4 modelMat;
 uniform mat4 viewMat;
 uniform mat4 projMat;
-uniform mat4 lightProjection;
 
 void main()
 {
@@ -23,7 +25,11 @@ void main()
     normal = normalize(mat3(transpose(inverse(modelMat))) * aNormal);
     texCoord = aTexCoord;
     color = aColor;
-    fragPosLight = lightProjection * vec4(currentPos, 1.0f);
+
+    for (int i = 0; i < MAX_LIGHTS; i++)
+    {
+        fragPosLight[i] = lightProjection[i] * vec4(currentPos, 1.0f);
+    }
 
     gl_Position = projMat * viewMat * worldPos;
 }

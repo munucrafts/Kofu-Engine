@@ -52,11 +52,22 @@ void Light::DrawLightMesh()
 
 void Light::CalculateLightProjection()
 {
-    float range = 25.0f;       
-    float nearPlane = 1.0f;    
-    float farPlane = 50.0f;
+    if (lightType == DIRECTIONAL_LIGHT)
+    {
+        float range = 25.0f;       
+        float nearPlane = 1.0f;    
+        float farPlane = 50.0f;
 
-    glm::mat4 orthgonalProjection = glm::ortho(-range, range, -range, range, nearPlane, farPlane);
-    glm::mat4 lightView = glm::lookAt(location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    lightProj = orthgonalProjection * lightView;
+        glm::mat4 orthgonalProjection = glm::ortho(-range, range, -range, range, nearPlane, farPlane);
+        glm::mat4 lightView = glm::lookAt(location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        lightProj = orthgonalProjection * lightView;
+    }
+    else if (lightType == SPOT_LIGHT)
+    {
+
+    }
+    else
+    {
+
+    }
 }

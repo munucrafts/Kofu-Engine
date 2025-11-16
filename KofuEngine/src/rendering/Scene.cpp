@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "scene.h"
 #include <geometry/GLTFLoader.h>
-#include <glm/gtc/type_ptr.hpp>
 #include <Engine.h>
+#include <glm/gtc/type_ptr.hpp>
 
 void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
@@ -25,6 +25,8 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     Light* light = new Light(glm::vec4(1.0f), glm::vec3(10.0f, 10.0f, 0.0f), DIRECTIONAL_LIGHT);
     lights.emplace_back(light);
+    //Light* light2 = new Light(glm::vec4(1.0f), glm::vec3(-10.0f, 10.0f, 0.0f), SPOT_LIGHT);
+    //lights.emplace_back(light2);
 
     for (Mesh* mesh : meshes)
     {
@@ -34,16 +36,16 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
         mesh->InitMesh();
     }
 
-    for (Light* light : lights)
+    for (int i = 0; i < lights.size(); i++)
     {
-        light->Init();
+        lights[i]->Init();
+        shadowMapFBOs.emplace_back(RenderTarget::CreateShadowTarget(shadowMapWidth, shadowMapHeight));
     }
 
     skyBox.LoadSkybox();
     screenQuad.Init();
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
-    shadowMapFBO = RenderTarget::CreateShadowTarget(shadowMapWidth, shadowMapHeight);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -65,18 +67,17 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glViewport(0, 0, shadowMapWidth, shadowMapHeight);
-    shadowMapFBO.Bind();
-    glClear(GL_DEPTH_BUFFER_BIT);
 
-    for (Light* light : lights)
+    for (int i = 0; i < lights.size(); i++)
     {
-        light->CalculateLightProjection();
-        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(light->lightProj));
-    }
+        shadowMapFBOs[i].Bind();
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightProj));
 
-    for (Mesh* mesh : meshes)
-    {
-        mesh->DrawMesh();
+        for (Mesh* mesh : meshes)
+        {
+            mesh->DrawMesh();
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -105,18 +106,19 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glUniform1i(glGetUniformLocation(activeShaderProgram, "occlusionTex"), 2);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "metallicTex"), 3);
 
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, shadowMapFBO.depthTex);
-    glUniform1i(glGetUniformLocation(activeShaderProgram, "shadowMap"), 4);
+    glUniform1i(glGetUniformLocation(activeShaderProgram, "lightCount"), (int)lights.size());
 
-    for (Light* light : lights)
+    for (int i = 0; i < lights.size(); i++)
     {
-        glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPos"), 1, glm::value_ptr(light->location));
-        glUniform4fv(glGetUniformLocation(activeShaderProgram, "lightCol"), 1, glm::value_ptr(light->color));
-        glUniform1i(glGetUniformLocation(activeShaderProgram, "lightType"), (int)light->lightType);
+        glActiveTexture(GL_TEXTURE0 + 4 + i);
+        glBindTexture(GL_TEXTURE_2D, shadowMapFBOs[i].depthTex);
+        glUniform1i(glGetUniformLocation(activeShaderProgram, "shadowMap"), 4 + i);
+        glUniform3fv(glGetUniformLocation(activeShaderProgram, ("lightPos[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->location));
+        glUniform4fv(glGetUniformLocation(activeShaderProgram, ("lightCol[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->color));
+        glUniform1i(glGetUniformLocation(activeShaderProgram, ("lightType[" + std::to_string(i) + "]").c_str()), (int)lights[i]->lightType);
 
-        light->CalculateLightProjection();
-        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(light->lightProj));
+        lights[i]->CalculateLightProjection();
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, ("lightProjection[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightProj));
     }
 
     for (Mesh* mesh : meshes)
