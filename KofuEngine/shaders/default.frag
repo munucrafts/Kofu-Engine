@@ -19,50 +19,52 @@ uniform float farClip;
 uniform int renderMode;
 uniform vec3 camPos;
 
-uniform int lightCount;
 in vec4 fragPosLight[MAX_LIGHTS];
-uniform vec3 lightPos[MAX_LIGHTS];
-uniform vec4 lightCol[MAX_LIGHTS];
-uniform int lightType[MAX_LIGHTS];
+uniform int lightCount;
+uniform int lightTypes[MAX_LIGHTS];
+uniform vec3 lightPositions[MAX_LIGHTS];
+uniform vec3 lightDirections[MAX_LIGHTS];
+uniform vec4 lightColors[MAX_LIGHTS];
+uniform float lightIntensities[MAX_LIGHTS];
+uniform float lightInnerCones[MAX_LIGHTS];
+uniform float lightOuterCones[MAX_LIGHTS];
+
+float ambient = 0.2;
 
 float MakeLinearDepth(float depth)
 {
-    return (2.0f * nearClip * farClip) / (farClip + nearClip - (depth * 2.0f - 1.0f) * (farClip - nearClip));
+    return (2.0 * nearClip * farClip) / (farClip + nearClip - (depth * 2.0 - 1.0) * (farClip - nearClip));
 }
 
 vec4 PointLight(int lightIndex)
 {
-    vec3 lightVec = lightPos[lightIndex] - currentPos;
+    vec3 lightVec = lightPositions[lightIndex] - currentPos;
     float dist = length(lightVec);
-    float a = 3.0f;
-    float b = 0.05f;
-    float inten = 10.0f / (a * dist * dist + b * dist + 1.0f);
-
-    float ambient = 0.2f;
+    float a = 3.0;
+    float b = 0.05;
+    float inten = 10.0 / (a * dist * dist + b * dist + 1.0f);
 
     vec3 norm = normalize(normal);
     vec3 lightDir = normalize(lightVec);
     float diffuse = max(dot(norm, lightDir), 0.0f);
 
     float specular  = 0.0f;
-	if (diffuse != 0.0f)
+	if (diffuse != 0.0)
 	{
 		float specularLight = 0.50f;
 		vec3 viewDir = normalize(camPos - currentPos);
 		vec3 halfwayVec = normalize(viewDir + lightDir);
-		float specAmount = pow(max(dot(normal, halfwayVec), 0.0f), 16);
+		float specAmount = pow(max(dot(normal, halfwayVec), 0.0), 16);
 		specular = specAmount * specularLight;
 	};
 
-    return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular)) * lightCol[lightIndex];
+    return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular)) * lightColors[lightIndex];
 }
 
 vec4 DirectionalLight(int lightIndex)
 {
-    float ambient = 0.2f;
-
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(lightPos[lightIndex]);
+    vec3 lightDir = normalize(lightPositions[lightIndex]);
     float diffuse = max(dot(norm, lightDir), 0.0);
 
     float specular = 0.0;
@@ -74,7 +76,6 @@ vec4 DirectionalLight(int lightIndex)
         specular = pow(max(dot(norm, halfway), 0.0), 16.0) * specularStrength;
     }
 
-    // Shadow calculation
     float shadow = 0.0;
     vec3 lightCoords = fragPosLight[lightIndex].xyz / fragPosLight[lightIndex].w;
     if (lightCoords.z <= 1.0)
@@ -87,46 +88,69 @@ vec4 DirectionalLight(int lightIndex)
         vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
 
         for (int y = -sampleRadius; y <= sampleRadius; y++)
+        {
             for (int x = -sampleRadius; x <= sampleRadius; x++)
             {
                 float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+
                 if (currentDepth > closestDepth + bias)
                     shadow += 1.0;
             }
+        }
 
         shadow /= pow((sampleRadius * 2 + 1), 2);
     }
 
-    // Combine
-    return (texture(baseTex, texCoord) * (diffuse * (1.0f - shadow) + ambient) + specular  * (1.0f - shadow)) * lightCol[lightIndex];
+    return lightIntensities[lightIndex] * (texture(baseTex, texCoord) * (diffuse * (1.0f - shadow) + ambient) + specular  * (1.0f - shadow)) * lightColors[lightIndex];
 }
 
 vec4 SpotLight(int lightIndex)
 {
-    float outerCone = 0.9f;
-    float innerCone = 0.95f;
-
-    float ambient = 0.2f;
+    float outerCone = lightOuterCones[lightIndex];
+    float innerCone = lightInnerCones[lightIndex];
 
     vec3 norm = normalize(normal);
-    vec3 lightVec = lightPos[lightIndex] - currentPos;
-    vec3 lightDir = normalize(lightVec);
-    float diffuse = max(dot(norm, lightDir), 0.0f);
+    vec3 lightVecDir = normalize(lightPositions[lightIndex] - currentPos);
+    float diffuse = max(dot(norm, lightVecDir), 0.0f);
 
     float specular  = 0.0f;
 	if (diffuse != 0.0f)
 	{
 		float specularLight = 0.50f;
 		vec3 viewDir = normalize(camPos - currentPos);
-		vec3 halfwayVec = normalize(viewDir + lightDir);
+		vec3 halfwayVec = normalize(viewDir + lightVecDir);
 		float specAmount = pow(max(dot(normal, halfwayVec), 0.0f), 16);
 		specular = specAmount * specularLight;
 	};
 
-    float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDir);
+    float angle = dot(lightDirections[lightIndex], -lightVecDir);
     float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
-    return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular * inten)) * lightCol[lightIndex];
+    float shadow = 0.0;
+    vec3 lightCoords = fragPosLight[lightIndex].xyz / fragPosLight[lightIndex].w;
+    if (lightCoords.z <= 1.0)
+    {
+        lightCoords = (lightCoords + 1.0) / 2.0;
+        float currentDepth = lightCoords.z;
+        float bias = max(0.025 * (1.0 - dot(norm, lightVecDir)), 0.0005);
+
+        int sampleRadius = 2;
+        vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
+
+        for (int y = -sampleRadius; y <= sampleRadius; y++)
+        {
+            for (int x = -sampleRadius; x <= sampleRadius; x++)
+            {
+                float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+                if (currentDepth > closestDepth + bias)
+                    shadow += 1.0;
+            }
+        }
+
+        shadow /= pow((sampleRadius * 2 + 1), 2);
+    }
+
+    return lightIntensities[lightIndex] * (texture(baseTex, texCoord) * (diffuse * inten * (1.0 - shadow) + ambient + specular * inten * (1.0 - shadow))) * lightColors[lightIndex];
 }
 
 void main()
@@ -140,7 +164,7 @@ void main()
 
             for (int i = 0; i < lightCount; i++)
             {
-                finalCol += lightType[i] == 0 ? PointLight(i) : lightType[i] == 1 ? SpotLight(i) : DirectionalLight(i);
+                finalCol += lightTypes[i] == 0 ? PointLight(i) : lightTypes[i] == 1 ? SpotLight(i) : DirectionalLight(i);
             }
 
             fragColor = finalCol;

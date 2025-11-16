@@ -12,7 +12,7 @@ out vec3 currentPos;
 out vec3 normal;
 
 out vec4 fragPosLight[MAX_LIGHTS];
-uniform mat4 lightProjection[MAX_LIGHTS];
+uniform mat4 lightProjections[MAX_LIGHTS];
 
 uniform mat4 modelMat;
 uniform mat4 viewMat;
@@ -28,7 +28,7 @@ void main()
 
     for (int i = 0; i < MAX_LIGHTS; i++)
     {
-        fragPosLight[i] = lightProjection[i] * vec4(currentPos, 1.0f);
+        fragPosLight[i] = lightProjections[i] * vec4(currentPos, 1.0f);
     }
 
     gl_Position = projMat * viewMat * worldPos;

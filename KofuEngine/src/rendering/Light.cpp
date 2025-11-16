@@ -2,22 +2,20 @@
 #include "rendering/Light.h"
 #include "glad/glad.h"
 
-Light::Light(const glm::vec4& col, const glm::vec3& loc, const LightType& type)
+Light::Light(const LightDetails details)
 {
-	location = loc;
-	color = col;
-    lightType = type;
+    lightDetails = details;
 
     lightVertices =
     {
-        { glm::vec3(-0.1f, -0.1f,  0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) },
-        { glm::vec3(0.1f, -0.1f,  0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) },
-        { glm::vec3(0.1f,  0.1f,  0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) },
-        { glm::vec3(-0.1f,  0.1f,  0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) },
-        { glm::vec3(-0.1f, -0.1f, -0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) },
-        { glm::vec3(0.1f, -0.1f, -0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) },
-        { glm::vec3(0.1f,  0.1f, -0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) },
-        { glm::vec3(-0.1f,  0.1f, -0.1f), glm::vec3(0.0f), color, glm::vec2(0.0f) }
+        { glm::vec3(-0.1f, -0.1f,  0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) },
+        { glm::vec3(0.1f, -0.1f,  0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) },
+        { glm::vec3(0.1f,  0.1f,  0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) },
+        { glm::vec3(-0.1f,  0.1f,  0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) },
+        { glm::vec3(-0.1f, -0.1f, -0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) },
+        { glm::vec3(0.1f, -0.1f, -0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) },
+        { glm::vec3(0.1f,  0.1f, -0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) },
+        { glm::vec3(-0.1f,  0.1f, -0.1f), glm::vec3(0.0f), lightDetails.color, glm::vec2(0.0f) }
     };
 
     lightIndices =
@@ -40,7 +38,7 @@ Light::Light(const glm::vec4& col, const glm::vec3& loc, const LightType& type)
 void Light::Init()
 {
 	lightMesh = { lightVertices, lightIndices };
-	lightMesh.transform.location = location;
+	lightMesh.transform.location = lightDetails.location;
 	lightMesh.transform.scale = glm::vec3(5.0f);
 	lightMesh.InitMeshManually();
 }
@@ -50,21 +48,37 @@ void Light::DrawLightMesh()
 	lightMesh.DrawMesh();
 }
 
+glm::vec3 Light::GetDirection()
+{
+    float pitch = glm::radians(lightDetails.rotation.x);
+    float yaw = glm::radians(lightDetails.rotation.y);
+
+    glm::vec3 dir;
+    dir.x = cos(pitch) * sin(yaw);  
+    dir.y = sin(pitch);             
+    dir.z = -cos(pitch) * cos(yaw); 
+
+    return glm::normalize(dir);
+}
+
+
 void Light::CalculateLightProjection()
 {
-    if (lightType == DIRECTIONAL_LIGHT)
-    {
-        float range = 25.0f;       
-        float nearPlane = 1.0f;    
-        float farPlane = 50.0f;
+    float range = 25.0f;
+    float nearPlane = 1.0f;
+    float farPlane = 50.0f;
 
-        glm::mat4 orthgonalProjection = glm::ortho(-range, range, -range, range, nearPlane, farPlane);
-        glm::mat4 lightView = glm::lookAt(location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        lightProj = orthgonalProjection * lightView;
+    if (lightDetails.lightType == DIRECTIONAL_LIGHT)
+    {
+        glm::mat4 orthoProjection = glm::ortho(-range, range, -range, range, nearPlane, farPlane);
+        glm::mat4 lightView = glm::lookAt(lightDetails.location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        lightDetails.lightProj = orthoProjection * lightView;
     }
-    else if (lightType == SPOT_LIGHT)
+    else if (lightDetails.lightType == SPOT_LIGHT)
     {
-
+        glm::mat4 persProjection = glm::perspective(glm::radians(lightDetails.outerCone * 2.0f), 1.0f, nearPlane, farPlane);
+        glm::mat4 lightView = glm::lookAt(lightDetails.location, lightDetails.location + GetDirection(), glm::vec3(0, 1, 0));
+        lightDetails.lightProj = persProjection * lightView;
     }
     else
     {
