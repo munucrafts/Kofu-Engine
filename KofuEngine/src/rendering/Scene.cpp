@@ -71,7 +71,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     {
         shadowMapFBOs[i].Bind();
         glClear(GL_DEPTH_BUFFER_BIT);
-        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProj));
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
 
         for (Mesh* mesh : meshes)
         {
@@ -121,7 +121,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         glUniform1f(glGetUniformLocation(activeShaderProgram, ("lightOuterCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.outerCone)));
 
         lights[i]->CalculateLightProjection();
-        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, ("lightProjections[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProj));
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, ("lightProjections[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
     }
 
     for (Mesh* mesh : meshes)

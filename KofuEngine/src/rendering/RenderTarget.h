@@ -8,4 +8,6 @@ namespace RenderTarget
     FBO CreateMSAATarget(int width, int height, int samples);
 
     FBO CreateShadowTarget(int width, int height);
+
+    FBO CreateCubemapTarget(int width, int height);
 }

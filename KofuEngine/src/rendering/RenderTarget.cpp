@@ -25,6 +25,21 @@ namespace RenderTarget
         specs.hasColor = false;
         specs.hasDepth = true;
         specs.depthAsTexture = true;
+        specs.depthCube = false;
+        fb.Init(specs);
+        return fb;
+    }
+
+    FBO CreateCubemapTarget(int width, int height)
+    {
+        FBO fb;
+        FramebufferSpec specs;
+        specs.width = width;
+        specs.height = height;
+        specs.hasColor = false;
+        specs.hasDepth = true;
+        specs.depthAsTexture = true;
+        specs.depthCube = true;
         fb.Init(specs);
         return fb;
     }

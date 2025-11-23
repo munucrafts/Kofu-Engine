@@ -18,7 +18,7 @@ struct LightDetails
     glm::vec4 color = glm::vec4(1.0f);
     glm::vec3 location = glm::vec3(0.0f);
     glm::vec3 rotation = glm::vec3(0.0f);
-    glm::mat4 lightProj;
+    std::vector<glm::mat4> lightProjs;
 };
 
 class Light

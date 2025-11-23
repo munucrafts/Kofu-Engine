@@ -41,6 +41,8 @@ void Light::Init()
 	lightMesh.transform.location = lightDetails.location;
 	lightMesh.transform.scale = glm::vec3(5.0f);
 	lightMesh.InitMeshManually();
+
+    CalculateLightProjection();
 }
 
 void Light::DrawLightMesh()
@@ -61,7 +63,6 @@ glm::vec3 Light::GetDirection()
     return glm::normalize(dir);
 }
 
-
 void Light::CalculateLightProjection()
 {
     float range = 25.0f;
@@ -72,16 +73,22 @@ void Light::CalculateLightProjection()
     {
         glm::mat4 orthoProjection = glm::ortho(-range, range, -range, range, nearPlane, farPlane);
         glm::mat4 lightView = glm::lookAt(lightDetails.location, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        lightDetails.lightProj = orthoProjection * lightView;
+        lightDetails.lightProjs.push_back(orthoProjection * lightView);
     }
     else if (lightDetails.lightType == SPOT_LIGHT)
     {
         glm::mat4 persProjection = glm::perspective(glm::radians(lightDetails.outerCone * 2.0f), 1.0f, nearPlane, farPlane);
         glm::mat4 lightView = glm::lookAt(lightDetails.location, lightDetails.location + GetDirection(), glm::vec3(0, 1, 0));
-        lightDetails.lightProj = persProjection * lightView;
+        lightDetails.lightProjs.push_back(persProjection * lightView);
     }
     else
     {
-
+        glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, nearPlane, farPlane);
+        lightDetails.lightProjs.push_back(shadowProj * glm::lookAt(lightDetails.location, lightDetails.location + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+        lightDetails.lightProjs.push_back(shadowProj * glm::lookAt(lightDetails.location, lightDetails.location + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+        lightDetails.lightProjs.push_back(shadowProj * glm::lookAt(lightDetails.location, lightDetails.location + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+        lightDetails.lightProjs.push_back(shadowProj * glm::lookAt(lightDetails.location, lightDetails.location + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+        lightDetails.lightProjs.push_back(shadowProj * glm::lookAt(lightDetails.location, lightDetails.location + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+        lightDetails.lightProjs.push_back(shadowProj * glm::lookAt(lightDetails.location, lightDetails.location + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
     }
 }

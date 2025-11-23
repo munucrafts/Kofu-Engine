@@ -51,6 +51,30 @@ void FBO::Init(const FramebufferSpec& specData)
                 glReadBuffer(GL_NONE);
             }
         }
+        else if (spec.depthCube)
+        {
+            glGenTextures(1, &depthTex);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, depthTex);
+
+            for (unsigned int i = 0; i < 6; i++)
+            {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, spec.width, spec.height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+            }
+
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex, 0);
+
+            if (!spec.hasColor)
+            {
+                glDrawBuffer(GL_NONE);
+                glReadBuffer(GL_NONE);
+            }
+        }
         else
         {
             glGenRenderbuffers(1, &depthRBO);

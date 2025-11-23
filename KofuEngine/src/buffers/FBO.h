@@ -16,6 +16,7 @@ struct FramebufferSpec
 	bool hasColor = true;
 	bool hasDepth = true;
 	bool depthAsTexture = false;
+	bool depthCube = false;
 };
 
 class FBO
