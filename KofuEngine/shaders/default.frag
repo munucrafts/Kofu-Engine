@@ -1,5 +1,5 @@
 ﻿#version 330 core
-#define MAX_LIGHTS 16
+#define MAX_LIGHT_PROJS 32
 
 out vec4 fragColor;
 
@@ -12,22 +12,23 @@ uniform sampler2D baseTex;
 uniform sampler2D normalTex;
 uniform sampler2D occlusionTex;
 uniform sampler2D metallicTex;
-uniform sampler2D shadowMap;
 
 uniform float nearClip;
 uniform float farClip;
 uniform int renderMode;
 uniform vec3 camPos;
 
-in vec4 fragPosLight[MAX_LIGHTS];
-uniform int lightCount;
-uniform int lightTypes[MAX_LIGHTS];
-uniform vec3 lightPositions[MAX_LIGHTS];
-uniform vec3 lightDirections[MAX_LIGHTS];
-uniform vec4 lightColors[MAX_LIGHTS];
-uniform float lightIntensities[MAX_LIGHTS];
-uniform float lightInnerCones[MAX_LIGHTS];
-uniform float lightOuterCones[MAX_LIGHTS];
+uniform int lightProjsCount;
+in vec4 fragPosLight[MAX_LIGHT_PROJS];
+uniform int lightTypes[MAX_LIGHT_PROJS];
+uniform vec3 lightPositions[MAX_LIGHT_PROJS];
+uniform vec3 lightDirections[MAX_LIGHT_PROJS];
+uniform vec4 lightColors[MAX_LIGHT_PROJS];
+uniform float lightIntensities[MAX_LIGHT_PROJS];
+uniform float lightInnerCones[MAX_LIGHT_PROJS];
+uniform float lightOuterCones[MAX_LIGHT_PROJS];
+uniform sampler2D shadowMap[MAX_LIGHT_PROJS];
+uniform samplerCube shadowCubeMap[MAX_LIGHT_PROJS];
 
 float ambient = 0.2;
 
@@ -85,13 +86,13 @@ vec4 DirectionalLight(int lightIndex)
         float bias = max(0.025 * (1.0 - dot(norm, lightDir)), 0.0005);
 
         int sampleRadius = 2;
-        vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
+        vec2 pixelSize = 1.0 / textureSize(shadowMap[lightIndex], 0);
 
         for (int y = -sampleRadius; y <= sampleRadius; y++)
         {
             for (int x = -sampleRadius; x <= sampleRadius; x++)
             {
-                float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+                float closestDepth = texture(shadowMap[lightIndex], lightCoords.xy + vec2(x, y) * pixelSize).r;
 
                 if (currentDepth > closestDepth + bias)
                     shadow += 1.0;
@@ -135,13 +136,13 @@ vec4 SpotLight(int lightIndex)
         float bias = max(0.025 * (1.0 - dot(norm, lightVecDir)), 0.0005);
 
         int sampleRadius = 2;
-        vec2 pixelSize = 1.0 / textureSize(shadowMap, 0);
+        vec2 pixelSize = 1.0 / textureSize(shadowMap[lightIndex], 0);
 
         for (int y = -sampleRadius; y <= sampleRadius; y++)
         {
             for (int x = -sampleRadius; x <= sampleRadius; x++)
             {
-                float closestDepth = texture(shadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+                float closestDepth = texture(shadowMap[lightIndex], lightCoords.xy + vec2(x, y) * pixelSize).r;
                 if (currentDepth > closestDepth + bias)
                     shadow += 1.0;
             }
@@ -162,7 +163,7 @@ void main()
         {
             vec4 finalCol = vec4(0.0);
 
-            for (int i = 0; i < lightCount; i++)
+            for (int i = 0; i < lightProjsCount; i++)
             {
                 finalCol += lightTypes[i] == 0 ? PointLight(i) : lightTypes[i] == 1 ? SpotLight(i) : DirectionalLight(i);
             }

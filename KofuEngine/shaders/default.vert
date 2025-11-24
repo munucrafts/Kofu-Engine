@@ -1,5 +1,5 @@
 ﻿#version 330 core
-#define MAX_LIGHTS 16
+#define MAX_LIGHT_PROJS 32
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
@@ -11,8 +11,8 @@ out vec2 texCoord;
 out vec3 currentPos;
 out vec3 normal;
 
-out vec4 fragPosLight[MAX_LIGHTS];
-uniform mat4 lightProjections[MAX_LIGHTS];
+out vec4 fragPosLight[MAX_LIGHT_PROJS];
+uniform mat4 lightProjections[MAX_LIGHT_PROJS];
 
 uniform mat4 modelMat;
 uniform mat4 viewMat;
@@ -26,7 +26,7 @@ void main()
     texCoord = aTexCoord;
     color = aColor;
 
-    for (int i = 0; i < MAX_LIGHTS; i++)
+    for (int i = 0; i < MAX_LIGHT_PROJS; i++)
     {
         fragPosLight[i] = lightProjections[i] * vec4(currentPos, 1.0f);
     }
