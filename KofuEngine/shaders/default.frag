@@ -40,53 +40,65 @@ float MakeLinearDepth(float depth)
 
 vec4 PointLight(int lightIndex)
 {
-    vec3 lightVec = lightPositions[lightIndex] - currentPos;
-    float dist = length(lightVec);
+    vec3 fragToLight = currentPos - lightPositions[lightIndex];
+    float dist = length(fragToLight);
+
+    // Attenuation
     float a = 3.0;
     float b = 0.05;
-    float inten = 10.0 / (a * dist * dist + b * dist + 1.0f);
+    float attenuation = 10.0 / (a * dist * dist + b * dist + 1.0f);
 
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(lightVec);
-    float diffuse = max(dot(norm, lightDir), 0.0f);
+    vec3 lightDir = normalize(-fragToLight); // direction TO light
+    float diffuse = max(dot(norm, lightDir), 0.0);
 
-    float specular  = 0.0f;
-	if (diffuse > 0.0)
-	{
-		float specularLight = 0.50f;
-		vec3 viewDir = normalize(camPos - currentPos);
-		vec3 halfwayVec = normalize(viewDir + lightDir);
-		float specAmount = pow(max(dot(normal, halfwayVec), 0.0), 16);
-		specular = specAmount * specularLight;
-	};
-
-    float shadow = 0.0;
-    vec3 lightCoords = fragPosLight[lightIndex].xyz / fragPosLight[lightIndex].w;
-    if (lightCoords.z <= 1.0)
+    // Specular
+    float specular = 0.0;
+    if (diffuse > 0.0)
     {
-        lightCoords = (lightCoords + 1.0) / 2.0;
-        float currentDepth = lightCoords.z;
-        float bias = max(0.025 * (1.0 - dot(norm, lightDir)), 0.0005);
+        float specularStrength = 0.5;
+        vec3 viewDir = normalize(camPos - currentPos);
+        vec3 halfway = normalize(viewDir + lightDir);
+        specular = pow(max(dot(norm, halfway), 0.0), 16.0) * specularStrength;
+    }
 
-        int sampleRadius = 2;
-        vec2 pixelSize = 1.0 / textureSize(shadowMap[lightIndex], 0);
+    // Shadow
+    float shadow = 0.0;
+    float currentDepth = dist;
+    float bias = max(0.05 * (1.0 - dot(norm, lightDir)), 0.005);
 
-        for (int y = -sampleRadius; y <= sampleRadius; y++)
+    int sampleRadius = 2; // PCF samples per axis
+    float offset = 0.02;
+
+    for (int x = -sampleRadius; x <= sampleRadius; ++x)
+    {
+        for (int y = -sampleRadius; y <= sampleRadius; ++y)
         {
-            for (int x = -sampleRadius; x <= sampleRadius; x++)
+            for (int z = -sampleRadius; z <= sampleRadius; ++z)
             {
-                float closestDepth = texture(shadowMap[lightIndex], lightCoords.xy + vec2(x, y) * pixelSize).r;
+                vec3 sampleDir = fragToLight + vec3(x, y, z) * offset;
+                float closestDepth = texture(shadowCubeMap[lightIndex], sampleDir).r;
+                closestDepth *= lightFarPlane; // cube map stores depth normalized to [0,1]
 
-                if (currentDepth > closestDepth + bias)
+                if (currentDepth - bias > closestDepth)
                     shadow += 1.0;
             }
         }
-
-        shadow /= pow((sampleRadius * 2 + 1), 2);
     }
 
-    return lightIntensities[lightIndex] * (texture(baseTex, texCoord) * (diffuse * (1.0f - shadow) + ambient) + specular  * (1.0f - shadow)) * lightColors[lightIndex];
+    shadow /= pow(sampleRadius * 2 + 1, 3);
+
+    // Final color
+    vec3 texColor = texture(baseTex, texCoord).rgb;
+    vec3 lightCol = lightColors[lightIndex].rgb;
+    float intensity = lightIntensities[lightIndex];
+
+    vec3 result = (diffuse * (1.0 - shadow) + ambient) * texColor * intensity + specular * (1.0 - shadow) * intensity;
+    result *= lightCol;
+
+    return vec4(result, 1.0);
 }
+
 
 vec4 DirectionalLight(int lightIndex)
 {

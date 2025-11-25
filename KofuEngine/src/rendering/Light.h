@@ -25,9 +25,9 @@ class Light
 {
 public:
     LightDetails lightDetails;
-    float range = 25.0f;
-    float nearPlane = 1.0f;
-    float farPlane = 50.0f;
+    const float range = 25.0f;
+    const float nearPlane = 1.0f;
+    const float farPlane = 50.0f;
 
 private:
 	Mesh lightMesh;
