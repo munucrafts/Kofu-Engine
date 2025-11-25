@@ -1,5 +1,5 @@
 ﻿#version 330 core
-#define MAX_LIGHT_PROJS 32
+#define MAX_LIGHTS 16
 
 out vec4 fragColor;
 
@@ -7,6 +7,7 @@ in vec4 color;
 in vec2 texCoord;
 in vec3 currentPos;
 in vec3 normal;
+in vec4 fragPosLight[MAX_LIGHTS];
 
 uniform sampler2D baseTex;
 uniform sampler2D normalTex;
@@ -15,20 +16,20 @@ uniform sampler2D metallicTex;
 
 uniform float nearClip;
 uniform float farClip;
+uniform float lightFarPlane;
 uniform int renderMode;
 uniform vec3 camPos;
 
-uniform int lightProjsCount;
-in vec4 fragPosLight[MAX_LIGHT_PROJS];
-uniform int lightTypes[MAX_LIGHT_PROJS];
-uniform vec3 lightPositions[MAX_LIGHT_PROJS];
-uniform vec3 lightDirections[MAX_LIGHT_PROJS];
-uniform vec4 lightColors[MAX_LIGHT_PROJS];
-uniform float lightIntensities[MAX_LIGHT_PROJS];
-uniform float lightInnerCones[MAX_LIGHT_PROJS];
-uniform float lightOuterCones[MAX_LIGHT_PROJS];
-uniform sampler2D shadowMap[MAX_LIGHT_PROJS];
-uniform samplerCube shadowCubeMap[MAX_LIGHT_PROJS];
+uniform int lightCount;
+uniform int lightTypes[MAX_LIGHTS];
+uniform vec3 lightPositions[MAX_LIGHTS];
+uniform vec3 lightDirections[MAX_LIGHTS];
+uniform vec4 lightColors[MAX_LIGHTS];
+uniform float lightIntensities[MAX_LIGHTS];
+uniform float lightInnerCones[MAX_LIGHTS];
+uniform float lightOuterCones[MAX_LIGHTS];
+uniform sampler2D shadowMap[MAX_LIGHTS];
+uniform samplerCube shadowCubeMap[MAX_LIGHTS];
 
 float ambient = 0.2;
 
@@ -50,7 +51,7 @@ vec4 PointLight(int lightIndex)
     float diffuse = max(dot(norm, lightDir), 0.0f);
 
     float specular  = 0.0f;
-	if (diffuse != 0.0)
+	if (diffuse > 0.0)
 	{
 		float specularLight = 0.50f;
 		vec3 viewDir = normalize(camPos - currentPos);
@@ -59,7 +60,32 @@ vec4 PointLight(int lightIndex)
 		specular = specAmount * specularLight;
 	};
 
-    return (texture(baseTex, texCoord) * (diffuse * inten + ambient + specular)) * lightColors[lightIndex];
+    float shadow = 0.0;
+    vec3 lightCoords = fragPosLight[lightIndex].xyz / fragPosLight[lightIndex].w;
+    if (lightCoords.z <= 1.0)
+    {
+        lightCoords = (lightCoords + 1.0) / 2.0;
+        float currentDepth = lightCoords.z;
+        float bias = max(0.025 * (1.0 - dot(norm, lightDir)), 0.0005);
+
+        int sampleRadius = 2;
+        vec2 pixelSize = 1.0 / textureSize(shadowMap[lightIndex], 0);
+
+        for (int y = -sampleRadius; y <= sampleRadius; y++)
+        {
+            for (int x = -sampleRadius; x <= sampleRadius; x++)
+            {
+                float closestDepth = texture(shadowMap[lightIndex], lightCoords.xy + vec2(x, y) * pixelSize).r;
+
+                if (currentDepth > closestDepth + bias)
+                    shadow += 1.0;
+            }
+        }
+
+        shadow /= pow((sampleRadius * 2 + 1), 2);
+    }
+
+    return lightIntensities[lightIndex] * (texture(baseTex, texCoord) * (diffuse * (1.0f - shadow) + ambient) + specular  * (1.0f - shadow)) * lightColors[lightIndex];
 }
 
 vec4 DirectionalLight(int lightIndex)
@@ -163,7 +189,7 @@ void main()
         {
             vec4 finalCol = vec4(0.0);
 
-            for (int i = 0; i < lightProjsCount; i++)
+            for (int i = 0; i < lightCount; i++)
             {
                 finalCol += lightTypes[i] == 0 ? PointLight(i) : lightTypes[i] == 1 ? SpotLight(i) : DirectionalLight(i);
             }

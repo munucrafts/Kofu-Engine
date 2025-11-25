@@ -6,11 +6,12 @@
 
 void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
-    shaders.emplace("default", Shader("./shaders/default.vert", "./shaders/default.frag"));
-    shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag"));
-    shaders.emplace("screen", Shader("./shaders/screen.vert", "./shaders/screen.frag"));
-    shaders.emplace("light", Shader("./shaders/light.vert", "./shaders/light.frag"));
-    shaders.emplace("shadow", Shader("./shaders/shadow.vert", "./shaders/shadow.frag"));
+    shaders.emplace("default", Shader("./shaders/default.vert", "./shaders/default.frag", ""));
+    shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag", ""));
+    shaders.emplace("screen", Shader("./shaders/screen.vert", "./shaders/screen.frag", ""));
+    shaders.emplace("light", Shader("./shaders/light.vert", "./shaders/light.frag", ""));
+    shaders.emplace("shadow", Shader("./shaders/shadow.vert", "./shaders/shadow.frag", ""));
+    shaders.emplace("pointLightShadow", Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
 
     renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
@@ -24,8 +25,8 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     }
 
     lights.emplace_back(new Light({ .lightType = SPOT_LIGHT, .intensity = 1.0f, .location = glm::vec3(-7.0f, 5.0f, -18.0f), .rotation = glm::vec3(-90.0f, 0.0f, 0.0f) }));
-    lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = .0f, .color = glm::vec4(0.1f, 0.1f, 0.5f, 1.0f), .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
     lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f)}));
+    //lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 5.0f, .color = glm::vec4(0.1f, 0.1f, 0.5f, 1.0f), .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
 
     for (Mesh* mesh : meshes)
     {
@@ -38,7 +39,9 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     for (int i = 0; i < lights.size(); i++)
     {
         lights[i]->Init();
-        shadowMapFBOs.emplace_back(lights[i]->lightDetails.lightType == POINT_LIGHT ? RenderTarget::CreateCubemapTarget(shadowMapWidth, shadowMapHeight) : RenderTarget::CreateShadowTarget(shadowMapWidth, shadowMapHeight));
+        shadowMapFBOs.emplace_back(lights[i]->lightDetails.lightType == POINT_LIGHT ? 
+                                    RenderTarget::CreateCubemapTarget(shadowMapWidth, shadowMapHeight) : 
+                                    RenderTarget::CreateShadowTarget(shadowMapWidth, shadowMapHeight));
     }
 
     skyBox.LoadSkybox();
@@ -62,21 +65,46 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         ppFBO.Resize(windowWidth, windowHeight);
     }
 
+    shaders.at("pointLightShadow").Activate();
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glViewport(0, 0, shadowMapWidth, shadowMapHeight);
+
+    for (int i = 0; i < lights.size(); i++)
+    {
+        if (lights[i]->lightDetails.lightType == POINT_LIGHT)
+        {
+            shadowMapFBOs[i].Bind();
+
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices[0]"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices[1]"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[1]));
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices[2]"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[2]));
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices[3]"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[3]));
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices[4]"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[4]));
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices[5]"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[5]));
+            glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPosition"), 1, glm::value_ptr(lights[i]->lightDetails.location));
+            glUniform1f(glGetUniformLocation(activeShaderProgram, "farPlane"), lights[i]->farPlane);
+
+            for (Mesh* mesh : meshes)
+            {
+                mesh->DrawMesh();
+            }
+        }
+    }
+
     shaders.at("shadow").Activate();
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glViewport(0, 0, shadowMapWidth, shadowMapHeight);
 
-    unsigned int lightProjsCount = 0;
     for (int i = 0; i < lights.size(); i++)
     {
-        for (int j = 0; j < lights[i]->lightDetails.lightProjs.size(); j++)
+        if (lights[i]->lightDetails.lightType != POINT_LIGHT)
         {
-            lightProjsCount++;
             shadowMapFBOs[i].Bind();
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, shadowMapFBOs[i].depthTex, 0);
+
             glClear(GL_DEPTH_BUFFER_BIT);
-            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[j]));
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
 
             for (Mesh* mesh : meshes)
             {
@@ -105,21 +133,20 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glUniform1f(glGetUniformLocation(activeShaderProgram, "farClip"), playerCamera.farClip);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
     glUniform3fv(glGetUniformLocation(activeShaderProgram, "camPos"), 1, glm::value_ptr(playerCamera.location));
-
     glUniform1i(glGetUniformLocation(activeShaderProgram, "baseTex"), 0);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "normalTex"), 1);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "occlusionTex"), 2);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "metallicTex"), 3);
+    glUniform1i(glGetUniformLocation(activeShaderProgram, "lightCount"), lights.size());
 
-    glUniform1i(glGetUniformLocation(activeShaderProgram, "lightProjsCount"), lightProjsCount);
-
-    unsigned int currentProjIndex = 0;
     for (int i = 0; i < lights.size(); i++)
     {
         bool isPointLight = lights[i]->lightDetails.lightType == POINT_LIGHT;
+        lights[i]->CalculateLightProjection();
 
-
+        glActiveTexture(GL_TEXTURE0 + 4);
         glBindTexture(isPointLight ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D, shadowMapFBOs[i].depthTex);
+        glUniform1i(glGetUniformLocation(activeShaderProgram, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(i) + "]").c_str()), 4);
         glUniform3fv(glGetUniformLocation(activeShaderProgram, ("lightPositions[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.location));
         glUniform4fv(glGetUniformLocation(activeShaderProgram, ("lightColors[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.color));
         glUniform3fv(glGetUniformLocation(activeShaderProgram, ("lightDirections[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->GetDirection()));
@@ -127,16 +154,8 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         glUniform1f(glGetUniformLocation(activeShaderProgram, ("lightIntensities[" + std::to_string(i) + "]").c_str()), lights[i]->lightDetails.intensity);
         glUniform1f(glGetUniformLocation(activeShaderProgram, ("lightInnerCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.innerCone)));
         glUniform1f(glGetUniformLocation(activeShaderProgram, ("lightOuterCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.outerCone)));
-
-        lights[i]->CalculateLightProjection();
-
-        for (int j = 0; j < lights[i]->lightDetails.lightProjs.size(); j++)
-        {
-            glActiveTexture(GL_TEXTURE0 + 4 + i + j);
-            glUniform1i(glGetUniformLocation(activeShaderProgram, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(currentProjIndex) + "]").c_str()), 4 + i + j);
-            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, ("lightProjections[" + std::to_string(currentProjIndex) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[j]));
-            currentProjIndex++;
-        }
+        glUniform1f(glGetUniformLocation(activeShaderProgram, "lightFarPlane"), lights[i]->farPlane);
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, ("lightProjections[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
     }
 
     for (Mesh* mesh : meshes)

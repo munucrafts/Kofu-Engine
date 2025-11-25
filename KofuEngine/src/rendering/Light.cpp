@@ -65,10 +65,6 @@ glm::vec3 Light::GetDirection()
 
 void Light::CalculateLightProjection()
 {
-    float range = 25.0f;
-    float nearPlane = 1.0f;
-    float farPlane = 50.0f;
-
     if (lightDetails.lightType == DIRECTIONAL_LIGHT)
     {
         glm::mat4 orthoProjection = glm::ortho(-range, range, -range, range, nearPlane, farPlane);
