@@ -24,8 +24,8 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
         meshes.insert(meshes.end(), newMeshes.begin(), newMeshes.end());
     }
 
-    //lights.emplace_back(new Light({ .lightType = SPOT_LIGHT, .intensity = 1.0f, .location = glm::vec3(-7.0f, 5.0f, -18.0f), .rotation = glm::vec3(-90.0f, 0.0f, 0.0f) }));
-    //lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f)}));
+    lights.emplace_back(new Light({ .lightType = SPOT_LIGHT, .intensity = 1.0f, .location = glm::vec3(-7.0f, 15.0f, -18.0f), .rotation = glm::vec3(-95.0f, 0.0f, 0.0f) }));
+    lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f), .rotation = glm::vec3(-45.f, 0.0f, 0.0f) }));
     lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 2.0f, .color = glm::vec4(0.1f, 0.1f, 0.5f, 1.0f), .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
 
     for (Mesh* mesh : meshes)
@@ -145,12 +145,12 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         glUniform1i(glGetUniformLocation(activeShaderProgram, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(i) + "]").c_str()), 4 + i);
         glUniform3fv(glGetUniformLocation(activeShaderProgram, ("lightPositions[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.location));
         glUniform4fv(glGetUniformLocation(activeShaderProgram, ("lightColors[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.color));
-        glUniform3fv(glGetUniformLocation(activeShaderProgram, ("lightDirections[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->GetDirection()));
         glUniform1i(glGetUniformLocation(activeShaderProgram, ("lightTypes[" + std::to_string(i) + "]").c_str()), (int)lights[i]->lightDetails.lightType);
         glUniform1f(glGetUniformLocation(activeShaderProgram, ("lightIntensities[" + std::to_string(i) + "]").c_str()), lights[i]->lightDetails.intensity);
 
         if (lights[i]->lightDetails.lightType == SPOT_LIGHT)
         {
+            glUniform3fv(glGetUniformLocation(activeShaderProgram, ("lightDirections[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->GetDirection()));
             glUniform1f(glGetUniformLocation(activeShaderProgram, ("lightInnerCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.innerCone)));
             glUniform1f(glGetUniformLocation(activeShaderProgram, ("lightOuterCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.outerCone)));
         }
