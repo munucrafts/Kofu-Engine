@@ -38,7 +38,7 @@ namespace RenderTarget
         specs.height = height;
         specs.hasColor = false;
         specs.hasDepth = true;
-        specs.depthAsTexture = true;
+        specs.depthAsTexture = false;
         specs.depthCube = true;
         fb.Init(specs);
         return fb;

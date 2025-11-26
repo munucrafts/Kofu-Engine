@@ -26,7 +26,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     lights.emplace_back(new Light({ .lightType = SPOT_LIGHT, .intensity = 1.0f, .location = glm::vec3(-7.0f, 15.0f, -18.0f), .rotation = glm::vec3(-95.0f, 0.0f, 0.0f) }));
     lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f), .rotation = glm::vec3(-45.f, 0.0f, 0.0f) }));
-    lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 2.0f, .color = glm::vec4(0.1f, 0.1f, 0.5f, 1.0f), .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
+    lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 1.0f, .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
 
     for (Mesh* mesh : meshes)
     {
@@ -70,6 +70,8 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glDisable(GL_CULL_FACE);
     glViewport(0, 0, shadowMapWidth, shadowMapHeight);
 
+    glUniform1f(glGetUniformLocation(activeShaderProgram, "farPlane"), lights[0]->farPlane);
+
     for (int i = 0; i < lights.size(); i++)
     {
         if (lights[i]->lightDetails.lightType == POINT_LIGHT)
@@ -78,7 +80,6 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
             glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices"), 6, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
             glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPosition"), 1, glm::value_ptr(lights[i]->lightDetails.location));
-            glUniform1f(glGetUniformLocation(activeShaderProgram, "farPlane"), lights[i]->farPlane);
 
             for (Mesh* mesh : meshes)
             {

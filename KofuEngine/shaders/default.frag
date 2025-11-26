@@ -17,6 +17,7 @@ uniform sampler2D metallicTex;
 uniform float nearClip;
 uniform float farClip;
 uniform float lightFarPlane;
+
 uniform int renderMode;
 uniform vec3 camPos;
 
