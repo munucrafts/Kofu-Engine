@@ -55,14 +55,6 @@ void StaticMesh::InitMesh()
     normalTex.Bind(GL_TEXTURE1);
     occlusionTex.Bind(GL_TEXTURE2);
     metallicTex.Bind(GL_TEXTURE3);
-
-    vao.Unbind();
-    vbo.Unbind();
-    ebo.Unbind();
-    baseTex.Unbind();
-    normalTex.Unbind();
-    metallicTex.Unbind();
-    occlusionTex.Unbind();
 }
 
 void StaticMesh::ClearMesh()
@@ -71,6 +63,9 @@ void StaticMesh::ClearMesh()
     vao.Delete();
     ebo.Delete();
     baseTex.Delete();
+    normalTex.Delete();
+    metallicTex.Delete();
+    occlusionTex.Delete();
 }
 
 void StaticMesh::DrawMesh()

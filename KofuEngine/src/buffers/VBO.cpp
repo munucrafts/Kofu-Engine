@@ -7,6 +7,13 @@ void VBO::Init(const std::vector<Vertex>& vertices)
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 }
 
+void VBO::Init(const std::vector<glm::mat4>& matrices)
+{
+	glGenBuffers(1, &id);
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferData(GL_ARRAY_BUFFER, matrices.size() * sizeof(glm::mat4), matrices.data(), GL_STATIC_DRAW);
+}
+
 void VBO::Init(const float* vertices, const int size)
 {
 	glGenBuffers(1, &id);

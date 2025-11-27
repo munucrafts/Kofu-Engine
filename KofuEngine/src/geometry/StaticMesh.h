@@ -28,7 +28,7 @@ public:
 	Texture metallicTex;
 	Texture occlusionTex;
 
-private:
+protected:
 	VAO vao;
 	VBO vbo;
 	EBO ebo;
