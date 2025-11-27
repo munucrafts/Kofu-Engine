@@ -26,7 +26,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     lights.emplace_back(new Light({ .lightType = SPOT_LIGHT, .intensity = 1.0f, .location = glm::vec3(-7.0f, 15.0f, -18.0f), .rotation = glm::vec3(-95.0f, 0.0f, 0.0f) }));
     lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f), .rotation = glm::vec3(-45.f, 0.0f, 0.0f) }));
-    lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 1.0f, .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
+    lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 0.1f, .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
 
     for (Mesh* mesh : meshes)
     {
@@ -125,10 +125,8 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     shaders.at("default").Activate();
     playerCamera.ApplyCamMatrix();
-    glUniform1f(glGetUniformLocation(activeShaderProgram, "nearClip"), playerCamera.nearClip);
-    glUniform1f(glGetUniformLocation(activeShaderProgram, "farClip"), playerCamera.farClip);
+
     glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
-    glUniform3fv(glGetUniformLocation(activeShaderProgram, "camPos"), 1, glm::value_ptr(playerCamera.location));
     glUniform1i(glGetUniformLocation(activeShaderProgram, "baseTex"), 0);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "normalTex"), 1);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "occlusionTex"), 2);

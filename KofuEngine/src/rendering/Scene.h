@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <map>
-#include <geometry/mesh.h>
+#include <geometry/Mesh.h>
+#include <geometry/StaticMesh.h>
 #include <rendering/Light.h>
 #include <geometry/Skybox.h>
 #include <geometry/ScreenQuad.h>

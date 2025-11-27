@@ -1,15 +1,15 @@
-#include "geometry/mesh.h"
+#pragma once
+#include "geometry/StaticMesh.h"
 #include "Engine.h"
 #include <glm/gtc/type_ptr.hpp>
 
-
-Mesh::Mesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
+StaticMesh::StaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
 {
     vertices = verts;
     indices = inds;
 }
 
-void Mesh::InitMeshManually()
+void StaticMesh::InitMeshManually()
 {
     vao.Init();
     vao.Bind();
@@ -32,7 +32,7 @@ void Mesh::InitMeshManually()
     occlusionTex.Unbind();
 }
 
-void Mesh::InitMesh()
+void StaticMesh::InitMesh()
 {
     vao.Init();
     vao.Bind();
@@ -65,7 +65,7 @@ void Mesh::InitMesh()
     occlusionTex.Unbind();
 }
 
-void Mesh::ClearMesh()
+void StaticMesh::ClearMesh()
 {
     vbo.Delete();
     vao.Delete();
@@ -73,7 +73,7 @@ void Mesh::ClearMesh()
     baseTex.Delete();
 }
 
-void Mesh::DrawMesh()
+void StaticMesh::DrawMesh()
 {
     vao.Bind();
     baseTex.Bind(GL_TEXTURE0);

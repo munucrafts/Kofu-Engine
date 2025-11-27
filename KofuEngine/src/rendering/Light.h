@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <glm/ext/vector_float3.hpp>
-#include <geometry/mesh.h>
+#include <geometry/StaticMesh.h>
 #include "iostream"
 #include "vector"
 
@@ -30,7 +30,7 @@ public:
     const float farPlane = 50.0f;
 
 private:
-	Mesh lightMesh;
+	StaticMesh lightMesh;
 
     std::vector<Vertex> lightVertices =
     {

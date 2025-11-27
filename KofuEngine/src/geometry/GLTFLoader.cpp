@@ -187,7 +187,7 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		vertices.push_back({ positions[i], normal, color, texCoord });
 	}
 
-	Mesh* mesh = new Mesh(vertices, indices);
+	StaticMesh* staticMesh = new StaticMesh(vertices, indices);
 
 	int materialIndex = subMesh.material;
 	if (materialIndex >= 0)
@@ -199,7 +199,7 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		{
 			int imgIndex = gltfModel.textures[baseTexIndex].source;
 			std::string textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
-			mesh->baseTex.LoadTexture(textureName.c_str());
+			staticMesh->baseTex.LoadTexture(textureName.c_str());
 		}
 
 		int metallicTexIndex = material.pbrMetallicRoughness.metallicRoughnessTexture.index;
@@ -207,7 +207,7 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		{
 			int imgIndex = gltfModel.textures[metallicTexIndex].source;
 			std::string textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
-			mesh->metallicTex.LoadTexture(textureName.c_str());
+			staticMesh->metallicTex.LoadTexture(textureName.c_str());
 		}
 
 		int normalTexIndex = material.normalTexture.index;
@@ -215,7 +215,7 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		{
 			int imgIndex = gltfModel.textures[normalTexIndex].source;
 			std::string textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
-			mesh->normalTex.LoadTexture(textureName.c_str());
+			staticMesh->normalTex.LoadTexture(textureName.c_str());
 		}
 
 		int occlusionTexIndex = material.occlusionTexture.index;
@@ -223,9 +223,9 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		{
 			int imgIndex = gltfModel.textures[occlusionTexIndex].source;
 			std::string textureName = "./assets/models/" + gltfModel.images[imgIndex].uri;
-			mesh->occlusionTex.LoadTexture(textureName.c_str());
+			staticMesh->occlusionTex.LoadTexture(textureName.c_str());
 		}
 	}
 
-	meshesArray.emplace_back(mesh);
+	meshesArray.emplace_back(staticMesh);
 }

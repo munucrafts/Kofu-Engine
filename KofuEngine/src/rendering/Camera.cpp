@@ -14,11 +14,11 @@ void Camera::ApplyCamMatrix()
 	projMat = glm::mat4(1.0f);
 	projMat = glm::perspective(glm::radians(engine.activeScene->playerCamera.FOV), engine.GetAspectRatio(), engine.activeScene->playerCamera.nearClip, engine.activeScene->playerCamera.farClip);
 
-	int viewLoc = glGetUniformLocation(engine.activeScene->activeShaderProgram, "viewMat");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMat));
-
-	int projLoc = glGetUniformLocation(engine.activeScene->activeShaderProgram, "projMat");
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projMat));
+	glUniformMatrix4fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
+	glUniformMatrix4fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
+	glUniform1f(glGetUniformLocation(engine.activeScene->activeShaderProgram, "nearClip"), nearClip);
+	glUniform1f(glGetUniformLocation(engine.activeScene->activeShaderProgram, "farClip"), farClip);
+	glUniform3fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "camPos"), 1, glm::value_ptr(location));
 }
 
 void Camera::NavigateCamera()
