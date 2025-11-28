@@ -11,10 +11,12 @@ InstancedStaticMesh::InstancedStaticMesh(const std::vector<Vertex> verts, const 
 void InstancedStaticMesh::DrawMesh()
 {
 	vao.Bind();
-	baseTex.Bind(GL_TEXTURE0);
-	normalTex.Bind(GL_TEXTURE1);
-	occlusionTex.Bind(GL_TEXTURE2);
-	metallicTex.Bind(GL_TEXTURE3);
+
+	unsigned int texUnit = 0;
+	for (auto& tex : textures)
+	{
+		tex.second.Bind(texUnit++);
+	}
 
 	glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, instanceCount);
 }

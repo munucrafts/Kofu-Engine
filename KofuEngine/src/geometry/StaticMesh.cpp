@@ -26,10 +26,11 @@ void StaticMesh::InitMeshManually()
     vao.Unbind();
     vbo.Unbind();
     ebo.Unbind();
-    baseTex.Unbind();
-    normalTex.Unbind();
-    metallicTex.Unbind();
-    occlusionTex.Unbind();
+
+    for (std::pair<const std::string, Texture>& tex : textures)
+    {
+        tex.second.Unbind();
+    }
 }
 
 void StaticMesh::InitMesh()
@@ -45,16 +46,14 @@ void StaticMesh::InitMesh()
     vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
     vao.LinkAttribs(vbo, 2, 4, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
     vao.LinkAttribs(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(10 * sizeof(float)));
+    
+    unsigned int texUnit = 0;
 
-    baseTex.Init();
-    normalTex.Init();
-    metallicTex.Init();
-    occlusionTex.Init();
-
-    baseTex.Bind(GL_TEXTURE0);
-    normalTex.Bind(GL_TEXTURE1);
-    occlusionTex.Bind(GL_TEXTURE2);
-    metallicTex.Bind(GL_TEXTURE3);
+    for (auto& tex : textures)
+    {
+        tex.second.Init();
+        tex.second.Bind(texUnit++);
+    }
 }
 
 void StaticMesh::ClearMesh()
@@ -62,19 +61,22 @@ void StaticMesh::ClearMesh()
     vbo.Delete();
     vao.Delete();
     ebo.Delete();
-    baseTex.Delete();
-    normalTex.Delete();
-    metallicTex.Delete();
-    occlusionTex.Delete();
+
+    for (auto& tex : textures)
+    {
+        tex.second.Delete();
+    }
 }
 
 void StaticMesh::DrawMesh()
 {
     vao.Bind();
-    baseTex.Bind(GL_TEXTURE0);
-    normalTex.Bind(GL_TEXTURE1);
-    occlusionTex.Bind(GL_TEXTURE2);
-    metallicTex.Bind(GL_TEXTURE3);
+
+    unsigned int texUnit = 0;
+    for (auto& tex : textures)
+    {
+        tex.second.Bind(texUnit++);
+    }
 
     modelMat = glm::mat4(1.0f);
     modelMat = glm::translate(modelMat, transform.location);

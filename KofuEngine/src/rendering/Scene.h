@@ -30,6 +30,7 @@ private:
 	std::vector<FBO> shadowMapFBOs;
 	int shadowMapWidth = 2048;
 	int shadowMapHeight = 2048;
+	std::map<std::string, unsigned int> reservedTexSlots = {{"baseTex", 0}, {"normalTex", 1}, {"occlusionTex", 2}, {"metallicTex", 3}};
 
 public:
 	Camera playerCamera;

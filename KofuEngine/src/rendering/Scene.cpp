@@ -127,21 +127,25 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     playerCamera.ApplyCamMatrix();
 
     glUniform1i(glGetUniformLocation(activeShaderProgram, "renderMode"), (int)renderMode);
-    glUniform1i(glGetUniformLocation(activeShaderProgram, "baseTex"), 0);
-    glUniform1i(glGetUniformLocation(activeShaderProgram, "normalTex"), 1);
-    glUniform1i(glGetUniformLocation(activeShaderProgram, "occlusionTex"), 2);
-    glUniform1i(glGetUniformLocation(activeShaderProgram, "metallicTex"), 3);
     glUniform1f(glGetUniformLocation(activeShaderProgram, "lightFarPlane"), lights[0]->farPlane);
     glUniform1i(glGetUniformLocation(activeShaderProgram, "lightCount"), lights.size());
+
+    unsigned int reservedSlots = reservedTexSlots.size();
+
+    for (std::pair<const std::string, unsigned int>& slot : reservedTexSlots)
+    {
+        glUniform1i(glGetUniformLocation(activeShaderProgram, slot.first.c_str()), slot.second);
+    }
 
     for (int i = 0; i < lights.size(); i++)
     {
         bool isPointLight = lights[i]->lightDetails.lightType == POINT_LIGHT;
         lights[i]->CalculateLightProjection();
 
-        glActiveTexture(GL_TEXTURE0 + 4 + i);
+        GLuint nextTexUnit = reservedSlots + i;
+        glActiveTexture(GL_TEXTURE0 + nextTexUnit);
         glBindTexture(isPointLight ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D, shadowMapFBOs[i].depthTex);
-        glUniform1i(glGetUniformLocation(activeShaderProgram, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(i) + "]").c_str()), 4 + i);
+        glUniform1i(glGetUniformLocation(activeShaderProgram, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(i) + "]").c_str()), nextTexUnit);
         glUniform3fv(glGetUniformLocation(activeShaderProgram, ("lightPositions[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.location));
         glUniform4fv(glGetUniformLocation(activeShaderProgram, ("lightColors[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.color));
         glUniform1i(glGetUniformLocation(activeShaderProgram, ("lightTypes[" + std::to_string(i) + "]").c_str()), (int)lights[i]->lightDetails.lightType);

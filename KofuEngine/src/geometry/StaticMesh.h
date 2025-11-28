@@ -10,6 +10,7 @@
 #include "rendering/Texture.h"
 #include "components/Components.h"
 #include "rendering/Camera.h"
+#include "map"
 
 class StaticMesh : public Mesh
 {
@@ -23,10 +24,7 @@ public:
 	virtual void DrawMesh() override;
 
 public:
-	Texture baseTex;
-	Texture normalTex;
-	Texture metallicTex;
-	Texture occlusionTex;
+	std::map<std::string, Texture> textures;
 
 protected:
 	VAO vao;
