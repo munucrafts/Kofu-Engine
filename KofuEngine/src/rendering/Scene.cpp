@@ -74,17 +74,16 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     for (int i = 0; i < lights.size(); i++)
     {
-        if (lights[i]->lightDetails.lightType == POINT_LIGHT)
+        if (lights[i]->lightDetails.lightType != POINT_LIGHT) continue;
+
+        shadowMapFBOs[i].Bind();
+
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices"), 6, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
+        glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPosition"), 1, glm::value_ptr(lights[i]->lightDetails.location));
+
+        for (Mesh* mesh : meshes)
         {
-            shadowMapFBOs[i].Bind();
-
-            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices"), 6, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
-            glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPosition"), 1, glm::value_ptr(lights[i]->lightDetails.location));
-
-            for (Mesh* mesh : meshes)
-            {
-                mesh->DrawMesh();
-            }
+            mesh->DrawMesh();
         }
     }
 
@@ -95,17 +94,16 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     for (int i = 0; i < lights.size(); i++)
     {
-        if (lights[i]->lightDetails.lightType != POINT_LIGHT)
+        if (lights[i]->lightDetails.lightType == POINT_LIGHT) continue;
+
+        shadowMapFBOs[i].Bind();
+
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
+
+        for (Mesh* mesh : meshes)
         {
-            shadowMapFBOs[i].Bind();
-
-            glClear(GL_DEPTH_BUFFER_BIT);
-            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
-
-            for (Mesh* mesh : meshes)
-            {
-                mesh->DrawMesh();
-            }
+            mesh->DrawMesh();
         }
     }
 
@@ -132,17 +130,18 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     unsigned int reservedSlots = reservedTexSlots.size();
 
-    for (std::pair<const std::string, unsigned int>& slot : reservedTexSlots)
+    for (auto& slot : reservedTexSlots)
     {
         glUniform1i(glGetUniformLocation(activeShaderProgram, slot.first.c_str()), slot.second);
     }
 
     for (int i = 0; i < lights.size(); i++)
     {
-        bool isPointLight = lights[i]->lightDetails.lightType == POINT_LIGHT;
         lights[i]->CalculateLightProjection();
 
+        bool isPointLight = lights[i]->lightDetails.lightType == POINT_LIGHT;
         GLuint nextTexUnit = reservedSlots + i;
+
         glActiveTexture(GL_TEXTURE0 + nextTexUnit);
         glBindTexture(isPointLight ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D, shadowMapFBOs[i].depthTex);
         glUniform1i(glGetUniformLocation(activeShaderProgram, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(i) + "]").c_str()), nextTexUnit);
