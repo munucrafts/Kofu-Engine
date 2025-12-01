@@ -9,7 +9,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     shaders.emplace("default", Shader("./shaders/default.vert", "./shaders/default.frag", ""));
     shaders.emplace("skyBox", Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag", ""));
     shaders.emplace("screen", Shader("./shaders/screen.vert", "./shaders/screen.frag", ""));
-    shaders.emplace("light", Shader("./shaders/light.vert", "./shaders/light.frag", ""));
+    shaders.emplace("lightMesh", Shader("./shaders/lightMesh.vert", "./shaders/lightMesh.frag", ""));
     shaders.emplace("shadow", Shader("./shaders/shadow.vert", "./shaders/shadow.frag", ""));
     shaders.emplace("pointLightShadow", Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
 
@@ -65,7 +65,6 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         ppFBO.Resize(windowWidth, windowHeight);
     }
 
-    shaders.at("pointLightShadow").Activate();
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glViewport(0, 0, shadowMapWidth, shadowMapHeight);
@@ -74,32 +73,20 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     for (int i = 0; i < lights.size(); i++)
     {
-        if (lights[i]->lightDetails.lightType != POINT_LIGHT) continue;
-
         shadowMapFBOs[i].Bind();
-
-        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices"), 6, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
-        glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPosition"), 1, glm::value_ptr(lights[i]->lightDetails.location));
-
-        for (Mesh* mesh : meshes)
-        {
-            mesh->DrawMesh();
-        }
-    }
-
-    shaders.at("shadow").Activate();
-    glEnable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-    glViewport(0, 0, shadowMapWidth, shadowMapHeight);
-
-    for (int i = 0; i < lights.size(); i++)
-    {
-        if (lights[i]->lightDetails.lightType == POINT_LIGHT) continue;
-
-        shadowMapFBOs[i].Bind();
-
         glClear(GL_DEPTH_BUFFER_BIT);
-        glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
+
+        if (lights[i]->lightDetails.lightType == POINT_LIGHT)
+        {
+            shaders.at("pointLightShadow").Activate();
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "shadowMatrices"), 6, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
+            glUniform3fv(glGetUniformLocation(activeShaderProgram, "lightPosition"), 1, glm::value_ptr(lights[i]->lightDetails.location));
+        }
+        else
+        {
+            shaders.at("shadow").Activate();
+            glUniformMatrix4fv(glGetUniformLocation(activeShaderProgram, "lightProjection"), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
+        }
 
         for (Mesh* mesh : meshes)
         {
@@ -112,7 +99,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     msaaSceneFBO.Bind();
     Engine::GetEngine().ClearWindow();
 
-    shaders.at("light").Activate();
+    shaders.at("lightMesh").Activate();
     playerCamera.NavigateCamera();
     playerCamera.ApplyCamMatrix();
 
