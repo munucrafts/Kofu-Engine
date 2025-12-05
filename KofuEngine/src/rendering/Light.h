@@ -65,7 +65,7 @@ public:
 	Light() = default;
 	~Light() = default;
 	void Init();
-	void DrawLightMesh();
+	void DrawLightMesh(int shaderID);
     glm::vec3 GetDirection();
     void CalculateLightProjection();
 };

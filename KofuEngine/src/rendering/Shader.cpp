@@ -48,10 +48,15 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
 }
 
 
-void Shader::Activate()
+GLuint Shader::Activate()
 {
 	glUseProgram(shaderProgram);
-	Engine::GetEngine().activeScene->activeShaderProgram = shaderProgram;
+    return shaderProgram;
+}
+
+GLuint Shader::GetShaderID()
+{
+    return shaderProgram;
 }
 
 bool Shader::LoadShader(const std::string& shaderPath, std::string& shaderRef)

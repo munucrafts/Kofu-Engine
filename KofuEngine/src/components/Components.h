@@ -2,6 +2,18 @@
 #include "glm/glm.hpp"
 #include <glm/gtx/transform.hpp>
 
+enum ObjectType
+{
+	NONE,
+	STATIC_MESH,
+	INSTANCED_STATIC_MESH,
+	SKY_BOX,
+	SCREEN,
+	LIGHT_MESH,
+	LIGHT_SHADOW,
+	POINT_LIGHT_SHADOW
+};
+
 enum RenderMode
 {
 	LIT, UNLIT, DEPTH, NORMAL

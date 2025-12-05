@@ -45,9 +45,9 @@ void Light::Init()
     CalculateLightProjection();
 }
 
-void Light::DrawLightMesh()
+void Light::DrawLightMesh(int shaderID)
 {
-	lightMesh.DrawMesh();
+	lightMesh.DrawMesh(shaderID);
 }
 
 glm::vec3 Light::GetDirection()

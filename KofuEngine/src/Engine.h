@@ -17,7 +17,7 @@ public:
 	void InitEngine();
 	void RunEngine();
 	void QuitEngine();
-	void ClearWindow();
+	void ClearWindow(unsigned int width, unsigned height);
 	float GetAspectRatio();
 
 private:

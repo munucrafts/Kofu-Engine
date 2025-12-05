@@ -9,7 +9,7 @@ public:
 	Skybox() = default;
 	~Skybox() = default;
 	void LoadSkybox();
-	void DrawSkybox();
+	void DrawSkybox(const GLuint& shaderID);
 
 private:
 	VAO vao;

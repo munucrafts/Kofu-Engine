@@ -85,7 +85,7 @@ float Engine::GetAspectRatio()
     return ((float)windowWidth/windowHeight);
 }
 
-void Engine::ClearWindow()
+void Engine::ClearWindow(unsigned int width, unsigned int height)
 {
     glClearColor(0.38f, 0.67f, 0.94f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -94,4 +94,5 @@ void Engine::ClearWindow()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+    glViewport(0, 0, width, height);
 }

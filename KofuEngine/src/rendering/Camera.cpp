@@ -4,7 +4,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
 
-void Camera::ApplyCamMatrix()
+void Camera::ApplyCamMatrix(int shaderID)
 {
 	Engine& engine = Engine::GetEngine();
 
@@ -14,11 +14,11 @@ void Camera::ApplyCamMatrix()
 	projMat = glm::mat4(1.0f);
 	projMat = glm::perspective(glm::radians(engine.activeScene->playerCamera.FOV), engine.GetAspectRatio(), engine.activeScene->playerCamera.nearClip, engine.activeScene->playerCamera.farClip);
 
-	glUniformMatrix4fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
-	glUniformMatrix4fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
-	glUniform1f(glGetUniformLocation(engine.activeScene->activeShaderProgram, "nearClip"), nearClip);
-	glUniform1f(glGetUniformLocation(engine.activeScene->activeShaderProgram, "farClip"), farClip);
-	glUniform3fv(glGetUniformLocation(engine.activeScene->activeShaderProgram, "camPos"), 1, glm::value_ptr(location));
+	glUniformMatrix4fv(glGetUniformLocation(shaderID, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
+	glUniformMatrix4fv(glGetUniformLocation(shaderID, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
+	glUniform1f(glGetUniformLocation(shaderID, "nearClip"), nearClip);
+	glUniform1f(glGetUniformLocation(shaderID, "farClip"), farClip);
+	glUniform3fv(glGetUniformLocation(shaderID, "camPos"), 1, glm::value_ptr(location));
 }
 
 void Camera::NavigateCamera()

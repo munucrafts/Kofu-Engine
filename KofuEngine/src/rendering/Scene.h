@@ -7,6 +7,7 @@
 #include <geometry/Skybox.h>
 #include <geometry/ScreenQuad.h>
 #include "RenderTarget.h"
+#include <geometry/InstancedStaticMesh.h>
 
 struct Scene
 {
@@ -18,9 +19,14 @@ public:
 	void EndScene();
 
 private:
+	void UploadLightData(const GLuint shaderId);
+
+private:
 	std::vector<std::string> modelPaths;
-	std::map<std::string, Shader> shaders; 
+	std::map<ObjectType, Shader> shaders; 
 	std::vector<Mesh*> meshes;
+	std::vector<StaticMesh*> staticMeshes;
+	std::vector<InstancedStaticMesh*> instancedStaticMeshes;
 	std::vector<Light*> lights;
 	Skybox skyBox;
 	RenderMode renderMode = LIT;
@@ -34,7 +40,6 @@ private:
 
 public:
 	Camera playerCamera;
-	GLuint activeShaderProgram = 0;
 };
 
 

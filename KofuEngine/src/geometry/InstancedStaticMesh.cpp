@@ -2,13 +2,19 @@
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
 
+InstancedStaticMesh::InstancedStaticMesh()
+{
+	objectType = INSTANCED_STATIC_MESH;
+}
+
 InstancedStaticMesh::InstancedStaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
 {
+	objectType = INSTANCED_STATIC_MESH;
 	vertices = verts;
 	indices = inds;
 }
 
-void InstancedStaticMesh::DrawMesh()
+void InstancedStaticMesh::DrawMesh(int shaderID)
 {
 	vao.Bind();
 

@@ -3,8 +3,14 @@
 #include "Engine.h"
 #include <glm/gtc/type_ptr.hpp>
 
+StaticMesh::StaticMesh()
+{
+    objectType = STATIC_MESH;
+}
+
 StaticMesh::StaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
 {
+    objectType = STATIC_MESH;
     vertices = verts;
     indices = inds;
 }
@@ -68,7 +74,7 @@ void StaticMesh::ClearMesh()
     }
 }
 
-void StaticMesh::DrawMesh()
+void StaticMesh::DrawMesh(int shaderID)
 {
     vao.Bind();
 
@@ -85,7 +91,7 @@ void StaticMesh::DrawMesh()
     modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     modelMat = glm::scale(modelMat, transform.scale);
 
-    glUniformMatrix4fv(glGetUniformLocation(Engine::GetEngine().activeScene->activeShaderProgram, "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
+    glUniformMatrix4fv(glGetUniformLocation(shaderID, "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
 
     glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 }

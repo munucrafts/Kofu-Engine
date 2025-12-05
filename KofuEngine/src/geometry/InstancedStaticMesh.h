@@ -11,10 +11,10 @@ public:
 	VBO instancedVBO;
 
 public:
-	InstancedStaticMesh() = default;
+	InstancedStaticMesh();
 	InstancedStaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds);
 	~InstancedStaticMesh() = default;
-	virtual void DrawMesh() override;
+	virtual void DrawMesh(int shaderID) override;
 	virtual void InitMesh() override;
 	virtual void ClearMesh() override;
 };

@@ -9,8 +9,9 @@ public:
 	virtual void InitMeshManually() = 0;
 	virtual void InitMesh() = 0;
 	virtual void ClearMesh() = 0;
-	virtual void DrawMesh() = 0;
+	virtual void DrawMesh(int shaderID) = 0;
 
 public:
 	Transform transform = {};
+	ObjectType objectType = NONE;
 };

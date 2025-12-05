@@ -15,13 +15,13 @@
 class StaticMesh : public Mesh
 {
 public:
-	StaticMesh() = default;
+	StaticMesh();
 	StaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds);
 	~StaticMesh() = default;
 	virtual void InitMeshManually() override;
 	virtual void InitMesh() override;
 	virtual void ClearMesh() override;
-	virtual void DrawMesh() override;
+	virtual void DrawMesh(int shaderID) override;
 
 public:
 	std::map<std::string, Texture> textures;

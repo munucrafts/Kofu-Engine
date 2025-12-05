@@ -3,13 +3,14 @@
 
 struct Shader
 {
-public:
+private:
 	GLuint shaderProgram;
 
 public:
 	Shader() = default;
 	Shader(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
-	void Activate();
+    GLuint Activate();
+    GLuint GetShaderID();
 
 private:
 	bool LoadShader(const std::string& shaderPath, std::string& shaderRef);

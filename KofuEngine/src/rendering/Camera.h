@@ -6,7 +6,7 @@ class Camera
 public:
 	Camera() = default;
 	~Camera() = default;
-	void ApplyCamMatrix();
+	void ApplyCamMatrix(int shaderID);
 	void NavigateCamera();
 
 public:
