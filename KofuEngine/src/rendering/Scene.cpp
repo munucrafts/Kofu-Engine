@@ -3,6 +3,7 @@
 #include <geometry/GLTFLoader.h>
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <algorithm>
 
 void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
@@ -29,14 +30,14 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f), .rotation = glm::vec3(-45.f, 0.0f, 0.0f) }));
     lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 0.1f, .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
 
+    SortMeshesByType();
+
     for (Mesh* mesh : meshes)
     {
         mesh->transform.location = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->transform.scale = glm::vec3(10.0f);
         mesh->InitMesh();
-
-        mesh->objectType == STATIC_MESH ? staticMeshes.push_back((StaticMesh*)mesh) : instancedStaticMeshes.push_back((InstancedStaticMesh*)mesh);
     }
 
     for (int i = 0; i < lights.size(); i++)
@@ -68,9 +69,9 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         ppFBO.Resize(windowWidth, windowHeight);
     }
 
+    GLuint shaderID = 0;
     playerCamera.NavigateCamera();
     Engine::GetEngine().ClearWindow(shadowMapWidth, shadowMapHeight);
-    GLuint shaderID = 0;
 
     for (int i = 0; i < lights.size(); i++)
     {
@@ -91,10 +92,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
         glUniform1f(glGetUniformLocation(shaderID, "farPlane"), lights[0]->farPlane);
 
-        for (Mesh* mesh : meshes)
-        {
-            mesh->DrawMesh(shaderID);
-        }
+        for (Mesh* mesh : meshes) mesh->DrawMesh(shaderID);
     }
 
     msaaSceneFBO.Bind();
@@ -103,27 +101,21 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     shaderID = shaders.at(LIGHT_MESH).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
 
-    for (Light* light : lights)
+    for (Light* light : lights) light->DrawLightMesh(shaderID);;
+
+    ObjectType lastMeshType = NONE;
+
+    for (Mesh* mesh : meshes)
     {
-        light->DrawLightMesh(shaderID);
-    }
+        if (mesh->objectType != lastMeshType)
+        {
+            lastMeshType = mesh->objectType;
+            shaderID = shaders.at(lastMeshType).Activate();
+            UploadLightData(shaderID);
+            playerCamera.ApplyCamMatrix(shaderID);
+        }
 
-    shaderID = shaders.at(STATIC_MESH).Activate();
-    UploadLightData(shaderID);
-    playerCamera.ApplyCamMatrix(shaderID);
-
-    for (StaticMesh* SM : staticMeshes)
-    {
-        SM->DrawMesh(shaderID);
-    }
-
-    shaderID = shaders.at(INSTANCED_STATIC_MESH).Activate();
-    UploadLightData(shaderID);
-    playerCamera.ApplyCamMatrix(shaderID);
-
-    for (InstancedStaticMesh* ISM : instancedStaticMeshes)
-    {
-        ISM->DrawMesh(shaderID);
+        mesh->DrawMesh(shaderID);
     }
 
     shaderID = shaders.at(SKY_BOX).Activate();
@@ -196,4 +188,13 @@ void Scene::UploadLightData(const GLuint shaderId)
             glUniformMatrix4fv(glGetUniformLocation(shaderId, ("lightProjections[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
         }
     }
+}
+
+void Scene::SortMeshesByType()
+{
+    std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b)
+        {
+            return a->objectType < b->objectType;
+        }
+    );
 }

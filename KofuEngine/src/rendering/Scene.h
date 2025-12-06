@@ -20,13 +20,12 @@ public:
 
 private:
 	void UploadLightData(const GLuint shaderId);
+	void SortMeshesByType();
 
 private:
 	std::vector<std::string> modelPaths;
 	std::map<ObjectType, Shader> shaders; 
 	std::vector<Mesh*> meshes;
-	std::vector<StaticMesh*> staticMeshes;
-	std::vector<InstancedStaticMesh*> instancedStaticMeshes;
 	std::vector<Light*> lights;
 	Skybox skyBox;
 	RenderMode renderMode = LIT;
@@ -34,8 +33,8 @@ private:
 	FBO msaaSceneFBO;
 	FBO ppFBO;
 	std::vector<FBO> shadowMapFBOs;
-	int shadowMapWidth = 2048;
-	int shadowMapHeight = 2048;
+	const int shadowMapWidth = 2048;
+	const int shadowMapHeight = 2048;
 	std::map<std::string, unsigned int> reservedTexSlots = {{"baseTex", 0}, {"normalTex", 1}, {"occlusionTex", 2}, {"metallicTex", 3}};
 
 public:
