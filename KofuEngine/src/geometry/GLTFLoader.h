@@ -7,13 +7,15 @@
 class GLTFLoader
 {
 public:
-	std::vector<Mesh*> LoadGltfModel(const std::string& path);
+	std::vector<Mesh*> LoadGltfModel(const std::string& path, MeshData meshDetails);
 	static GLTFLoader& GetGltfLoader();
 
 private:
 	tinygltf::Model gltfModel;
 	tinygltf::TinyGLTF gltfLoader;
 	std::vector<Mesh*> meshesArray;
+	MeshData meshData;
+	std::string modelPath;
 
 private:
 	void LoadGltfNode(tinygltf::Node& node);
@@ -26,4 +28,3 @@ private:
 	~GLTFLoader() = default;
 	GLTFLoader& operator= (GLTFLoader& instance) = delete;
 };
-

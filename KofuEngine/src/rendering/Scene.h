@@ -23,7 +23,7 @@ private:
 	void SortMeshesByType();
 
 private:
-	std::vector<std::string> modelPaths;
+	std::map<std::string, MeshData> modelPaths;
 	std::map<ObjectType, Shader> shaders; 
 	std::vector<Mesh*> meshes;
 	std::vector<Light*> lights;

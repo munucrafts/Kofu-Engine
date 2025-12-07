@@ -18,11 +18,12 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
      
-    modelPaths.push_back("./assets/models/medieval.gltf");
+    modelPaths.insert({"./assets/models/Medieval/medieval.gltf", { STATIC_MESH, { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f) }}});
+    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", { STATIC_MESH, { glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f) }}});
     
-    for (const std::string& path : modelPaths)
+    for (const std::pair<std::string, MeshData>& path : modelPaths)
     {
-        std::vector<Mesh*> newMeshes = GLTFLoader::GetGltfLoader().LoadGltfModel(path);
+        std::vector<Mesh*> newMeshes = GLTFLoader::GetGltfLoader().LoadGltfModel(path.first, path.second);
         meshes.insert(meshes.end(), newMeshes.begin(), newMeshes.end());
     }
 
@@ -32,13 +33,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     SortMeshesByType();
 
-    for (Mesh* mesh : meshes)
-    {
-        mesh->transform.location = glm::vec3(0.0f, 0.0f, 0.0f);
-        mesh->transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-        mesh->transform.scale = glm::vec3(10.0f);
-        mesh->InitMesh();
-    }
+    for (Mesh* mesh : meshes) mesh->InitMesh();
 
     for (int i = 0; i < lights.size(); i++)
     {

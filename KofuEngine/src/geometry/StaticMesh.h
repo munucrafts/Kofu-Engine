@@ -23,14 +23,9 @@ public:
 	virtual void ClearMesh() override;
 	virtual void DrawMesh(int shaderID) override;
 
-public:
-	std::map<std::string, Texture> textures;
-
 protected:
 	VAO vao;
 	VBO vbo;
 	EBO ebo;
 	glm::mat4 modelMat;
-	std::vector<Vertex> vertices;
-	std::vector<GLuint> indices;
 };

@@ -12,7 +12,7 @@ public:
 
 public:
 	InstancedStaticMesh();
-	InstancedStaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds);
+	InstancedStaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds, const unsigned int instCount);
 	~InstancedStaticMesh() = default;
 	virtual void DrawMesh(int shaderID) override;
 	virtual void InitMesh() override;

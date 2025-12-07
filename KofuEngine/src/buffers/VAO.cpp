@@ -11,7 +11,6 @@ void VAO::LinkAttribs(VBO& VBO, const GLuint layout, const GLuint numComponents,
 	VBO.Bind();
 	glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, offset);
 	glEnableVertexAttribArray(layout);
-	VBO.Unbind();
 }
 
 void VAO::Bind()
