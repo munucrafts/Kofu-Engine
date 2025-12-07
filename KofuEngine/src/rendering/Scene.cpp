@@ -17,7 +17,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
-
+     
     modelPaths.push_back("./assets/models/medieval.gltf");
     
     for (const std::string& path : modelPaths)

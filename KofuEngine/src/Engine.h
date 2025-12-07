@@ -17,7 +17,7 @@ public:
 	void InitEngine();
 	void RunEngine();
 	void QuitEngine();
-	void ClearWindow(unsigned int width, unsigned height);
+	void ClearWindow(const unsigned int width, const unsigned height, const glm::vec4& clearColor = glm::vec4(0.0f));
 	float GetAspectRatio();
 
 private:
