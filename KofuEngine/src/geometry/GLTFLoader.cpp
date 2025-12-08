@@ -10,7 +10,7 @@ GLTFLoader& GLTFLoader::GetGltfLoader()
 	return instance;
 }
 
-std::vector<Mesh*> GLTFLoader::LoadGltfModel(const std::string& path, MeshData meshDetails)
+std::vector<Mesh*> GLTFLoader::LoadGltfModel(const std::string& path, const MeshData& meshDetails)
 {
 	std::filesystem::path filePath(path);
 	modelPath = filePath.parent_path().string();
@@ -205,10 +205,12 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		}
 	case(INSTANCED_STATIC_MESH):
 		{
-			mesh = new InstancedStaticMesh(vertices, indices, 1);
+			mesh = new InstancedStaticMesh(vertices, indices, meshData.instanceCount);
 			break;
 		}
 	}
+
+	if (!mesh) return;
 
 	mesh->transform = meshData.transform;
 

@@ -5,12 +5,12 @@
 
 StaticMesh::StaticMesh()
 {
-    objectType = STATIC_MESH;
+    meshType = STATIC_MESH;
 }
 
 StaticMesh::StaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
 {
-    objectType = STATIC_MESH;
+    meshType = STATIC_MESH;
     vertices = verts;
     indices = inds;
 }

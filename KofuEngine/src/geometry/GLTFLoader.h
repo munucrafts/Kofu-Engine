@@ -7,7 +7,7 @@
 class GLTFLoader
 {
 public:
-	std::vector<Mesh*> LoadGltfModel(const std::string& path, MeshData meshDetails);
+	std::vector<Mesh*> LoadGltfModel(const std::string& path, const MeshData& meshDetails);
 	static GLTFLoader& GetGltfLoader();
 
 private:

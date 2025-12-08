@@ -40,3 +40,10 @@ struct Direction
 	glm::vec3 right;
 	glm::vec3 up;
 };
+
+struct MeshData
+{
+	ObjectType meshType;
+	Transform transform;
+	unsigned int instanceCount = 1;
+};

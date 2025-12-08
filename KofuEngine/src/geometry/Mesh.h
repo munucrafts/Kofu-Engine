@@ -7,11 +7,6 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-struct MeshData
-{
-	ObjectType meshType;
-	Transform transform;
-};
 
 class Mesh
 {
@@ -24,8 +19,8 @@ public:
 	virtual void DrawMesh(int shaderID) = 0;
 
 public:
+	ObjectType meshType = NONE;
 	Transform transform = {};
-	ObjectType objectType = NONE;
 	std::map<std::string, Texture> textures;
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;

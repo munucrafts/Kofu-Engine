@@ -19,7 +19,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
      
     modelPaths.insert({"./assets/models/Medieval/medieval.gltf", { STATIC_MESH, { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f) }}});
-    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", { STATIC_MESH, { glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f) }}});
+    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", { INSTANCED_STATIC_MESH, { glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f) }, 4}});
     
     for (const std::pair<std::string, MeshData>& path : modelPaths)
     {
@@ -102,9 +102,9 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     for (Mesh* mesh : meshes)
     {
-        if (mesh->objectType != lastMeshType)
+        if (mesh->meshType != lastMeshType)
         {
-            lastMeshType = mesh->objectType;
+            lastMeshType = mesh->meshType;
             shaderID = shaders.at(lastMeshType).Activate();
             UploadLightData(shaderID);
             playerCamera.ApplyCamMatrix(shaderID);
@@ -189,7 +189,7 @@ void Scene::SortMeshesByType()
 {
     std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b)
         {
-            return a->objectType < b->objectType;
+            return a->meshType < b->meshType;
         }
     );
 }
