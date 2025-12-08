@@ -24,6 +24,15 @@ void Engine::InitEngine()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(windowWidth, windowHeight, "Kofu Engine", nullptr, nullptr);
+
+    GLFWimage images[1];
+    images[0].pixels = stbi_load("../KofuEngine/assets/others/Icon.png", &images[0].width, &images[0].height, 0, 4);
+    if (images[0].pixels)
+    {
+        glfwSetWindowIcon(window, 1, images);
+        stbi_image_free(images[0].pixels);
+    }
+
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
     gladLoadGL();
