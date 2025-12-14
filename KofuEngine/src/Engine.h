@@ -8,7 +8,7 @@
 #include <rendering/scene.h>
 #include "geometry/Skybox.h"
 #include "map"
-#include <rendering/Light.h>
+#include "rendering/Light.h"
 
 class Engine
 {
@@ -21,6 +21,7 @@ public:
 	float GetAspectRatio();
 
 private:
+	static constexpr char engineName[12] = "Kofu Engine";
 	bool engineInitialized = false;
 	static bool windowResized;
 

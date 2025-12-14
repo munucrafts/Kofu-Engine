@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "Engine.h"
 #include "iostream"
-#include "geometry/GLTFLoader.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "geometry/GLTFLoader.h"
 #include "rendering/RenderTarget.h"
 #include "geometry/ScreenQuad.h"
 
@@ -23,10 +23,10 @@ void Engine::InitEngine()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(windowWidth, windowHeight, "Kofu Engine", nullptr, nullptr);
+    window = glfwCreateWindow(windowWidth, windowHeight, engineName, nullptr, nullptr);
 
     GLFWimage images[1];
-    images[0].pixels = stbi_load("../KofuEngine/assets/others/Icon.png", &images[0].width, &images[0].height, 0, 4);
+    images[0].pixels = stbi_load("assets/others/Icon.png", &images[0].width, &images[0].height, 0, 4);
     if (images[0].pixels)
     {
         glfwSetWindowIcon(window, 1, images);
@@ -67,7 +67,7 @@ void Engine::RunEngine()
 
         if (fpsTimer >= 1.0f)
         {
-            std::string statLine = "Kofu Engine [ " + std::to_string(fps) + " FPS | " + std::to_string(deltaTime * 1000.0f) + " ms ]";
+            std::string statLine = (std::string)engineName + " [ " + std::to_string(fps) + " FPS | " + std::to_string(deltaTime * 1000.0f) + " ms ]";
             glfwSetWindowTitle(window, statLine.c_str());
             fps = 0;
             fpsTimer = 0.0f;
