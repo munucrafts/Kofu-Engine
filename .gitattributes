@@ -1,0 +1,5 @@
+# Exclude vendor and third-party files from GitHub language statistics.
+
+* linguist-vendored
+KofuEngine/** !linguist-vendored
+KofuEngine/src/audio/dr_wav.h linguist-vendored
