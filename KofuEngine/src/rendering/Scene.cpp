@@ -4,6 +4,7 @@
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <algorithm>
+#include "../audio/AudioMaster.h"
 
 void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
@@ -17,6 +18,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     renderMode = LIT;
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
+    AudioMaster::GetAudioMaster().InitAudioMaster();
      
     modelPaths.insert({"./assets/models/Medieval/medieval.gltf", { STATIC_MESH, { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f) }}});
     modelPaths.insert({"./assets/models/Helmet/Scene.gltf", { INSTANCED_STATIC_MESH, { glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f) }, 4}});

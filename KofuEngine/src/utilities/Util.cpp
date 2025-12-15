@@ -42,7 +42,7 @@ namespace Util
         {
             glm::vec3 position = RandVec3(minBounds, maxBounds);
             glm::quat rotation = glm::quat(glm::vec3(RandFloat(0.0f, glm::two_pi<float>()), RandFloat(0.0f, glm::two_pi<float>()), RandFloat(0.0f, glm::two_pi<float>())));
-            
+
             float scaleValue = RandFloat(minScale, maxScale);
             glm::vec3 scale(scaleValue);
 

@@ -32,7 +32,13 @@ project "KofuEngine"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.JsonParser}"
+		"%{IncludeDir.JsonParser}",
+		"%{IncludeDir.OpenAL}"
+	}
+
+	libdirs
+	{
+		"vendor/OpenAL/lib"
 	}
 
 	links 
@@ -40,7 +46,8 @@ project "KofuEngine"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"opengl32.lib"
+		"opengl32.lib",
+		"OpenAL32.lib"
 	}
 
 	filter "system:windows"

@@ -3,6 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
+#include <audio/AudioListener.h>
 
 void Camera::ApplyCamMatrix(int shaderID)
 {
@@ -80,6 +81,10 @@ void Camera::NavigateCamera()
 
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		location -= speed * direction.up;
+
+	AudioListener::GetListener().SetListenerLocation(location);
+	AudioListener::GetListener().SetListenerVelocity(direction.forward * speed);
+	AudioListener::GetListener().SetListenerOrientation(direction.forward, direction.up);
 }
 
 

@@ -1,7 +1,7 @@
 #include "InstancedStaticMesh.h"
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
-#include <Utils/Util.h>
+#include <utilities/Util.h>
 
 InstancedStaticMesh::InstancedStaticMesh()
 {

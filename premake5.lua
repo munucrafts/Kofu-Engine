@@ -28,6 +28,7 @@ IncludeDir["glm"] = "vendor/glm"
 IncludeDir["stb_image"] = "vendor/stb_image"
 IncludeDir["JsonParser"] = "vendor/JsonParser"
 IncludeDir["tinygltf"] = "vendor/tinygltf"
+IncludeDir["OpenAL"] = "vendor/OpenAL/include"
 
 -- Projects
 group "Dependencies"
