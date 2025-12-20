@@ -20,8 +20,10 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
     AudioMaster::GetAudioMaster().InitAudioMaster();
      
-    modelPaths.insert({"./assets/models/Medieval/medieval.gltf", { STATIC_MESH, { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f) }}});
-    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", { INSTANCED_STATIC_MESH, { glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f) }, 4}});
+    modelPaths.insert({"./assets/models/Medieval/medieval.gltf", 
+                      { STATIC_MESH, { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f) }}});
+    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", 
+                      { INSTANCED_STATIC_MESH, { glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f) }, 4}});
     
     for (const std::pair<std::string, MeshData>& path : modelPaths)
     {
@@ -49,13 +51,6 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     screenQuad.Init();
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
-    glViewport(0, 0, windowWidth, windowHeight);
 }
 
 void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime)
@@ -134,15 +129,8 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
 void Scene::EndScene()
 {
-    for (Mesh* mesh : meshes)
-    {
-        delete mesh;
-    }
-
-    for (Light* light : lights)
-    {
-        delete light;
-    }
+    for (Mesh* mesh : meshes) delete mesh;
+    for (Light* light : lights) delete light;
 }
 
 void Scene::UploadLightData(const GLuint shaderId)
