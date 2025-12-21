@@ -22,6 +22,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
      
     modelPaths.insert({"./assets/models/Medieval/medieval.gltf", 
                       { STATIC_MESH, { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f) }}});
+
     modelPaths.insert({"./assets/models/Helmet/Scene.gltf", 
                       { INSTANCED_STATIC_MESH, { glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f) }, 4}});
     
@@ -31,8 +32,12 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
         meshes.insert(meshes.end(), newMeshes.begin(), newMeshes.end());
     }
 
-    lights.emplace_back(new Light({ .lightType = SPOT_LIGHT, .intensity = 1.0f, .location = glm::vec3(-7.0f, 15.0f, -18.0f), .rotation = glm::vec3(-95.0f, 0.0f, 0.0f) }));
-    lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f), .rotation = glm::vec3(-45.f, 0.0f, 0.0f) }));
+    lights.emplace_back(new Light({ .lightType = SPOT_LIGHT, 
+                                    .intensity = 1.0f, .location = glm::vec3(-7.0f, 15.0f, -18.0f), .rotation = glm::vec3(-95.0f, 0.0f, 0.0f) }));
+    
+    lights.emplace_back(new Light({ .lightType = DIRECTIONAL_LIGHT, 
+                                    .intensity = 0.5f, .location = glm::vec3(10.0f, 10.0f, 0.0f), .rotation = glm::vec3(-45.f, 0.0f, 0.0f) }));
+    
     lights.emplace_back(new Light({ .lightType = POINT_LIGHT, .intensity = 0.1f, .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
 
     SortMeshesByType();
