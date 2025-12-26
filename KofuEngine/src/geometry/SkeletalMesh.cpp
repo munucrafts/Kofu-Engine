@@ -1,21 +1,21 @@
 #pragma once
-#include "geometry/StaticMesh.h"
+#include "SkeletalMesh.h"
 #include "Engine.h"
 #include <glm/gtc/type_ptr.hpp>
 
-StaticMesh::StaticMesh()
+SkeletalMesh::SkeletalMesh()
 {
-    meshType = STATIC_MESH;
+    meshType = SKELETAL_MESH;
 }
 
-StaticMesh::StaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
+SkeletalMesh::SkeletalMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
 {
-    meshType = STATIC_MESH;
+    meshType = SKELETAL_MESH;
     vertices = verts;
     indices = inds;
 }
 
-void StaticMesh::InitMeshManually()
+void SkeletalMesh::InitMesh()
 {
     vao.Init();
     vao.Bind();
@@ -29,30 +29,6 @@ void StaticMesh::InitMeshManually()
     vao.LinkAttribs(vbo, 2, 4, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
     vao.LinkAttribs(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(10 * sizeof(float)));
 
-    vao.Unbind();
-    vbo.Unbind();
-    ebo.Unbind();
-
-    for (std::pair<const std::string, Texture>& tex : textures)
-    {
-        tex.second.Unbind();
-    }
-}
-
-void StaticMesh::InitMesh()
-{
-    vao.Init();
-    vao.Bind();
-    vbo.Init(vertices);
-    vbo.Bind();
-    ebo.Init(indices);
-    ebo.Bind();
-
-    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
-    vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
-    vao.LinkAttribs(vbo, 2, 4, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
-    vao.LinkAttribs(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(10 * sizeof(float)));
-    
     unsigned int texUnit = 0;
 
     for (auto& tex : textures)
@@ -62,7 +38,7 @@ void StaticMesh::InitMesh()
     }
 }
 
-void StaticMesh::ClearMesh()
+void SkeletalMesh::ClearMesh()
 {
     vbo.Delete();
     vao.Delete();
@@ -74,7 +50,7 @@ void StaticMesh::ClearMesh()
     }
 }
 
-void StaticMesh::DrawMesh(int shaderID)
+void SkeletalMesh::DrawMesh(int shaderID)
 {
     vao.Bind();
 
