@@ -78,6 +78,9 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 	std::vector<glm::vec4> colors;
 	std::vector<glm::vec2> texCoords;
 
+	std::vector<glm::ivec4> jointIDs;
+	std::vector<glm::vec4> jointWeights;
+
 	if (attribs.find("POSITION") != attribs.end())
 	{
 		tinygltf::Accessor& accessor = gltfModel.accessors[attribs.at("POSITION")];
@@ -149,6 +152,44 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 			float v = data[i * 2 + 1];
 
 			texCoords.push_back(glm::vec2(u, v));
+		}
+	}
+
+	if (attribs.find("JOINTS_0") != attribs.end())
+	{
+		tinygltf::Accessor& accessor = gltfModel.accessors[attribs.at("JOINTS_0")];
+		tinygltf::BufferView& bufferView = gltfModel.bufferViews[accessor.bufferView];
+		tinygltf::Buffer& buffer = gltfModel.buffers[bufferView.buffer];
+
+		float* data = reinterpret_cast<float*>(&buffer.data[accessor.byteOffset + bufferView.byteOffset]);
+
+		for (int i = 0; i < accessor.count; i++)
+		{
+			float x = data[i * 3 + 0];
+			float y = data[i * 3 + 1];
+			float z = data[i * 3 + 2];
+			float w = data[i * 3 + 3];
+
+			jointIDs.push_back(glm::ivec4(x, y, z, w));
+		}
+	}
+
+	if (attribs.find("WEIGHTS_0") != attribs.end())
+	{
+		tinygltf::Accessor& accessor = gltfModel.accessors[attribs.at("WEIGHTS_0")];
+		tinygltf::BufferView& bufferView = gltfModel.bufferViews[accessor.bufferView];
+		tinygltf::Buffer& buffer = gltfModel.buffers[bufferView.buffer];
+
+		float* data = reinterpret_cast<float*>(&buffer.data[accessor.byteOffset + bufferView.byteOffset]);
+
+		for (int i = 0; i < accessor.count; i++)
+		{
+			float x = data[i * 3 + 0];
+			float y = data[i * 3 + 1];
+			float z = data[i * 3 + 2];
+			float w = data[i * 3 + 3];
+
+			jointWeights.push_back(glm::ivec4(x, y, z, w));
 		}
 	}
 

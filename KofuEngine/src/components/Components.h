@@ -26,6 +26,9 @@ struct Vertex
 	glm::vec3 normal;
 	glm::vec4 color;
 	glm::vec2 texCoord;
+
+	glm::ivec4 jointIDs;
+	glm::vec4 jointWeights;
 };
 
 struct Transform
