@@ -1,0 +1,11 @@
+Model Information:
+* title:	Batman VS Superman Suit
+* source:	https://sketchfab.com/3d-models/batman-vs-superman-suit-35e9fbd6dc3b4fa8a8cc469cc1a16393
+* author:	Valentin Yovchev (https://sketchfab.com/spybg)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Batman VS Superman Suit" (https://sketchfab.com/3d-models/batman-vs-superman-suit-35e9fbd6dc3b4fa8a8cc469cc1a16393) by Valentin Yovchev (https://sketchfab.com/spybg) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

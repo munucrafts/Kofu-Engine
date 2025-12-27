@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ruel From Wakfu
+* source:	https://sketchfab.com/3d-models/ruel-from-wakfu-b699a3d0774e44c7a2812adbba48bf8f
+* author:	keianhzo (https://sketchfab.com/keianhzo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ruel From Wakfu" (https://sketchfab.com/3d-models/ruel-from-wakfu-b699a3d0774e44c7a2812adbba48bf8f) by keianhzo (https://sketchfab.com/keianhzo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

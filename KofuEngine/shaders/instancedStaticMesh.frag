@@ -32,7 +32,7 @@ uniform float lightOuterCones[MAX_LIGHTS];
 uniform sampler2D shadowMap[MAX_LIGHTS];
 uniform samplerCube shadowCubeMap[MAX_LIGHTS];
 
-float ambient = 0.2;
+float ambient = 0.5;
 
 float MakeLinearDepth(float depth)
 {

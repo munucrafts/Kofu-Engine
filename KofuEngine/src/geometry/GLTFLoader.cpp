@@ -208,6 +208,11 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 			mesh = new InstancedStaticMesh(vertices, indices, meshData.instanceCount);
 			break;
 		}
+	case(SKELETAL_MESH):
+		{
+			mesh = new SkeletalMesh(vertices, indices);
+			break;
+		}
 	}
 
 	if (!mesh) return;

@@ -3,6 +3,7 @@
 #include <map>
 #include <geometry/Mesh.h>
 #include <geometry/StaticMesh.h>
+#include <geometry/SkeletalMesh.h>
 #include <rendering/Light.h>
 #include <geometry/Skybox.h>
 #include <geometry/ScreenQuad.h>

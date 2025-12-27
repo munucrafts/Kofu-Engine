@@ -13,7 +13,6 @@ class Mesh
 public:
 	Mesh() = default;
 	virtual ~Mesh() = default;
-	virtual void InitMeshManually() = 0;
 	virtual void InitMesh() = 0;
 	virtual void ClearMesh() = 0;
 	virtual void DrawMesh(int shaderID) = 0;
