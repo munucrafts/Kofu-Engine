@@ -12,34 +12,49 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
 
     shaderProgram = glCreateProgram();
 
-    std::string versionStr = Engine::GetEngine().GetOGLVesionText() + "\n";
+    const std::string versionStr = Engine::GetEngine().GetOGLVersionText() + "\n";
     const char* versionPtr = versionStr.c_str();
 
     if (vertLoaded)
     {
         vertShader = glCreateShader(GL_VERTEX_SHADER);
-        const char* src[] = { versionPtr, vertCode.c_str() };
+        const char* src[2] = { versionPtr, vertCode.c_str() };
         glShaderSource(vertShader, 2, src, nullptr);
         glCompileShader(vertShader);
         glAttachShader(shaderProgram, vertShader);
+    }
+    else
+    {
+        std::string msg = vertPath.length() == 0 ? "Empty Shader Path" : vertPath;
+        std::cerr << "Failed to Load Shader - (" + msg + ")" << std::endl;
     }
 
     if (fragLoaded)
     {
         fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-        const char* src[] = { versionPtr, fragCode.c_str() };
+        const char* src[2] = { versionPtr, fragCode.c_str() };
         glShaderSource(fragShader, 2, src, nullptr);
         glCompileShader(fragShader);
         glAttachShader(shaderProgram, fragShader);
+    }
+    else
+    {
+        std::string msg = fragPath.length() == 0 ? "Empty Shader Path" : fragPath;
+        std::cerr << "Failed to Load Shader - (" + msg + ")" << std::endl;
     }
 
     if (geomLoaded)
     {
         geomShader = glCreateShader(GL_GEOMETRY_SHADER);
-        const char* src[] = { versionPtr, geomCode.c_str() };
+        const char* src[2] = { versionPtr, geomCode.c_str() };
         glShaderSource(geomShader, 2, src, nullptr);
         glCompileShader(geomShader);
         glAttachShader(shaderProgram, geomShader);
+    }
+    else
+    {
+        std::string msg = geomPath.length() == 0 ? "Empty Shader Path" : geomPath;
+        std::cerr << "Failed to Load Shader - (" + msg + ")" << std::endl;
     }
 
     glLinkProgram(shaderProgram);
@@ -49,7 +64,6 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
     glDeleteShader(fragShader);
     glDeleteShader(geomShader);
 }
-
 
 GLuint Shader::Activate()
 {
@@ -75,5 +89,9 @@ bool Shader::LoadShader(const std::string& shaderPath, std::string& shaderRef)
 		in.close();
 		return true;
 	}
-	else return false;
+    else
+    {
+        std::cerr << "No Shader to Load. Shader Path is Empty" << std::endl;
+        return false;
+    }
 }

@@ -110,7 +110,7 @@ float Engine::GetAspectRatio()
     return ((float)windowWidth/windowHeight);
 }
 
-std::string Engine::GetOGLVesionText()
+std::string Engine::GetOGLVersionText()
 {
     return ("#version " + std::to_string(OGLMajor) + std::to_string(OGLMinor) + "0 core");
 }

@@ -1,9 +1,11 @@
 #pragma once
 #include "stb_image.h"
+#include "iostream"
+#include <glad/glad.h>
 
-struct Shader
+class Shader
 {
-private:
+protected:
 	GLuint shaderProgram;
 
 public:
@@ -12,6 +14,6 @@ public:
     GLuint Activate();
     GLuint GetShaderID();
 
-private:
+protected:
 	bool LoadShader(const std::string& shaderPath, std::string& shaderRef);
 };
