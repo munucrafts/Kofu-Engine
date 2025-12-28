@@ -19,9 +19,9 @@ public:
 	void QuitEngine();
 	void ClearWindow(const unsigned int width, const unsigned height, const glm::vec4& clearColor = glm::vec4(0.0f));
 	float GetAspectRatio();
+	std::string GetOGLVesionText();
 
 private:
-	static constexpr char engineName[12] = "Kofu Engine";
 	bool engineInitialized = false;
 	static bool windowResized;
 

@@ -12,11 +12,14 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
 
     shaderProgram = glCreateProgram();
 
+    std::string versionStr = Engine::GetEngine().GetOGLVesionText() + "\n";
+    const char* versionPtr = versionStr.c_str();
+
     if (vertLoaded)
     {
         vertShader = glCreateShader(GL_VERTEX_SHADER);
-        const char* src = vertCode.c_str();
-        glShaderSource(vertShader, 1, &src, nullptr);
+        const char* src[] = { versionPtr, vertCode.c_str() };
+        glShaderSource(vertShader, 2, src, nullptr);
         glCompileShader(vertShader);
         glAttachShader(shaderProgram, vertShader);
     }
@@ -24,8 +27,8 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
     if (fragLoaded)
     {
         fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-        const char* src = fragCode.c_str();
-        glShaderSource(fragShader, 1, &src, nullptr);
+        const char* src[] = { versionPtr, fragCode.c_str() };
+        glShaderSource(fragShader, 2, src, nullptr);
         glCompileShader(fragShader);
         glAttachShader(shaderProgram, fragShader);
     }
@@ -33,8 +36,8 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
     if (geomLoaded)
     {
         geomShader = glCreateShader(GL_GEOMETRY_SHADER);
-        const char* src = geomCode.c_str();
-        glShaderSource(geomShader, 1, &src, nullptr);
+        const char* src[] = { versionPtr, geomCode.c_str() };
+        glShaderSource(geomShader, 2, src, nullptr);
         glCompileShader(geomShader);
         glAttachShader(shaderProgram, geomShader);
     }

@@ -10,6 +10,10 @@ int Engine::windowWidth = 1024;
 int Engine::windowHeight = 724;
 bool Engine::windowResized = false;
 
+constexpr char engineName[12] = "Kofu Engine";
+constexpr int OGLMajor = 4;
+constexpr int OGLMinor = 6;
+
 Engine& Engine::GetEngine()
 {
     static Engine instance;
@@ -19,8 +23,8 @@ Engine& Engine::GetEngine()
 void Engine::InitEngine()
 {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OGLMajor);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OGLMinor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(windowWidth, windowHeight, engineName, nullptr, nullptr);
@@ -104,4 +108,9 @@ void Engine::ClearWindow(const unsigned int width, const unsigned height, const 
 float Engine::GetAspectRatio()
 {
     return ((float)windowWidth/windowHeight);
+}
+
+std::string Engine::GetOGLVesionText()
+{
+    return ("#version " + std::to_string(OGLMajor) + std::to_string(OGLMinor) + "0 core");
 }

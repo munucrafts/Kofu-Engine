@@ -232,7 +232,10 @@ void GLTFLoader::LoadGltfSubMesh(tinygltf::Primitive& subMesh)
 		glm::vec4 color = (i < colors.size()) ? colors[i] : glm::vec4(1.0f);
 		glm::vec2 texCoord = (i < texCoords.size()) ? texCoords[i] : glm::vec2(0.0f);
 
-		vertices.push_back({ positions[i], normal, color, texCoord });
+		glm::ivec4 jointID = (i < jointIDs.size()) ? jointIDs[i] : glm::ivec4(0);
+		glm::vec4 jointWeight = (i < jointWeights.size()) ? jointWeights[i] : glm::vec4(0);
+
+		vertices.push_back(Vertex(positions[i], normal, color, texCoord, jointID, jointWeight));
 	}
 
 	Mesh* mesh = nullptr;
