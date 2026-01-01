@@ -3,8 +3,8 @@ workspace "KofuEngine"
 	architecture "x64"
 	startproject "KofuEngine"
 
-	-- Force Visual Studio 2022 toolset toolset "v143"
-	toolset "v143"
+	-- Force Visual Studio 2026 toolset toolset "v145"
+	toolset "v145"
 	
 	configurations
 	{
