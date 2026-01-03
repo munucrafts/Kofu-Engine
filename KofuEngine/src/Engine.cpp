@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "geometry/GLTFLoader.h"
 #include "rendering/RenderTarget.h"
-#include "geometry/ScreenQuad.h"
+#include "geometry/Quad.h"
 
 int Engine::windowWidth = 1024;
 int Engine::windowHeight = 724;

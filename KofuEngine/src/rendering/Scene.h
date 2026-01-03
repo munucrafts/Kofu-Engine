@@ -6,7 +6,7 @@
 #include <geometry/SkeletalMesh.h>
 #include <rendering/Light.h>
 #include <geometry/Skybox.h>
-#include <geometry/ScreenQuad.h>
+#include <geometry/Quad.h>
 #include "RenderTarget.h"
 #include <geometry/InstancedStaticMesh.h>
 
@@ -30,7 +30,8 @@ private:
 	std::vector<Light*> lights;
 	Skybox skyBox;
 	RenderMode renderMode = LIT;
-	ScreenQuad screenQuad;
+	Quad screenQuad;
+	Quad gridQuad;
 	FBO msaaSceneFBO;
 	FBO ppFBO;
 	std::vector<FBO> shadowMapFBOs;

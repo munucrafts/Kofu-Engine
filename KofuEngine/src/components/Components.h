@@ -10,6 +10,7 @@ enum ObjectType
 	INSTANCED_STATIC_MESH,
 	SKY_BOX,
 	SCREEN,
+	GRID,
 	LIGHT_MESH,
 	LIGHT_SHADOW,
 	POINT_LIGHT_SHADOW
@@ -33,9 +34,9 @@ struct Vertex
 
 struct Transform
 {
-	glm::vec3 location;
-	glm::vec3 rotation;
-	glm::vec3 scale;
+	glm::vec3 location = glm::vec3(0.0f);
+	glm::vec3 rotation = glm::vec3(0.0f);
+	glm::vec3 scale = glm::vec3(1.0f);
 };
 
 struct Direction

@@ -12,6 +12,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     shaders.emplace(INSTANCED_STATIC_MESH, Shader("./shaders/instancedStaticMesh.vert", "./shaders/instancedStaticMesh.frag", ""));
     shaders.emplace(SKY_BOX, Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag", ""));
     shaders.emplace(SCREEN, Shader("./shaders/screen.vert", "./shaders/screen.frag", ""));
+    shaders.emplace(GRID, Shader("./shaders/grid.vert", "./shaders/grid.frag", ""));
     shaders.emplace(LIGHT_MESH, Shader("./shaders/lightMesh.vert", "./shaders/lightMesh.frag", ""));
     shaders.emplace(LIGHT_SHADOW, Shader("./shaders/shadow.vert", "./shaders/shadow.frag", ""));
     shaders.emplace(POINT_LIGHT_SHADOW, Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
@@ -49,7 +50,9 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     }
 
     skyBox.LoadSkybox();
-    screenQuad.Init();
+    screenQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(100.0f)));
+    gridQuad.Init();
+
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
 }
@@ -90,14 +93,17 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     msaaSceneFBO.Bind();
     Engine::GetEngine().ClearWindow(windowWidth, windowHeight);
+    
+    shaderID = shaders.at(GRID).Activate();
+    gridQuad.vao.Bind();
+    playerCamera.ApplyCamMatrix(shaderID);
+    gridQuad.DrawQuad(shaderID);
 
     shaderID = shaders.at(LIGHT_MESH).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
-
     for (Light* light : lights) light->DrawLightMesh(shaderID);;
 
     ObjectType lastMeshType = NONE;
-
     for (Mesh* mesh : meshes)
     {
         if (mesh->meshType != lastMeshType)
@@ -125,7 +131,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
-    screenQuad.Draw();
+    screenQuad.DrawQuad(shaderID);
 }
 
 void Scene::EndScene()
