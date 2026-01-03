@@ -50,8 +50,8 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     }
 
     skyBox.LoadSkybox();
-    screenQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(100.0f)));
-    gridQuad.Init();
+    screenQuad.Init();
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(10000.0f)));
 
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
@@ -87,22 +87,25 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         }
 
         glUniform1f(glGetUniformLocation(shaderID, "farPlane"), lights[0]->farPlane);
-
         for (Mesh* mesh : meshes) mesh->DrawMesh(shaderID);
     }
 
     msaaSceneFBO.Bind();
     Engine::GetEngine().ClearWindow(windowWidth, windowHeight);
     
+    glDisable(GL_CULL_FACE);
     shaderID = shaders.at(GRID).Activate();
-    gridQuad.vao.Bind();
     playerCamera.ApplyCamMatrix(shaderID);
+    //gridQuad.transform.location = glm::vec3(playerCamera.location.x, 0.0f, playerCamera.location.z);
+    gridQuad.vao.Bind();
     gridQuad.DrawQuad(shaderID);
 
     shaderID = shaders.at(LIGHT_MESH).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
-    for (Light* light : lights) light->DrawLightMesh(shaderID);;
+    for (Light* light : lights) light->DrawLightMesh(shaderID);
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     ObjectType lastMeshType = NONE;
     for (Mesh* mesh : meshes)
     {

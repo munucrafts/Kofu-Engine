@@ -36,9 +36,9 @@ void Quad::DrawQuad(const GLuint& shaderID)
 
 	glm::mat4 modelMat(1.0f);
 	modelMat = glm::translate(modelMat, transform.location);
-	modelMat = glm::rotate(modelMat, transform.rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	modelMat = glm::rotate(modelMat, transform.rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	modelMat = glm::rotate(modelMat, transform.rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	modelMat = glm::rotate(modelMat, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	modelMat = glm::scale(modelMat, transform.scale);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderID, "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
