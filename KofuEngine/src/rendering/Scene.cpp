@@ -68,7 +68,6 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     playerCamera.NavigateCamera();
 
     Engine::GetEngine().ClearWindow(shadowMapWidth, shadowMapHeight);
-
     for (int i = 0; i < lights.size(); i++)
     {
         shadowMapFBOs[i].Bind();
@@ -102,11 +101,9 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     shaderID = shaders.at(LIGHT_MESH).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
-
     for (Light* light : lights) light->DrawLightMesh(shaderID);
 
     ObjectType lastMeshType = NONE;
-
     for (Mesh* mesh : meshes)
     {
         if (mesh->meshType != lastMeshType)
