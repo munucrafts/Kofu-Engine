@@ -22,9 +22,9 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     shaders.emplace(POINT_LIGHT_SHADOW, Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
 
     //modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
-    //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
+    //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
     //modelPaths.insert({"./assets/models/BatmanRP/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(5.1f)))});
-    //modelPaths.insert({"./assets/models/Batman/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(0.1f)))});
+    modelPaths.insert({"./assets/models/Batman/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(0.1f)))});
     //modelPaths.insert({"./assets/models/Helmet/Scene.gltf", MeshData(INSTANCED_STATIC_MESH, Transform(glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f)), 4)});
     
     for (const std::pair<std::string, MeshData>& path : modelPaths)
@@ -51,7 +51,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     skyBox.LoadSkybox();
     screenQuad.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(1000.0f)));
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(10000.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
 }
@@ -66,6 +66,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     GLuint shaderID = 0;
     playerCamera.NavigateCamera();
+
     Engine::GetEngine().ClearWindow(shadowMapWidth, shadowMapHeight);
 
     for (int i = 0; i < lights.size(); i++)
@@ -86,28 +87,26 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         }
 
         glUniform1f(glGetUniformLocation(shaderID, "farPlane"), lights[0]->farPlane);
+
         for (Mesh* mesh : meshes) mesh->DrawMesh(shaderID);
     }
 
     msaaSceneFBO.Bind();
     Engine::GetEngine().ClearWindow(windowWidth, windowHeight);
-    
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    shaderID = shaders.at(GRID).Activate();
-    playerCamera.ApplyCamMatrix(shaderID);
-    gridQuad.vao.Bind();
-    gridQuad.DrawQuad(shaderID);
 
     glDisable(GL_BLEND);
-    shaderID = shaders.at(LIGHT_MESH).Activate();
-    playerCamera.ApplyCamMatrix(shaderID);
-    for (Light* light : lights) light->DrawLightMesh(shaderID);
-
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    shaderID = shaders.at(LIGHT_MESH).Activate();
+    playerCamera.ApplyCamMatrix(shaderID);
+
+    for (Light* light : lights) light->DrawLightMesh(shaderID);
+
     ObjectType lastMeshType = NONE;
+
     for (Mesh* mesh : meshes)
     {
         if (mesh->meshType != lastMeshType)
@@ -123,6 +122,20 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     shaderID = shaders.at(SKY_BOX).Activate();
     skyBox.DrawSkybox(shaderID);
+
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthMask(GL_FALSE);
+
+    shaderID = shaders.at(GRID).Activate();
+    playerCamera.ApplyCamMatrix(shaderID);
+    gridQuad.vao.Bind();
+    gridQuad.DrawQuad(shaderID);
+
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
+
     glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ppFBO.id);
     glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
