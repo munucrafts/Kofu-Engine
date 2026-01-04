@@ -8,6 +8,10 @@
 
 void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
+    AudioMaster::GetAudioMaster().InitAudioMaster();
+    renderMode = LIT;
+    playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
+
     shaders.emplace(STATIC_MESH, Shader("./shaders/staticMesh.vert", "./shaders/staticMesh.frag", ""));
     shaders.emplace(INSTANCED_STATIC_MESH, Shader("./shaders/instancedStaticMesh.vert", "./shaders/instancedStaticMesh.frag", ""));
     shaders.emplace(SKY_BOX, Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag", ""));
@@ -17,11 +21,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     shaders.emplace(LIGHT_SHADOW, Shader("./shaders/shadow.vert", "./shaders/shadow.frag", ""));
     shaders.emplace(POINT_LIGHT_SHADOW, Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
 
-    renderMode = LIT;
-    playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
-    AudioMaster::GetAudioMaster().InitAudioMaster();
-     
-    modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
+    //modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
     //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
     //modelPaths.insert({"./assets/models/BatmanRP/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(5.1f)))});
     //modelPaths.insert({"./assets/models/Batman/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(0.1f)))});
@@ -51,8 +51,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     skyBox.LoadSkybox();
     screenQuad.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(10000.0f)));
-
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(1000.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
 }
@@ -94,12 +93,14 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     Engine::GetEngine().ClearWindow(windowWidth, windowHeight);
     
     glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     shaderID = shaders.at(GRID).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
-    //gridQuad.transform.location = glm::vec3(playerCamera.location.x, 0.0f, playerCamera.location.z);
     gridQuad.vao.Bind();
     gridQuad.DrawQuad(shaderID);
 
+    glDisable(GL_BLEND);
     shaderID = shaders.at(LIGHT_MESH).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
     for (Light* light : lights) light->DrawLightMesh(shaderID);
