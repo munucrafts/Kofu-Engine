@@ -102,7 +102,6 @@ void Skybox::DrawSkybox(const GLuint& shaderID)
 	glUniformMatrix4fv(glGetUniformLocation(shaderID, "projMat"), 1, GL_FALSE, glm::value_ptr(projectionMat));
 
 	vao.Bind();
-	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTex);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	vao.Unbind();

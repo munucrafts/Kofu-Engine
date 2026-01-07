@@ -4,7 +4,7 @@ out vec4 fragColor;
 float gridMinPixelsBetweenCells = 2.0;
 float gridCellSize = 0.5;
 
-vec4 gridBackgroundColor = vec4(0.75, 0.75, 0.75, 0.4); 
+vec4 gridBackgroundColor = vec4(0.75, 0.75, 0.75, 0.2); 
 vec4 gridColorThin  = vec4(1.0, 1.0, 1.0, 0.7);  
 vec4 gridColorThick = vec4(1.0, 1.0, 0.0, 1.0);  
 vec4 gridColorX     = vec4(1.0, 0.0, 0.0, 1.0);  

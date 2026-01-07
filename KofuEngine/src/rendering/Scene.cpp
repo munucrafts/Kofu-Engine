@@ -117,8 +117,9 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
         mesh->DrawMesh(shaderID);
     }
 
-    shaderID = shaders.at(SKY_BOX).Activate();
-    skyBox.DrawSkybox(shaderID);
+    glActiveTexture(GL_TEXTURE0);
+    //shaderID = shaders.at(SKY_BOX).Activate();
+    //skyBox.DrawSkybox(shaderID);
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
