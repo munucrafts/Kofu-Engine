@@ -1,14 +1,14 @@
 in vec3 worldPos;
 out vec4 fragColor;
 
-float gridMinPixelsBetweenCells = 2.0;
-float gridCellSize = 0.5;
+float gridMinPixelsBetweenCells = 4.0;
+float gridCellSize = 0.35;
 
-vec4 gridBackgroundColor = vec4(0.75, 0.75, 0.75, 0.2); 
-vec4 gridColorThin  = vec4(1.0, 1.0, 1.0, 0.7);  
-vec4 gridColorThick = vec4(1.0, 1.0, 0.0, 1.0);  
+vec4 gridBackgroundColor = vec4(0.0);
+vec4 gridColorThin  = vec4(1.0, 1.0, 1.0, 0.6);       
+vec4 gridColorThick = vec4(1.0, 1.0, 1.0, 1.0);       
 vec4 gridColorX     = vec4(1.0, 0.0, 0.0, 1.0);  
-vec4 gridColorY     = vec4(0.0, 1.0, 0.0, 1.0);
+vec4 gridColorZ     = vec4(0.0, 0.35, 1.0, 1.0);
 
 float log10(float x) { return log(x) / log(10.0); }
 float satf(float x) { return clamp(x, 0.0, 1.0); }
@@ -60,7 +60,7 @@ void main()
 
     vec2 axisAlpha = 1.0 - satv(abs(worldPos.xz) / dudv);
 
-    Color = mix(Color, gridColorY, axisAlpha.x);
+    Color = mix(Color, gridColorZ, axisAlpha.x);
     Color = mix(Color, gridColorX, axisAlpha.y);
 
     fragColor = Color;
