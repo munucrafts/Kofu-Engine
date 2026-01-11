@@ -13,7 +13,8 @@ enum ObjectType
 	GRID,
 	LIGHT_MESH,
 	LIGHT_SHADOW,
-	POINT_LIGHT_SHADOW
+	POINT_LIGHT_SHADOW,
+	GIZMO
 };
 
 enum RenderMode
@@ -48,7 +49,7 @@ struct Direction
 
 struct MeshData
 {
-	ObjectType meshType;
+	ObjectType meshType = STATIC_MESH;
 	Transform transform;
 	unsigned int instanceCount = 1;
 };

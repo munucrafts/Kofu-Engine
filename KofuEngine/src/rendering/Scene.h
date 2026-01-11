@@ -10,7 +10,7 @@
 #include "RenderTarget.h"
 #include <geometry/InstancedStaticMesh.h>
 
-struct Scene
+class Scene
 {
 public:
 	Scene() = default;

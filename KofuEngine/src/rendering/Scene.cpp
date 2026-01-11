@@ -13,6 +13,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     playerCamera.location = glm::vec3(0.0f, 6.0f, 50.0f);
 
     shaders.emplace(STATIC_MESH, Shader("./shaders/staticMesh.vert", "./shaders/staticMesh.frag", ""));
+    shaders.emplace(GIZMO, Shader("./shaders/gizmo.vert", "./shaders/gizmo.frag", ""));
     shaders.emplace(INSTANCED_STATIC_MESH, Shader("./shaders/instancedStaticMesh.vert", "./shaders/instancedStaticMesh.frag", ""));
     shaders.emplace(SKY_BOX, Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag", ""));
     shaders.emplace(SCREEN, Shader("./shaders/screen.vert", "./shaders/screen.frag", ""));
@@ -51,7 +52,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     skyBox.LoadSkybox();
     screenQuad.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(500.0f)));
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(600.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
 }
@@ -148,12 +149,6 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glUniform1i(glGetUniformLocation(shaderID, "screenTexture"), 0);
     glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
     screenQuad.DrawQuad(shaderID);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDisable(GL_DEPTH_TEST);
-    glViewport(windowWidth - 500, windowHeight - 500, 500, 500);
-
-    // Render Gizmo
 }
 
 void Scene::EndScene()
