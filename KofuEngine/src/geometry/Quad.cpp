@@ -42,7 +42,6 @@ void Quad::DrawQuad(const GLuint& shaderID)
 	modelMat = glm::scale(modelMat, transform.scale);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderID, "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
-
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	vao.Unbind();
 }

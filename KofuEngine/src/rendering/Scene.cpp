@@ -10,7 +10,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
     AudioMaster::GetAudioMaster().InitAudioMaster();
     renderMode = LIT;
-    playerCamera.location = glm::vec3(0.0f, 6.0f, 25.0f);
+    playerCamera.location = glm::vec3(0.0f, 6.0f, 50.0f);
 
     shaders.emplace(STATIC_MESH, Shader("./shaders/staticMesh.vert", "./shaders/staticMesh.frag", ""));
     shaders.emplace(INSTANCED_STATIC_MESH, Shader("./shaders/instancedStaticMesh.vert", "./shaders/instancedStaticMesh.frag", ""));
@@ -51,7 +51,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     skyBox.LoadSkybox();
     screenQuad.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(10000.0f)));
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(500.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
 }
@@ -118,6 +118,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     }
 
     glActiveTexture(GL_TEXTURE0);
+
     //shaderID = shaders.at(SKY_BOX).Activate();
     //skyBox.DrawSkybox(shaderID);
 
@@ -133,20 +134,26 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
-
     glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ppFBO.id);
     glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
     msaaSceneFBO.Unbind();
 
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
     shaderID = shaders.at(SCREEN).Activate();
     screenQuad.vao.Bind();
     glUniform1i(glGetUniformLocation(shaderID, "screenTexture"), 0);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
     glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
     screenQuad.DrawQuad(shaderID);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
+    glViewport(windowWidth - 500, windowHeight - 500, 500, 500);
+
+    // Render Gizmo
 }
 
 void Scene::EndScene()

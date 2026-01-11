@@ -95,6 +95,7 @@ void Engine::QuitEngine()
 
 void Engine::ClearWindow(const unsigned int width, const unsigned height, const glm::vec4& clearColor)
 {
+    glViewport(0, 0, width, height);
     glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LESS);
@@ -102,7 +103,6 @@ void Engine::ClearWindow(const unsigned int width, const unsigned height, const 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-    glViewport(0, 0, width, height);
 }
 
 float Engine::GetAspectRatio()
