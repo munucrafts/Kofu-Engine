@@ -9,6 +9,7 @@
 #include <geometry/Quad.h>
 #include "RenderTarget.h"
 #include <geometry/InstancedStaticMesh.h>
+#include <geometry/Gizmo.h>
 
 class Scene
 {
@@ -34,6 +35,7 @@ private:
 	Quad gridQuad;
 	FBO msaaSceneFBO;
 	FBO ppFBO;
+	Gizmo worldGizmo;
 	std::vector<FBO> shadowMapFBOs;
 	const int shadowMapWidth = 2048;
 	const int shadowMapHeight = 2048;

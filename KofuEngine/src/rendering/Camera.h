@@ -7,6 +7,7 @@ public:
 	Camera() = default;
 	~Camera() = default;
 	void ApplyCamMatrix(int shaderID);
+	void ApplyGizmoCamMatrix(int shaderID);
 	void NavigateCamera();
 
 public:

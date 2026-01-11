@@ -28,4 +28,7 @@ protected:
 	VBO vbo;
 	EBO ebo;
 	glm::mat4 modelMat;
+
+private:
+	friend class Gizmo;
 };

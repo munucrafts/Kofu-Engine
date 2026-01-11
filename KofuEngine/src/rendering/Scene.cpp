@@ -52,6 +52,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 
     skyBox.LoadSkybox();
     screenQuad.Init();
+    worldGizmo.Init();
     gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(600.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
     ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
@@ -149,6 +150,16 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glUniform1i(glGetUniformLocation(shaderID, "screenTexture"), 0);
     glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
     screenQuad.DrawQuad(shaderID);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    unsigned int gizmoSize = 150;
+    glViewport(windowWidth - gizmoSize, windowHeight - gizmoSize, gizmoSize, gizmoSize);
+
+    shaderID = shaders.at(GIZMO).Activate();
+    playerCamera.ApplyGizmoCamMatrix(shaderID);
+    worldGizmo.DrawGizmo(shaderID);
 }
 
 void Scene::EndScene()

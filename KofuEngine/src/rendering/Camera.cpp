@@ -22,6 +22,16 @@ void Camera::ApplyCamMatrix(int shaderID)
 	glUniform3fv(glGetUniformLocation(shaderID, "camPos"), 1, glm::value_ptr(location));
 }
 
+void Camera::ApplyGizmoCamMatrix(int shaderID)
+{
+	glm::vec3 gizmoCamPos = -direction.forward * 5.0f;
+	glm::mat4 gizmoView = glm::lookAt(gizmoCamPos, glm::vec3(0.0f), direction.up);
+	glm::mat4 gizmoProj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 10.0f);
+
+	glUniformMatrix4fv(glGetUniformLocation(shaderID, "viewMat"), 1, GL_FALSE, glm::value_ptr(gizmoView));
+	glUniformMatrix4fv(glGetUniformLocation(shaderID, "projMat"), 1, GL_FALSE, glm::value_ptr(gizmoProj));
+}
+
 void Camera::NavigateCamera()
 {
 	Engine& engine = Engine::GetEngine();
