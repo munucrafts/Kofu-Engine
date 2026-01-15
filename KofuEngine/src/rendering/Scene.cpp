@@ -151,11 +151,11 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
     screenQuad.DrawQuad(shaderID);
 
+    const unsigned int gizmoSize = 150;
+    glViewport(windowWidth - gizmoSize, windowHeight - gizmoSize, gizmoSize, gizmoSize);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
-    const unsigned int gizmoSize = 150;
-    glViewport(windowWidth - gizmoSize, windowHeight - gizmoSize, gizmoSize, gizmoSize);
 
     shaderID = shaders.at(GIZMO).Activate();
     playerCamera.ApplyGizmoCamMatrix(shaderID);
