@@ -62,7 +62,7 @@ void Camera::NavigateCamera()
 		glm::vec3 worldUp(0.0f, 1.0f, 0.0f);
 		glm::vec3 newForward = glm::rotate(direction.forward, glm::radians(-rotX), direction.right);
 
-		if (abs(glm::angle(newForward, worldUp) - glm::radians(90.0f)) <= glm::radians(89.0f))
+		if (abs(glm::angle(newForward, worldUp) - glm::radians(90.0f)) <= glm::radians(87.0f))
 			direction.forward = newForward;
 
 		direction.forward = glm::rotate(direction.forward, glm::radians(-rotY), worldUp);

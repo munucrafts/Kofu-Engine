@@ -154,7 +154,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
-    const unsigned int gizmoSize = 200;
+    const unsigned int gizmoSize = 150;
     glViewport(windowWidth - gizmoSize, windowHeight - gizmoSize, gizmoSize, gizmoSize);
 
     shaderID = shaders.at(GIZMO).Activate();

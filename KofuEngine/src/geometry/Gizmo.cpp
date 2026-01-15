@@ -9,9 +9,9 @@ void Gizmo::Init()
 	gizmoMesh = GLTFLoader::GetGltfLoader().LoadGltfModel("./assets/models/Gizmo/gizmo.gltf", meshData)[0];
 	gizmoMesh->InitMesh();
 
-	StaticMesh* staticPtr = static_cast<StaticMesh*>(gizmoMesh);
-	staticPtr->transform.scale = glm::vec3(0.025f);
-	glm::mat4& gizmoModel = staticPtr->modelMat;
+	StaticMesh* smGizmoPtr = static_cast<StaticMesh*>(gizmoMesh);
+	smGizmoPtr->transform.scale = glm::vec3(0.025f);
+	glm::mat4& gizmoModel = smGizmoPtr->modelMat;
 	gizmoModel[3] = glm::vec4(0, 0, 0, 1);
 	gizmoModel[0] = glm::normalize(gizmoModel[0]);
 	gizmoModel[1] = glm::normalize(gizmoModel[1]);
