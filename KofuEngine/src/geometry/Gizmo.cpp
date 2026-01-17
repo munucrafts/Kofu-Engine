@@ -11,6 +11,7 @@ void Gizmo::Init()
 
 	StaticMesh* smGizmoPtr = static_cast<StaticMesh*>(gizmoMesh);
 	smGizmoPtr->transform.scale = glm::vec3(0.025f);
+
 	glm::mat4& gizmoModel = smGizmoPtr->modelMat;
 	gizmoModel[3] = glm::vec4(0, 0, 0, 1);
 	gizmoModel[0] = glm::normalize(gizmoModel[0]);

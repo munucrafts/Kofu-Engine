@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <algorithm>
 #include "../audio/AudioMaster.h"
+#include <imgui.h>
 
 void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
