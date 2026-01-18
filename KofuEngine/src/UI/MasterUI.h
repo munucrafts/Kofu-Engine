@@ -17,6 +17,7 @@ private:
 	~MasterUI() = default;
 	MasterUI(const MasterUI& instance) = delete;
 	void operator=(const MasterUI& instance) = delete;
+	void SetUITheme();
 
 private:
 	OutlinerPanel outlinerPanel;

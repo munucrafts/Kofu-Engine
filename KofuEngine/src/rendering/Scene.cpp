@@ -62,14 +62,8 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     }
 }
 
-void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime)
+void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, float deltaTime)
 {
-    if (windowResized)
-    {
-        msaaSceneFBO.Resize(windowWidth, windowHeight);
-        ppFBO.Resize(windowWidth, windowHeight);
-    }
-
     GLuint shaderID = 0;
     playerCamera.NavigateCamera();
 
@@ -125,8 +119,8 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
 
     glActiveTexture(GL_TEXTURE0);
 
-    //shaderID = shaders.at(SKY_BOX).Activate();
-    //skyBox.DrawSkybox(shaderID);
+    shaderID = shaders.at(SKY_BOX).Activate();
+    skyBox.DrawSkybox(shaderID);
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);

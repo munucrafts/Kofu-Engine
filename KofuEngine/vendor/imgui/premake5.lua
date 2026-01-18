@@ -27,9 +27,9 @@ project "ImGui"
 
     includedirs
     {
+        "../glfw/include" ,
         ".",
-        "backends",
-        "../glfw/include" 
+        "backends"
     }
 
 	filter "system:windows"

@@ -23,7 +23,6 @@ public:
 
 private:
 	bool engineInitialized = false;
-	static bool windowResized;
 
 public:
 	GLFWwindow* window = nullptr;

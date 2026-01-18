@@ -18,7 +18,7 @@ public:
 	Scene() = default;
 	~Scene() = default;
 	void BeginScene(unsigned int windowWidth, unsigned int windowHeight);
-	void RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime);
+	void RenderScene(unsigned int windowWidth, unsigned int windowHeight, float deltaTime);
 	void EndScene();
 
 private:
@@ -48,6 +48,8 @@ public:
 private:
 	friend class MasterUI;
 	friend class OutlinerPanel;
+	friend class ViewportPanel;
+	friend class DetailsPanel;
 };
 
 

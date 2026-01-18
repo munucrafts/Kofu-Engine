@@ -8,7 +8,6 @@
 
 int Engine::windowWidth = 1024;
 int Engine::windowHeight = 724;
-bool Engine::windowResized = false;
 
 constexpr char engineName[12] = "Kofu Engine";
 constexpr int OGLMajor = 4;
@@ -51,7 +50,6 @@ void Engine::WindowResize(GLFWwindow* window, int width, int height)
 {
     windowWidth = width;
     windowHeight = height;
-    windowResized = true;
     glViewport(0, 0, windowWidth, windowHeight);
 }
 
@@ -77,8 +75,7 @@ void Engine::RunEngine()
             fpsTimer = 0.0f;
         }
 
-        activeScene->RenderScene(windowWidth, windowHeight, windowResized, deltaTime);
-        windowResized = false;
+        activeScene->RenderScene(windowWidth, windowHeight, deltaTime);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

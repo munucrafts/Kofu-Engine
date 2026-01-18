@@ -5,22 +5,40 @@
 
 void OutlinerPanel::RenderUI(Scene* activeScene)
 {
-	//std::cout << "Outliner Here" << std::endl;
+	ImGui::Begin("Outliner");
 
-	ImGui::Begin("Scene Outline");
+	if (ImGui::TreeNode("Meshes"))
+	{
+		for (int i = 0; i < activeScene->meshes.size(); i++)
+		{
+			std::string name = "Mesh " + std::to_string(i);
+			ImGui::Button(name.c_str(), ImVec2(ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)));
+		}
 
-	////for (Mesh* mesh : activeScene->meshes)
-	////{
-	////	ImGui::Text("Hello there");
-	////}
+		ImGui::TreePop();
+	}
 
-	ImGui::Text("Hello there");
-	ImGui::Text("Hello there");
-	ImGui::Text("Hello there");
-	ImGui::Text("Hello there");
+	if (ImGui::TreeNode("Lights"))
+	{
+		for (int i = 0; i < activeScene->lights.size(); i++)
+		{
+			std::string name = "Lights " + std::to_string(i);
+			ImGui::Button(name.c_str(), ImVec2(ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)));
+		}
+
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Camera"))
+	{
+		for (int i = 0; i < activeScene->meshes.size(); i++)
+		{
+			std::string name = "Camera " + std::to_string(i);
+			ImGui::Button(name.c_str(), ImVec2(ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)));
+		}
+
+		ImGui::TreePop();
+	}
 
 	ImGui::End();
-
-	
-	std::cout << activeScene->meshes.size() << std::endl;
 }
