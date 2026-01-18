@@ -25,7 +25,7 @@ void InstancedStaticMesh::DrawMesh(int shaderID)
 	unsigned int texUnit = 0;
 	for (auto& tex : textures) tex.second.Bind(texUnit++);
 
-	glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, instanceCount);
+	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0, instanceCount);
 }
 
 void InstancedStaticMesh::InitMesh()

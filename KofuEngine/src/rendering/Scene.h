@@ -10,6 +10,7 @@
 #include "RenderTarget.h"
 #include <geometry/InstancedStaticMesh.h>
 #include <geometry/Gizmo.h>
+#include <UI/MasterUI.h>
 
 class Scene
 {
@@ -43,6 +44,10 @@ private:
 
 public:
 	Camera playerCamera;
+
+private:
+	friend class MasterUI;
+	friend class OutlinerPanel;
 };
 
 

@@ -10,8 +10,16 @@
 void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
 {
     AudioMaster::GetAudioMaster().InitAudioMaster();
+    MasterUI::GetMasterUI().InitMasterUI();
+
+    skyBox.LoadSkybox();
+    screenQuad.Init();
+    worldGizmo.Init();
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(600.0f)));
+    msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
+    ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
+
     renderMode = LIT;
-    playerCamera.location = glm::vec3(0.0f, 6.0f, 50.0f);
 
     shaders.emplace(STATIC_MESH, Shader("./shaders/staticMesh.vert", "./shaders/staticMesh.frag", ""));
     shaders.emplace(GIZMO, Shader("./shaders/gizmo.vert", "./shaders/gizmo.frag", ""));
@@ -22,6 +30,8 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     shaders.emplace(LIGHT_MESH, Shader("./shaders/lightMesh.vert", "./shaders/lightMesh.frag", ""));
     shaders.emplace(LIGHT_SHADOW, Shader("./shaders/shadow.vert", "./shaders/shadow.frag", ""));
     shaders.emplace(POINT_LIGHT_SHADOW, Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
+
+    playerCamera.location = glm::vec3(0.0f, 6.0f, 50.0f);
 
     //modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
     //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
@@ -50,13 +60,6 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
                                     RenderTarget::CreateCubemapTarget(shadowMapWidth, shadowMapHeight) : 
                                     RenderTarget::CreateShadowTarget(shadowMapWidth, shadowMapHeight));
     }
-
-    skyBox.LoadSkybox();
-    screenQuad.Init();
-    worldGizmo.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(600.0f)));
-    msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
-    ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
 }
 
 void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, bool windowResized, float deltaTime)
@@ -161,6 +164,8 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, boo
     shaderID = shaders.at(GIZMO).Activate();
     playerCamera.ApplyGizmoCamMatrix(shaderID);
     worldGizmo.DrawGizmo(shaderID);
+
+    MasterUI::GetMasterUI().RenderMasterUI(this);
 }
 
 void Scene::EndScene()
