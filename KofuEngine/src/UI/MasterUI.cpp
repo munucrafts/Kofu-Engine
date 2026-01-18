@@ -94,7 +94,7 @@ void MasterUI::SetUITheme()
 
     // --- TITLE BAR (STEEL BLUE) ---
     colors[ImGuiCol_TitleBg] = ImVec4(0.75f, 0.80f, 0.88f, 1.00f); // Muted Blue
-    colors[ImGuiCol_TitleBgActive] = ImVec4(0.60f, 0.70f, 0.85f, 1.00f); // Focused Blue-Grey
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.60f, 0.70f, 0.95f, 1.00f); // Focused Blue-Grey
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.75f, 0.80f, 0.88f, 0.51f);
     colors[ImGuiCol_MenuBarBg] = ImVec4(0.80f, 0.85f, 0.92f, 1.00f);
 
