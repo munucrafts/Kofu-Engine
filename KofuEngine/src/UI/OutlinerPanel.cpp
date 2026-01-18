@@ -22,7 +22,7 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
 	{
 		for (int i = 0; i < activeScene->lights.size(); i++)
 		{
-			std::string name = "Lights " + std::to_string(i);
+			std::string name = "Light " + std::to_string(i);
 			ImGui::Button(name.c_str(), ImVec2(ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)));
 		}
 

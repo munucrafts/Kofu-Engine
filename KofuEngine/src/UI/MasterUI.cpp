@@ -36,27 +36,26 @@ void MasterUI::RenderMasterUI(Scene* activeScene)
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGuiID dockspace_id = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
-    static bool layout_initialized = false;
-    if (!layout_initialized)
+    ImGuiID dockspaceID = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+    static bool layoutInit = false;
+    if (!layoutInit)
     {
-        layout_initialized = true;
+        layoutInit = true;
 
-        ImGui::DockBuilderRemoveNode(dockspace_id);
-        ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
-        ImGui::DockBuilderSetNodeSize(dockspace_id, ImGui::GetMainViewport()->Size);
+        ImGui::DockBuilderRemoveNode(dockspaceID);
+        ImGui::DockBuilderAddNode(dockspaceID, ImGuiDockNodeFlags_DockSpace);
+        ImGui::DockBuilderSetNodeSize(dockspaceID, ImGui::GetMainViewport()->Size);
 
-        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.20f, nullptr, &dockspace_id);
-        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.20f, nullptr, &dockspace_id);
-        ImGuiID dockTopID = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.20f, nullptr, &dockspace_id);
-        ImGuiID dockBottomID = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.20f, nullptr, &dockspace_id);
-        ImGuiID dockCenterID = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.20f, nullptr, &dockspace_id);
+        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.20f, nullptr, &dockspaceID);
+        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.20f, nullptr, &dockspaceID);
+        ImGuiID dockCenterID = dockspaceID;
 
         ImGui::DockBuilderDockWindow("Outliner", dockLeftID);
+        ImGui::DockBuilderDockWindow("Properties", dockRightID);
         ImGui::DockBuilderDockWindow("Viewport", dockCenterID);
-        ImGui::DockBuilderDockWindow("Details", dockRightID);
+        ImGui::DockBuilderFinish(dockspaceID);
 
-        ImGui::DockBuilderFinish(dockspace_id);
+        ImGui::DockBuilderFinish(dockspaceID);
     }
 
     outlinerPanel.RenderUI(activeScene);
