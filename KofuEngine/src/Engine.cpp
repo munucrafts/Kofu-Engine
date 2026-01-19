@@ -70,6 +70,7 @@ void Engine::RunEngine()
 
         if (fpsTimer >= 1.0f)
         {
+            glfwSetWindowTitle(window, engineName);
             StatsHelper::GetStatsHelper().FPS = fps;
             StatsHelper::GetStatsHelper().deltaSecs = deltaTime;
             fps = 0;

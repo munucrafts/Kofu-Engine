@@ -13,6 +13,7 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(10.0f, 1.0f));
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
 
+    float gap = 5.0f;
     bool isSelected = false;
     std::map<std::string, int> indexMap;
 
@@ -35,6 +36,8 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
         ImGui::TreePop();
     }
 
+    ImGui::Dummy(ImVec2(0.0f, gap));
+
     if (ImGui::TreeNodeEx("Lights", flags))
     {
         for (int i = 0; i < activeScene->lights.size(); i++)
@@ -52,6 +55,8 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
         ImGui::TreePop();
     }
 
+    ImGui::Dummy(ImVec2(0.0f, gap));
+
     if (ImGui::TreeNodeEx("Cameras", flags))
     {
         Object* obj = &activeScene->playerCamera;
@@ -63,6 +68,8 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
 
         ImGui::TreePop();
     }
+
+    ImGui::Dummy(ImVec2(0.0f, gap));
 
     if (ImGui::TreeNodeEx("Skybox", flags))
     {
