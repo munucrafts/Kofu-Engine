@@ -2,8 +2,9 @@
 #include "buffers/VAO.h"
 #include "buffers/VBO.h"
 #include "buffers/EBO.h"
+#include "geometry/Object.h"
 
-class Skybox
+class Skybox : public Object
 {
 public:
 	Skybox() = default;

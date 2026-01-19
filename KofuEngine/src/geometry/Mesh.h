@@ -6,9 +6,10 @@
 #include "iostream"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include "geometry/Object.h"
 
 
-class Mesh
+class Mesh : public Object
 {
 public:
 	Mesh() = default;

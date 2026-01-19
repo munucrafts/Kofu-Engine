@@ -1,7 +1,8 @@
 #pragma once
 #include "components/Components.h"
+#include "geometry/Object.h"
 
-class Camera
+class Camera : public Object
 {
 public:
 	Camera() = default;

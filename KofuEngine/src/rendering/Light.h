@@ -21,7 +21,7 @@ struct LightDetails
     std::vector<glm::mat4> lightProjs;
 };
 
-class Light
+class Light : public Object
 {
 public:
     LightDetails lightDetails;
