@@ -46,13 +46,20 @@ void MasterUI::RenderMasterUI(Scene* activeScene)
         ImGui::DockBuilderAddNode(dockspaceID, ImGuiDockNodeFlags_DockSpace);
         ImGui::DockBuilderSetNodeSize(dockspaceID, ImGui::GetMainViewport()->Size);
 
-        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.25f, nullptr, &dockspaceID);
-        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.25f, nullptr, &dockspaceID);
         ImGuiID dockCenterID = dockspaceID;
+        ImGui::DockBuilderDockWindow("Viewport", dockCenterID);
+
+        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.25f, nullptr, &dockCenterID);
+        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.25f, nullptr, &dockCenterID);
 
         ImGui::DockBuilderDockWindow("Outliner", dockLeftID);
         ImGui::DockBuilderDockWindow("Properties", dockRightID);
-        ImGui::DockBuilderDockWindow("Viewport", dockCenterID);
+
+        ImGuiID dockRightTopID = ImGui::DockBuilderSplitNode(dockRightID, ImGuiDir_Up, 0.5f, nullptr, &dockRightID);
+        ImGuiID dockRightBottomID = ImGui::DockBuilderSplitNode(dockRightID, ImGuiDir_Down, 0.5f, nullptr, &dockRightID);
+
+        ImGui::DockBuilderDockWindow("Details", dockRightTopID);
+        ImGui::DockBuilderDockWindow("Statistics", dockRightBottomID);
         ImGui::DockBuilderFinish(dockspaceID);
 
         ImGui::DockBuilderFinish(dockspaceID);
@@ -61,6 +68,7 @@ void MasterUI::RenderMasterUI(Scene* activeScene)
     outlinerPanel.RenderUI(activeScene);
     viewportPanel.RenderUI(activeScene);
     detailsPanel.RenderUI(activeScene);
+    statsPanel.RenderUI(activeScene);
 
     ImGui::Render();
 

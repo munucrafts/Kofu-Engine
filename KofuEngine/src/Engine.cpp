@@ -5,6 +5,7 @@
 #include "geometry/GLTFLoader.h"
 #include "rendering/RenderTarget.h"
 #include "geometry/Quad.h"
+#include "stats/StatsHelper.h"
 
 int Engine::windowWidth = 1024;
 int Engine::windowHeight = 724;
@@ -69,8 +70,8 @@ void Engine::RunEngine()
 
         if (fpsTimer >= 1.0f)
         {
-            std::string statLine = (std::string)engineName + " [ " + std::to_string(fps) + " FPS | " + std::to_string(deltaTime * 1000.0f) + " ms ]";
-            glfwSetWindowTitle(window, statLine.c_str());
+            StatsHelper::GetStatsHelper().FPS = fps;
+            StatsHelper::GetStatsHelper().deltaSecs = deltaTime;
             fps = 0;
             fpsTimer = 0.0f;
         }

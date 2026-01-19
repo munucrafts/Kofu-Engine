@@ -2,6 +2,7 @@
 #include "OutlinerPanel.h"
 #include "ViewportPanel.h"
 #include "DetailsPanel.h"
+#include "StatsPanel.h"
 
 class Scene;
 
@@ -23,4 +24,5 @@ private:
 	OutlinerPanel outlinerPanel;
 	ViewportPanel viewportPanel;
 	DetailsPanel detailsPanel;
+	StatsPanel statsPanel;
 };

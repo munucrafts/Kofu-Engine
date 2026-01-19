@@ -24,4 +24,7 @@ public:
 	std::map<std::string, Texture> textures;
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
+
+private:
+	friend class StatsHelper;
 };
