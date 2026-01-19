@@ -10,16 +10,20 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 	ImGui::Begin("Viewport");
 	
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+	int& viewWidth = activeScene->viewportWidth;
+	int& viewHeight = activeScene->viewportHeight;
 
-	if ((viewportPanelSize.x != viewportSize.x || viewportPanelSize.y != viewportSize.y) && !ImGui::IsMouseDragging(0))
+	if ((viewportPanelSize.x != viewWidth || viewportPanelSize.y != viewHeight) && !ImGui::IsMouseDragging(0))
 	{
-		viewportSize = viewportPanelSize;
-		activeScene->msaaSceneFBO.Resize((int)viewportSize.x, (int)viewportSize.y);
-		activeScene->ppFBO.Resize((int)viewportSize.x, (int)viewportSize.y);
+		viewWidth = (int)viewportPanelSize.x;
+		viewHeight = (int)viewportPanelSize.y;
+
+		activeScene->msaaSceneFBO.Resize(viewWidth, viewHeight);
+		activeScene->ppFBO.Resize(viewWidth, viewHeight);
 	}
 
 	GLuint textureID = activeScene->ppFBO.colorTex;
-	ImGui::Image((void*)textureID, viewportSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
+	ImGui::Image((void*)textureID, ImVec2((float)viewWidth, (float)viewHeight), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 
 	ImGui::End();
 	ImGui::PopStyleVar();

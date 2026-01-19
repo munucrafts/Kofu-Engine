@@ -7,7 +7,7 @@
 #include "../audio/AudioMaster.h"
 #include <imgui.h>
 
-void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
+void Scene::BeginScene()
 {
     AudioMaster::GetAudioMaster().InitAudioMaster();
     MasterUI::GetMasterUI().InitMasterUI();
@@ -16,8 +16,8 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     screenQuad.Init();
     worldGizmo.Init();
     gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(600.0f)));
-    msaaSceneFBO = RenderTarget::CreateMSAATarget(windowWidth, windowHeight, 8);
-    ppFBO = RenderTarget::CreateSceneTarget(windowWidth, windowHeight);
+    msaaSceneFBO = RenderTarget::CreateMSAATarget(viewportWidth, viewportHeight, 8);
+    ppFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
 
     renderMode = LIT;
 
@@ -36,7 +36,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     //modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
     //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
     //modelPaths.insert({"./assets/models/BatmanRP/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(5.1f)))});
-    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", MeshData(INSTANCED_STATIC_MESH, Transform(glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f)), 4)});
+    //modelPaths.insert({"./assets/models/Helmet/Scene.gltf", MeshData(INSTANCED_STATIC_MESH, Transform(glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f)), 4)});
     modelPaths.insert({"./assets/models/Batman/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(0.1f)))});
     
     for (const std::pair<std::string, MeshData>& path : modelPaths)
@@ -62,7 +62,7 @@ void Scene::BeginScene(unsigned int windowWidth, unsigned int windowHeight)
     }
 }
 
-void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, float deltaTime)
+void Scene::RenderScene(const float deltaTime)
 {
     GLuint shaderID = 0;
     playerCamera.NavigateCamera();
@@ -91,7 +91,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, flo
     }
 
     msaaSceneFBO.Bind();
-    Engine::GetEngine().ClearWindow(windowWidth, windowHeight);
+    Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight);
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -136,7 +136,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, flo
     glDisable(GL_BLEND);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ppFBO.id);
-    glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, viewportWidth, viewportHeight, 0, 0, viewportWidth, viewportHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
     msaaSceneFBO.Unbind();
 
@@ -150,7 +150,7 @@ void Scene::RenderScene(unsigned int windowWidth, unsigned int windowHeight, flo
     screenQuad.DrawQuad(shaderID);
 
     const unsigned int gizmoSize = 150;
-    glViewport(windowWidth - gizmoSize, windowHeight - gizmoSize, gizmoSize, gizmoSize);
+    glViewport(viewportWidth - gizmoSize, viewportHeight - gizmoSize, gizmoSize, gizmoSize);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);

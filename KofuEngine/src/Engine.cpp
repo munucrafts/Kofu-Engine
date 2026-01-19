@@ -42,7 +42,7 @@ void Engine::InitEngine()
     gladLoadGL();
 
     activeScene = std::make_unique<Scene>();
-    activeScene->BeginScene(windowWidth, windowHeight);
+    activeScene->BeginScene();
 
     engineInitialized = true;
 }
@@ -51,7 +51,6 @@ void Engine::WindowResize(GLFWwindow* window, int width, int height)
 {
     windowWidth = width;
     windowHeight = height;
-    glViewport(0, 0, windowWidth, windowHeight);
 }
 
 void Engine::RunEngine()
@@ -77,7 +76,7 @@ void Engine::RunEngine()
             fpsTimer = 0.0f;
         }
 
-        activeScene->RenderScene(windowWidth, windowHeight, deltaTime);
+        activeScene->RenderScene(deltaTime);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

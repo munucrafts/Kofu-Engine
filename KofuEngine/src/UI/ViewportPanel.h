@@ -10,8 +10,5 @@ public:
 	ViewportPanel() = default;
 	~ViewportPanel() = default;
 	virtual void RenderUI(Scene* activeScene) override;
-
-private:
-	ImVec2 viewportSize;
 };
 
