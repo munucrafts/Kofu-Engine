@@ -6,6 +6,7 @@
 
 void ViewportPanel::RenderUI(Scene* activeScene)
 {
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Viewport");
 	
@@ -22,9 +23,11 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 		activeScene->screenTexFBO.Resize(viewWidth, viewHeight);
 	}
 
+
 	GLuint textureID = activeScene->screenTexFBO.colorTex;
-	ImGui::Image((void*)textureID, ImVec2((float)viewWidth, (float)viewHeight), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
+	ImGui::Image((void*)(intptr_t)textureID, ImVec2((float)viewWidth, (float)viewHeight), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 
 	ImGui::End();
+	ImGui::PopStyleColor();
 	ImGui::PopStyleVar();
 }

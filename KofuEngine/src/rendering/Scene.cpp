@@ -35,7 +35,7 @@ void Scene::BeginScene()
     //modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
     //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
     //modelPaths.insert({"./assets/models/BatmanRP/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(5.1f)))});
-    //modelPaths.insert({"./assets/models/Helmet/Scene.gltf", MeshData(INSTANCED_STATIC_MESH, Transform(glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f)), 4)});
+    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", MeshData(INSTANCED_STATIC_MESH, Transform(glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f)), 4)});
     modelPaths.insert({"./assets/models/Batman/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(0.1f)))});
     
     for (const std::pair<std::string, MeshData>& path : modelPaths)
@@ -90,7 +90,7 @@ void Scene::RenderScene(const float deltaTime)
 
     msaaSceneFBO.Bind();
     glViewport(0, 0, viewportWidth, viewportHeight);
-    Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight);
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -116,8 +116,8 @@ void Scene::RenderScene(const float deltaTime)
     }
 
     glActiveTexture(GL_TEXTURE0);
-    //shaderID = shaders.at(SKY_BOX).Activate();
-    //skyBox.DrawSkybox(shaderID);
+    shaderID = shaders.at(SKY_BOX).Activate();
+    skyBox.DrawSkybox(shaderID);
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
@@ -139,14 +139,17 @@ void Scene::RenderScene(const float deltaTime)
     playerCamera.ApplyGizmoCamMatrix(shaderID);
     worldGizmo.DrawGizmo(shaderID);
 
+    glViewport(0, 0, viewportWidth, viewportHeight);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, screenTexFBO.id);
     glBlitFramebuffer(0, 0, viewportWidth, viewportHeight, 0, 0, viewportWidth, viewportHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-    msaaSceneFBO.Unbind();
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);              
+    glClear(GL_COLOR_BUFFER_BIT);                      
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
+    msaaSceneFBO.Unbind();
 
     MasterUI::GetMasterUI().RenderMasterUI(this);
 }
