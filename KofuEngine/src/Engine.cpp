@@ -103,7 +103,7 @@ void Engine::ClearWindow(const unsigned int width, const unsigned height, const 
     glFrontFace(GL_CCW);
 }
 
-float Engine::GetAspectRatio()
+float Engine::GetWindowAspectRatio()
 {
     return ((float)windowWidth/windowHeight);
 }

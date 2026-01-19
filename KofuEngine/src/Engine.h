@@ -18,7 +18,7 @@ public:
 	void RunEngine();
 	void QuitEngine();
 	void ClearWindow(const unsigned int width, const unsigned height, const glm::vec4& clearColor = glm::vec4(0.0f));
-	float GetAspectRatio();
+	float GetWindowAspectRatio();
 	std::string GetOGLVersionText();
 
 private:

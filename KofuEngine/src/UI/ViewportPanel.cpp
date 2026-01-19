@@ -19,10 +19,10 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 		viewHeight = (int)viewportPanelSize.y;
 
 		activeScene->msaaSceneFBO.Resize(viewWidth, viewHeight);
-		activeScene->ppFBO.Resize(viewWidth, viewHeight);
+		activeScene->screenTexFBO.Resize(viewWidth, viewHeight);
 	}
 
-	GLuint textureID = activeScene->ppFBO.colorTex;
+	GLuint textureID = activeScene->screenTexFBO.colorTex;
 	ImGui::Image((void*)textureID, ImVec2((float)viewWidth, (float)viewHeight), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 
 	ImGui::End();

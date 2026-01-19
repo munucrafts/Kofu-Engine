@@ -13,11 +13,10 @@ void Scene::BeginScene()
     MasterUI::GetMasterUI().InitMasterUI();
 
     skyBox.LoadSkybox();
-    screenQuad.Init();
     worldGizmo.Init();
     gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(600.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(viewportWidth, viewportHeight, 8);
-    ppFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
+    screenTexFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
 
     renderMode = LIT;
 
@@ -67,10 +66,10 @@ void Scene::RenderScene(const float deltaTime)
     GLuint shaderID = 0;
     playerCamera.NavigateCamera();
 
-    Engine::GetEngine().ClearWindow(shadowMapWidth, shadowMapHeight);
     for (int i = 0; i < lights.size(); i++)
     {
         shadowMapFBOs[i].Bind();
+        glViewport(0, 0, shadowMapWidth, shadowMapHeight);
         glClear(GL_DEPTH_BUFFER_BIT);
 
         if (lights[i]->lightDetails.lightType == POINT_LIGHT)
@@ -86,12 +85,12 @@ void Scene::RenderScene(const float deltaTime)
         }
 
         glUniform1f(glGetUniformLocation(shaderID, "farPlane"), lights[0]->farPlane);
-
         for (Mesh* mesh : meshes) mesh->DrawMesh(shaderID);
     }
 
     msaaSceneFBO.Bind();
-    Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight);
+    glViewport(0, 0, viewportWidth, viewportHeight);
+    Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -113,14 +112,12 @@ void Scene::RenderScene(const float deltaTime)
             UploadLightData(shaderID);
             playerCamera.ApplyCamMatrix(shaderID);
         }
-
         mesh->DrawMesh(shaderID);
     }
 
     glActiveTexture(GL_TEXTURE0);
-
-    shaderID = shaders.at(SKY_BOX).Activate();
-    skyBox.DrawSkybox(shaderID);
+    //shaderID = shaders.at(SKY_BOX).Activate();
+    //skyBox.DrawSkybox(shaderID);
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
@@ -131,33 +128,25 @@ void Scene::RenderScene(const float deltaTime)
     playerCamera.ApplyCamMatrix(shaderID);
     gridQuad.vao.Bind();
     gridQuad.DrawQuad(shaderID);
-
     glDepthMask(GL_TRUE);
-    glDisable(GL_BLEND);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ppFBO.id);
-    glBlitFramebuffer(0, 0, viewportWidth, viewportHeight, 0, 0, viewportWidth, viewportHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-    msaaSceneFBO.Unbind();
-
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-
-    shaderID = shaders.at(SCREEN).Activate();
-    screenQuad.vao.Bind();
-    glUniform1i(glGetUniformLocation(shaderID, "screenTexture"), 0);
-    glBindTexture(GL_TEXTURE_2D, ppFBO.colorTex);
-    screenQuad.DrawQuad(shaderID);
 
     const unsigned int gizmoSize = 150;
     glViewport(viewportWidth - gizmoSize, viewportHeight - gizmoSize, gizmoSize, gizmoSize);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
 
     shaderID = shaders.at(GIZMO).Activate();
     playerCamera.ApplyGizmoCamMatrix(shaderID);
     worldGizmo.DrawGizmo(shaderID);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaSceneFBO.id);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, screenTexFBO.id);
+    glBlitFramebuffer(0, 0, viewportWidth, viewportHeight, 0, 0, viewportWidth, viewportHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    msaaSceneFBO.Unbind();
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 
     MasterUI::GetMasterUI().RenderMasterUI(this);
 }
@@ -223,4 +212,9 @@ void Scene::SortObjectsByType()
             return a->lightDetails.lightType < b->lightDetails.lightType;
         }
     );
+}
+
+float Scene::GetViewportAspectRatio()
+{
+    return ((float)viewportWidth / viewportHeight);
 }

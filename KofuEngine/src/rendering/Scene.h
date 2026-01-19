@@ -20,6 +20,7 @@ public:
 	void BeginScene();
 	void RenderScene(const float deltaTime);
 	void EndScene();
+	float GetViewportAspectRatio();
 
 private:
 	void UploadLightData(const GLuint shaderId);
@@ -32,10 +33,9 @@ private:
 	std::vector<Light*> lights;
 	Skybox skyBox;
 	RenderMode renderMode = LIT;
-	Quad screenQuad;
 	Quad gridQuad;
 	FBO msaaSceneFBO;
-	FBO ppFBO;
+	FBO screenTexFBO;
 	Gizmo worldGizmo;
 	std::vector<FBO> shadowMapFBOs;
 	const int shadowMapWidth = 2048;

@@ -13,7 +13,7 @@ void Camera::ApplyCamMatrix(int shaderID)
 	viewMat = glm::lookAt(location, location + direction.forward, direction.up);
 
 	projMat = glm::mat4(1.0f);
-	projMat = glm::perspective(glm::radians(engine.activeScene->playerCamera.FOV), engine.GetAspectRatio(), engine.activeScene->playerCamera.nearClip, engine.activeScene->playerCamera.farClip);
+	projMat = glm::perspective(glm::radians(engine.activeScene->playerCamera.FOV), engine.activeScene->GetViewportAspectRatio(), engine.activeScene->playerCamera.nearClip, engine.activeScene->playerCamera.farClip);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderID, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
 	glUniformMatrix4fv(glGetUniformLocation(shaderID, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
