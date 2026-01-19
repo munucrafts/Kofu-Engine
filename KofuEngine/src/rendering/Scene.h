@@ -23,7 +23,7 @@ public:
 
 private:
 	void UploadLightData(const GLuint shaderId);
-	void SortMeshesByType();
+	void SortObjectsByType();
 
 private:
 	std::map<std::string, MeshData> modelPaths;

@@ -23,7 +23,7 @@ void MasterUI::InitMasterUI()
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/Open_Sans/static/OpenSans-Medium.ttf", 18.0f);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/Open_Sans/static/OpenSans-Medium.ttf", 20.0f);
 
     Engine& engine = Engine::GetEngine();
     ImGui_ImplGlfw_InitForOpenGL(engine.window, true);
@@ -46,8 +46,8 @@ void MasterUI::RenderMasterUI(Scene* activeScene)
         ImGui::DockBuilderAddNode(dockspaceID, ImGuiDockNodeFlags_DockSpace);
         ImGui::DockBuilderSetNodeSize(dockspaceID, ImGui::GetMainViewport()->Size);
 
-        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.20f, nullptr, &dockspaceID);
-        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.20f, nullptr, &dockspaceID);
+        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.25f, nullptr, &dockspaceID);
+        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.25f, nullptr, &dockspaceID);
         ImGuiID dockCenterID = dockspaceID;
 
         ImGui::DockBuilderDockWindow("Outliner", dockLeftID);
