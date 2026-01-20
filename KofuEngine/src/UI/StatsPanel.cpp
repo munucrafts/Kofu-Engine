@@ -13,7 +13,7 @@ void StatsPanel::RenderUI(Scene* activeScene)
 	ImGui::Begin("Statistics");
 
 	ImGui::Text(("FPS - " + std::to_string(statHelp.GetFPS())).c_str());
-	ImGui::Text(("Delta Time - " + std::to_string(statHelp.GetDeltaMS())).c_str());
+	ImGui::Text((std::string("Delta Time - ") + std::to_string(statHelp.GetDeltaMS()) + " ms").c_str());
 	ImGui::Text(("Vertices - " + std::to_string(statHelp.GetVertexCount(activeScene->meshes))).c_str());
 	ImGui::Text(("Indices - " + std::to_string(statHelp.GetIndexCount(activeScene->meshes))).c_str());
 	ImGui::Text(("Triangles - " + std::to_string(statHelp.GetTriangleCount(activeScene->meshes))).c_str());
