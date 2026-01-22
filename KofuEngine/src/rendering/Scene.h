@@ -41,9 +41,9 @@ private:
 	const int shadowMapWidth = 2048;
 	const int shadowMapHeight = 2048;
 	std::map<std::string, unsigned int> reservedTexSlots = { {"baseTex", 0}, {"normalTex", 1}, {"occlusionTex", 2}, {"metallicTex", 3} };
-	std::string selectedUUID = "None";
 	int viewportWidth = 1024;
 	int viewportHeight = 720;
+	std::string selectedObjectID = "None";
 
 public:
 	Camera playerCamera;

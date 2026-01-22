@@ -4,5 +4,5 @@
 class Object
 {
 public:
-	std::string uuid;
+	std::string objectID;
 };

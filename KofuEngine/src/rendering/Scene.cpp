@@ -32,11 +32,11 @@ void Scene::BeginScene()
 
     playerCamera.location = glm::vec3(0.0f, 6.0f, 50.0f);
 
-    //modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
+    modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
     //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
     //modelPaths.insert({"./assets/models/BatmanRP/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(5.1f)))});
-    modelPaths.insert({"./assets/models/Helmet/Scene.gltf", MeshData(INSTANCED_STATIC_MESH, Transform(glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f)), 4)});
-    modelPaths.insert({"./assets/models/Batman/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(0.1f)))});
+    //modelPaths.insert({"./assets/models/Helmet/Scene.gltf", MeshData(INSTANCED_STATIC_MESH, Transform(glm::vec3(0.0f, 10.0f ,0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(5.0f)), 4)});
+    //modelPaths.insert({"./assets/models/Batman/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(-90.0f, 0.0f, 0.0f), glm::vec3(0.1f)))});
     
     for (const std::pair<std::string, MeshData>& path : modelPaths)
     {
