@@ -2,6 +2,7 @@
 #include "geometry/StaticMesh.h"
 #include "Engine.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "Stats/StatsHelper.h"
 
 StaticMesh::StaticMesh()
 {
@@ -90,4 +91,6 @@ void StaticMesh::DrawMesh(int shaderID)
 
     glUniformMatrix4fv(glGetUniformLocation(shaderID, "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
     glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
+
+    StatsHelper::GetStatsHelper().AppendDrawCallCount();
 }

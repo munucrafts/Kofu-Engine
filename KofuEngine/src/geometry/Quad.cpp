@@ -1,5 +1,6 @@
 #include "geometry/Quad.h"
 #include <glm/gtc/type_ptr.hpp>
+#include <Stats/StatsHelper.h>
 
 void Quad::Init(const Transform& worldTransform)
 {
@@ -44,4 +45,6 @@ void Quad::DrawQuad(const GLuint& shaderID)
 	glUniformMatrix4fv(glGetUniformLocation(shaderID, "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	vao.Unbind();
+
+	StatsHelper::GetStatsHelper().AppendDrawCallCount();
 }

@@ -2,6 +2,7 @@
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <utilities/Util.h>
+#include "Stats/StatsHelper.h"
 
 InstancedStaticMesh::InstancedStaticMesh()
 {
@@ -26,6 +27,8 @@ void InstancedStaticMesh::DrawMesh(int shaderID)
 	for (auto& tex : textures) tex.second.Bind(texUnit++);
 
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0, instanceCount);
+
+	StatsHelper::GetStatsHelper().AppendDrawCallCount();
 }
 
 void InstancedStaticMesh::InitMesh()

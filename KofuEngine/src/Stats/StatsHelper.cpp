@@ -52,3 +52,18 @@ float StatsHelper::GetDeltaMS()
 	return deltaSecs * 1000.0f;
 }
 
+void StatsHelper::AppendDrawCallCount()
+{
+	drawCalls++;
+}
+
+void StatsHelper::ClearDrawCallCount()
+{
+	drawCalls = 0;
+}
+
+int StatsHelper::GetDrawCallCount()
+{
+	return drawCalls;
+}
+

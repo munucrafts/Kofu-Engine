@@ -11,6 +11,9 @@ public:
 	int GetTriangleCount(const std::vector<Mesh*> meshes);
 	int GetFPS();
 	float GetDeltaMS();
+	int GetDrawCallCount();
+	void AppendDrawCallCount();
+	void ClearDrawCallCount();
 
 private:
 	int drawCalls = 0;

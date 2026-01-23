@@ -3,6 +3,7 @@
 #include "stb_image.h"
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <Stats/StatsHelper.h>
 
 
 void Skybox::LoadSkybox()
@@ -105,4 +106,6 @@ void Skybox::DrawSkybox(const GLuint& shaderID)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTex);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	vao.Unbind();
+
+	StatsHelper::GetStatsHelper().AppendDrawCallCount();
 }
