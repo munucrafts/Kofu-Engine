@@ -7,6 +7,7 @@
 #include "../audio/AudioMaster.h"
 #include <imgui.h>
 #include <Stats/StatsHelper.h>
+#include <Components/Controller.h>
 
 void Scene::BeginScene()
 {
@@ -64,8 +65,8 @@ void Scene::BeginScene()
 
 void Scene::RenderScene(const float deltaTime)
 {
+    Controller::Navigate(playerCamera);
     GLuint shaderID = 0;
-    playerCamera.NavigateCamera();
 
     for (int i = 0; i < lights.size(); i++)
     {

@@ -9,7 +9,6 @@ public:
 	~Camera() = default;
 	void ApplyCamMatrix(int shaderID);
 	void ApplyGizmoCamMatrix(int shaderID);
-	void NavigateCamera();
 
 public:
 	glm::vec3 location = glm::vec3(0.0f);
@@ -24,5 +23,8 @@ private:
 	glm::mat4 viewMat = glm::mat4(1.0f);
 	glm::mat4 projMat = glm::mat4(1.0f);
 	bool firstClick = false;
+
+private:
+	friend class Controller;
 };
 
