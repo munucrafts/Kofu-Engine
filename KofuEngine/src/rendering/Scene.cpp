@@ -16,7 +16,7 @@ void Scene::BeginScene()
 
     skyBox.LoadSkybox();
     worldGizmo.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(600.0f)));
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(2000.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(viewportWidth, viewportHeight, 8);
     screenTexFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
 
@@ -94,23 +94,24 @@ void Scene::RenderScene(const float deltaTime)
     glViewport(0, 0, viewportWidth, viewportHeight);
     Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight);
 
+    glDisable(GL_CULL_FACE);
+    shaderID = shaders.at(LIGHT_MESH).Activate();
+    playerCamera.ApplyCamMatrix(shaderID);
+    for (Light* light : lights) light->DrawLightMesh(shaderID);
+
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    shaderID = shaders.at(LIGHT_MESH).Activate();
-    playerCamera.ApplyCamMatrix(shaderID);
-    for (Light* light : lights) light->DrawLightMesh(shaderID);
-
-    ObjectType lastMeshType = NONE;
+    ObjectType prevMeshType = NONE;
     for (Mesh* mesh : meshes)
     {
-        if (mesh->meshType != lastMeshType)
+        if (mesh->meshType != prevMeshType)
         {
-            lastMeshType = mesh->meshType;
-            shaderID = shaders.at(lastMeshType).Activate();
+            prevMeshType = mesh->meshType;
+            shaderID = shaders.at(prevMeshType).Activate();
             UploadLightData(shaderID);
             playerCamera.ApplyCamMatrix(shaderID);
         }

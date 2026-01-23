@@ -58,11 +58,11 @@ void main()
         Color = mix(Color, gridColorThin, Lod0a * (1.0 - LOD_fade));
     }
 
-    float axisThickness = 2.0;
+    float axisThickness = 1.2;
     vec2 axisAlpha = 1.0 - satv(abs(worldPos.xz) / (dudv * axisThickness));
     vec4 axisColor = (axisAlpha.y > axisAlpha.x) ? axisX * axisAlpha.y : axisZ * axisAlpha.x;
     float axisMask = max(axisAlpha.x, axisAlpha.y);
-    Color = mix(Color, axisColor, axisMask);
+    Color = mix(Color, 1.25 * axisColor, axisMask);
 
     fragColor = Color;
 }

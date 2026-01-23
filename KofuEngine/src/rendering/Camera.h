@@ -16,7 +16,7 @@ public:
 	float sensitivity = 300.0f;
 	float speed = 0.5f;
 	float nearClip = 0.1f;
-	float farClip = 1000.0f;
+	float farClip = 10000.0f;
 	float FOV = 45.0f;
 
 private:
