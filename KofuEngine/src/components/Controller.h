@@ -7,7 +7,7 @@ class Controller
 {
 public:
 	static Controller& GetController();
-	static void Navigate(Camera& camera);
+	void Navigate(Camera& camera);
 
 private:
 	Controller() = default;

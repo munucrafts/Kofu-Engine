@@ -16,7 +16,7 @@ void Scene::BeginScene()
 
     skyBox.LoadSkybox();
     worldGizmo.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(2000.0f)));
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(20000.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(viewportWidth, viewportHeight, 8);
     screenTexFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
 
@@ -32,7 +32,7 @@ void Scene::BeginScene()
     shaders.emplace(LIGHT_SHADOW, Shader("./shaders/shadow.vert", "./shaders/shadow.frag", ""));
     shaders.emplace(POINT_LIGHT_SHADOW, Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
 
-    playerCamera.location = glm::vec3(0.0f, 6.0f, 50.0f);
+    playerCamera.location = glm::vec3(0.0f, 10.0f, 50.0f);
 
     //modelPaths.insert({"./assets/models/Ruel/scene.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(5.1f)))});
     //modelPaths.insert({"./assets/models/Medieval/medieval.gltf", MeshData(STATIC_MESH, Transform(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(0.0f), glm::vec3(10.0f)))});
@@ -65,7 +65,7 @@ void Scene::BeginScene()
 
 void Scene::RenderScene(const float deltaTime)
 {
-    Controller::Navigate(playerCamera);
+    Controller::GetController().Navigate(playerCamera);
     GLuint shaderID = 0;
 
     for (int i = 0; i < lights.size(); i++)

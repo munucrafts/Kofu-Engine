@@ -62,7 +62,7 @@ void main()
     vec2 axisAlpha = 1.0 - satv(abs(worldPos.xz) / (dudv * axisThickness));
     vec4 axisColor = (axisAlpha.y > axisAlpha.x) ? axisX * axisAlpha.y : axisZ * axisAlpha.x;
     float axisMask = max(axisAlpha.x, axisAlpha.y);
-    Color = mix(Color, 1.25 * axisColor, axisMask);
+    Color = mix(Color, 1.5 * axisColor, axisMask);
 
     fragColor = Color;
 }

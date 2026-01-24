@@ -31,19 +31,19 @@ private:
 	std::map<ObjectType, Shader> shaders; 
 	std::vector<Mesh*> meshes;
 	std::vector<Light*> lights;
+	Gizmo worldGizmo;
 	Skybox skyBox;
-	RenderMode renderMode = LIT;
 	Quad gridQuad;
+	RenderMode renderMode = LIT;
+	std::map<std::string, unsigned int> reservedTexSlots = { {"baseTex", 0}, {"normalTex", 1}, {"occlusionTex", 2}, {"metallicTex", 3} };
 	FBO msaaSceneFBO;
 	FBO screenTexFBO;
-	Gizmo worldGizmo;
 	std::vector<FBO> shadowMapFBOs;
+	std::string selectedObjectID = "None";
 	const int shadowMapWidth = 2048;
 	const int shadowMapHeight = 2048;
-	std::map<std::string, unsigned int> reservedTexSlots = { {"baseTex", 0}, {"normalTex", 1}, {"occlusionTex", 2}, {"metallicTex", 3} };
 	int viewportWidth = 1024;
 	int viewportHeight = 720;
-	std::string selectedObjectID = "None";
 
 public:
 	Camera playerCamera;

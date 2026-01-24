@@ -14,7 +14,7 @@ public:
 	glm::vec3 location = glm::vec3(0.0f);
 	Direction direction = { glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f) };
 	float sensitivity = 300.0f;
-	float speed = 0.5f;
+	float speed = 0.75f;
 	float nearClip = 0.1f;
 	float farClip = 10000.0f;
 	float FOV = 45.0f;
