@@ -9,7 +9,9 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Viewport");
-	
+
+	mouseHovering = ImGui::IsWindowHovered();
+
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 	int& viewWidth = activeScene->viewportWidth;
 	int& viewHeight = activeScene->viewportHeight;
@@ -21,11 +23,15 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 		activeScene->ResizeFBOs(viewWidth, viewHeight);
 	}
 
-
 	GLuint textureID = activeScene->screenTexFBO.colorTex;
 	ImGui::Image((void*)(intptr_t)textureID, ImVec2((float)viewWidth, (float)viewHeight), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 
 	ImGui::End();
 	ImGui::PopStyleColor();
 	ImGui::PopStyleVar();
+}
+
+bool ViewportPanel::IsMouseHoveringOnViewport()
+{
+	return mouseHovering;
 }

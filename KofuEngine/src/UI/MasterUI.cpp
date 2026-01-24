@@ -30,6 +30,11 @@ void MasterUI::InitMasterUI()
     ImGui_ImplOpenGL3_Init(engine.GetOGLVersionText().c_str());
 }
 
+bool MasterUI::IsMouseOnViewport()
+{
+    return viewportPanel.IsMouseHoveringOnViewport();
+}
+
 void MasterUI::RenderMasterUI(Scene* activeScene)
 {
     ImGui_ImplOpenGL3_NewFrame();

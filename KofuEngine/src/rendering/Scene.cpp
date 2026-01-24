@@ -66,7 +66,8 @@ void Scene::BeginScene()
 void Scene::RenderScene(const float deltaTime)
 {
     Controller& controller = Controller::GetController();
-    controller.Navigate(playerCamera);
+    if (MasterUI::GetMasterUI().IsMouseOnViewport()) controller.Navigate(playerCamera);
+
     GLuint shaderID = 0;
 
     for (int i = 0; i < lights.size(); i++)

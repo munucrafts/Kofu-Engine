@@ -12,6 +12,7 @@ public:
 	static MasterUI& GetMasterUI();
 	void InitMasterUI();
 	void RenderMasterUI(Scene* activeScene);
+	bool IsMouseOnViewport();
 
 private:
 	MasterUI() = default;

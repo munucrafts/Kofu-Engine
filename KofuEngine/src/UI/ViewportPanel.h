@@ -10,5 +10,9 @@ public:
 	ViewportPanel() = default;
 	~ViewportPanel() = default;
 	virtual void RenderUI(Scene* activeScene) override;
+	bool IsMouseHoveringOnViewport();
+
+private:
+	bool mouseHovering = false;
 };
 
