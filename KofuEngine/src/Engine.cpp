@@ -8,7 +8,7 @@
 #include "stats/StatsHelper.h"
 
 int Engine::windowWidth = 1024;
-int Engine::windowHeight = 724;
+int Engine::windowHeight = 720;
 
 constexpr char engineName[12] = "Kofu Engine";
 constexpr int OGLMajor = 4;

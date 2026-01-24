@@ -14,12 +14,6 @@ void Scene::BeginScene()
     AudioMaster::GetAudioMaster().InitAudioMaster();
     MasterUI::GetMasterUI().InitMasterUI();
 
-    skyBox.LoadSkybox();
-    worldGizmo.Init();
-    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(20000.0f)));
-    msaaSceneFBO = RenderTarget::CreateMSAATarget(viewportWidth, viewportHeight, 8);
-    screenTexFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
-
     renderMode = LIT;
 
     shaders.emplace(STATIC_MESH, Shader("./shaders/staticMesh.vert", "./shaders/staticMesh.frag", ""));
@@ -61,11 +55,18 @@ void Scene::BeginScene()
                                     RenderTarget::CreateCubemapTarget(shadowMapWidth, shadowMapHeight) : 
                                     RenderTarget::CreateShadowTarget(shadowMapWidth, shadowMapHeight));
     }
+
+    skyBox.LoadSkybox();
+    worldGizmo.Init();
+    gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(20000.0f)));
+    msaaSceneFBO = RenderTarget::CreateMSAATarget(viewportWidth, viewportHeight, 8);
+    screenTexFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
 }
 
 void Scene::RenderScene(const float deltaTime)
 {
-    Controller::GetController().Navigate(playerCamera);
+    Controller& controller = Controller::GetController();
+    controller.Navigate(playerCamera);
     GLuint shaderID = 0;
 
     for (int i = 0; i < lights.size(); i++)
@@ -95,7 +96,7 @@ void Scene::RenderScene(const float deltaTime)
     Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight);
 
     glDisable(GL_CULL_FACE);
-    shaderID = shaders.at(LIGHT_MESH).Activate();
+    shaderID = shaders[LIGHT_MESH].Activate();
     playerCamera.ApplyCamMatrix(shaderID);
     for (Light* light : lights) light->DrawLightMesh(shaderID);
 
@@ -111,7 +112,7 @@ void Scene::RenderScene(const float deltaTime)
         if (mesh->meshType != prevMeshType)
         {
             prevMeshType = mesh->meshType;
-            shaderID = shaders.at(prevMeshType).Activate();
+            shaderID = shaders[prevMeshType].Activate();
             UploadLightData(shaderID);
             playerCamera.ApplyCamMatrix(shaderID);
         }
@@ -119,7 +120,7 @@ void Scene::RenderScene(const float deltaTime)
     }
 
     glActiveTexture(GL_TEXTURE0);
-    //shaderID = shaders.at(SKY_BOX).Activate();
+    //shaderID = shaders[SKY_BOX].Activate();
     //skyBox.DrawSkybox(shaderID);
 
     glDisable(GL_CULL_FACE);
@@ -127,7 +128,7 @@ void Scene::RenderScene(const float deltaTime)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(GL_FALSE);
 
-    shaderID = shaders.at(GRID).Activate();
+    shaderID = shaders[GRID].Activate();
     playerCamera.ApplyCamMatrix(shaderID);
     gridQuad.vao.Bind();
     gridQuad.DrawQuad(shaderID);
@@ -138,7 +139,7 @@ void Scene::RenderScene(const float deltaTime)
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    shaderID = shaders.at(GIZMO).Activate();
+    shaderID = shaders[GIZMO].Activate();
     playerCamera.ApplyGizmoCamMatrix(shaderID);
     worldGizmo.DrawGizmo(shaderID);
 
@@ -204,6 +205,12 @@ void Scene::UploadLightData(const GLuint shaderId)
             glUniformMatrix4fv(glGetUniformLocation(shaderId, ("lightProjections[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
         }
     }
+}
+
+void Scene::ResizeFBOs(const int viewWidth, const int viewHeight)
+{
+    msaaSceneFBO.Resize(viewWidth, viewHeight);
+    screenTexFBO.Resize(viewWidth, viewHeight);
 }
 
 void Scene::SortObjectsByType()

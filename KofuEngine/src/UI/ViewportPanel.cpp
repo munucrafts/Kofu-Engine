@@ -18,9 +18,7 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 	{
 		viewWidth = (int)viewportPanelSize.x;
 		viewHeight = (int)viewportPanelSize.y;
-
-		activeScene->msaaSceneFBO.Resize(viewWidth, viewHeight);
-		activeScene->screenTexFBO.Resize(viewWidth, viewHeight);
+		activeScene->ResizeFBOs(viewWidth, viewHeight);
 	}
 
 
