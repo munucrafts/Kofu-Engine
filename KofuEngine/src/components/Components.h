@@ -2,6 +2,7 @@
 #include "glm/glm.hpp"
 #include <glm/gtx/transform.hpp>
 #include <vector>
+#include <geometry/Object.h>
 
 enum ObjectType
 {
@@ -16,6 +17,14 @@ enum ObjectType
 	LIGHT_SHADOW,
 	POINT_LIGHT_SHADOW,
 	GIZMO
+};
+
+struct HitData
+{
+	bool hit;
+	glm::vec3 hitLocation;
+	Object hitObject;
+	float distance;
 };
 
 enum RenderMode
