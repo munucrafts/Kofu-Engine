@@ -6,7 +6,7 @@ StatsHelper& StatsHelper::GetStatsHelper()
 	return instance;
 }
 
-int StatsHelper::GetVertexCount(const std::vector<Mesh*> meshes)
+int StatsHelper::GetTotalVertexCount(const std::vector<Mesh*> meshes)
 {
 	int count = 0;
 
@@ -18,7 +18,7 @@ int StatsHelper::GetVertexCount(const std::vector<Mesh*> meshes)
 	return count;
 }
 
-int StatsHelper::GetIndexCount(const std::vector<Mesh*> meshes)
+int StatsHelper::GetTotalIndexCount(const std::vector<Mesh*> meshes)
 {
 	int count = 0;
 
@@ -30,7 +30,7 @@ int StatsHelper::GetIndexCount(const std::vector<Mesh*> meshes)
 	return count;
 }
 
-int StatsHelper::GetTriangleCount(const std::vector<Mesh*> meshes)
+int StatsHelper::GetTotalTriangleCount(const std::vector<Mesh*> meshes)
 {
 	int count = 0;
 

@@ -6,9 +6,9 @@ class StatsHelper
 {
 public:
 	static StatsHelper& GetStatsHelper();
-	int GetVertexCount(const std::vector<Mesh*> meshes);
-	int GetIndexCount(const std::vector<Mesh*> meshes);
-	int GetTriangleCount(const std::vector<Mesh*> meshes);
+	int GetTotalVertexCount(const std::vector<Mesh*> meshes);
+	int GetTotalIndexCount(const std::vector<Mesh*> meshes);
+	int GetTotalTriangleCount(const std::vector<Mesh*> meshes);
 	int GetFPS();
 	float GetDeltaMS();
 	int GetDrawCallCount();

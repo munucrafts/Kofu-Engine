@@ -14,9 +14,9 @@ void StatsPanel::RenderUI(Scene* activeScene)
 
 	ImGui::Text(("FPS - %d"), statHelp.GetFPS());
 	ImGui::Text(("Delta Time - %.3f ms"), statHelp.GetDeltaMS());
-	ImGui::Text(("Vertices - %d"), statHelp.GetVertexCount(activeScene->meshes));
-	ImGui::Text(("Indices - %d"), statHelp.GetIndexCount(activeScene->meshes));
-	ImGui::Text(("Triangles - %d"), statHelp.GetTriangleCount(activeScene->meshes));
+	ImGui::Text(("Total Vertices - %d"), statHelp.GetTotalVertexCount(activeScene->meshes));
+	ImGui::Text(("Total Indices - %d"), statHelp.GetTotalIndexCount(activeScene->meshes));
+	ImGui::Text(("Total Triangles - %d"), statHelp.GetTotalTriangleCount(activeScene->meshes));
 	ImGui::Text(("Draw Calls - %d"), statHelp.GetDrawCallCount());
 
 	ImGui::End();
