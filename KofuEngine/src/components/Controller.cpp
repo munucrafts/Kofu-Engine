@@ -78,21 +78,21 @@ void Controller::Navigate(Camera& camera)
 	AudioListener::GetListener().SetListenerOrientation(camera.direction.forward, camera.direction.up);
 }
 
-//HitData Controller::RayCast(const glm::vec3& beginLocation, const glm::vec3& endLocation)
-//{
-//	// R(t) = O + D.t
-//
-//	return HitData();
-//}
-//
-//glm::vec3 Controller::ScreenToWorld(const glm::vec2& screenPosition)
-//{
-//	glm::vec2 screenRes;
-//	glm::vec3 ndc = glm::vec3(((screenPosition / screenRes) - glm::vec2(0.5f)) * 2.0f, 1.0f);
-//
-//	glm::vec4 clip = glm::vec4(ndc.x, ndc.y, -1.0f, 1.0f);
-//
-//
-//
-//	return glm::vec3();
-//}
+HitData Controller::RayCast(const glm::vec3& beginLocation, const glm::vec3& endLocation)
+{
+	// R(t) = O + D.t
+
+	return HitData();
+}
+
+glm::vec3 Controller::ScreenToWorld(const glm::vec2& screenPosition)
+{
+	glm::vec2 screenRes;
+	glm::vec3 ndc = glm::vec3(((screenPosition / screenRes) - glm::vec2(0.5f)) * 2.0f, 1.0f);
+
+	glm::vec4 clip = glm::vec4(ndc.x, ndc.y, -1.0f, 1.0f);
+
+
+
+	return glm::vec3();
+}
