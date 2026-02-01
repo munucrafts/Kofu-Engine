@@ -40,7 +40,7 @@ private:
 	FBO msaaSceneFBO;
 	FBO screenTexFBO;
 	std::vector<FBO> shadowMapFBOs;
-	std::string selectedObjectID = "None";
+	Object* selectedObject;
 	const int shadowMapWidth = 2048;
 	const int shadowMapHeight = 2048;
 	int viewportWidth = 1024;

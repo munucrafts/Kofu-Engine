@@ -4,6 +4,7 @@
 #include <imgui.h>
 #include "geometry/Object.h"
 #include <utilities/Util.h>
+#include <functional>
 
 void OutlinerPanel::RenderUI(Scene* activeScene)
 {
@@ -27,11 +28,10 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
             std::string uniqueID = typeName + "_" + std::to_string(typeIndex);
             obj->objectID = uniqueID;
 
-            isSelected = (activeScene->selectedObjectID == obj->objectID);
+            isSelected = (activeScene->selectedObject && (activeScene->selectedObject->objectID == obj->objectID));
+
             if (ImGui::Selectable(uniqueID.c_str(), isSelected))
-            {
-                activeScene->selectedObjectID = obj->objectID;
-            }
+                activeScene->selectedObject = activeScene->meshes[i];
         }
         ImGui::TreePop();
     }
@@ -48,9 +48,10 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
             std::string uniqueID = typeName + "_" + std::to_string(typeIndex);
             obj->objectID = uniqueID;
 
-            isSelected = (activeScene->selectedObjectID == obj->objectID);
+            isSelected = (activeScene->selectedObject && (activeScene->selectedObject->objectID == obj->objectID));
+
             if (ImGui::Selectable(obj->objectID.c_str(), isSelected))
-                activeScene->selectedObjectID = obj->objectID;
+                activeScene->selectedObject = activeScene->lights[i];
         }
         ImGui::TreePop();
     }
@@ -62,9 +63,10 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
         Object* obj = &activeScene->playerCamera;
         obj->objectID = "Camera_0";
 
-        isSelected = (activeScene->selectedObjectID == obj->objectID);
+        isSelected = (activeScene->selectedObject && (activeScene->selectedObject->objectID == obj->objectID));
+
         if (ImGui::Selectable(obj->objectID.c_str(), isSelected))
-            activeScene->selectedObjectID = obj->objectID;
+            activeScene->selectedObject = &activeScene->playerCamera;
 
         ImGui::TreePop();
     }
@@ -76,9 +78,10 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
         Object* obj = &activeScene->skyBox;
         obj->objectID = "Skybox_0";
 
-        isSelected = (activeScene->selectedObjectID == obj->objectID);
+        isSelected = (activeScene->selectedObject && (activeScene->selectedObject->objectID == obj->objectID));
+
         if (ImGui::Selectable(obj->objectID.c_str(), isSelected))
-            activeScene->selectedObjectID = obj->objectID;
+            activeScene->selectedObject = &activeScene->skyBox;
 
         ImGui::TreePop();
     }

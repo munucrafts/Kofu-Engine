@@ -121,8 +121,8 @@ void Scene::RenderScene(const float deltaTime)
     }
 
     glActiveTexture(GL_TEXTURE0);
-    //shaderID = shaders[SKY_BOX].Activate();
-    //skyBox.DrawSkybox(shaderID);
+    shaderID = shaders[SKY_BOX].Activate();
+    skyBox.DrawSkybox(shaderID);
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);

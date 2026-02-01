@@ -9,7 +9,6 @@ uniform mat4 projMat;
 
 void main()
 {
-    vec4 worldPos = modelMat * vec4(aPosition, 1.0);
-    gl_Position = projMat * viewMat * worldPos;
+    gl_Position = projMat * viewMat * modelMat * vec4(aPosition, 1.0);;
     texCoord = aTexCoord;
 }
