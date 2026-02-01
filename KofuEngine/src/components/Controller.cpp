@@ -77,14 +77,3 @@ void Controller::Navigate(Camera& camera)
 	AudioListener::GetListener().SetListenerVelocity(camera.direction.forward * camera.speed);
 	AudioListener::GetListener().SetListenerOrientation(camera.direction.forward, camera.direction.up);
 }
-
-HitData Controller::RayCast(const glm::vec3& beginLocation, const glm::vec3& endLocation)
-{
-	// R(t) = O + D.t
-	return HitData();
-}
-
-glm::vec3 Controller::ScreenToWorld(const glm::vec2& screenPosition)
-{
-	return glm::vec3();
-}

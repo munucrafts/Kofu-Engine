@@ -4,6 +4,8 @@
 
 Light::Light(const LightDetails details)
 {
+    objectType = details.lightType;
+
     lightDetails = details;
 
     lightVertices =

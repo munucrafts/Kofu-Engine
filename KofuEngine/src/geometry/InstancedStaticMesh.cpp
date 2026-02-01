@@ -6,12 +6,12 @@
 
 InstancedStaticMesh::InstancedStaticMesh()
 {
-	meshType = INSTANCED_STATIC_MESH;
+	objectType = INSTANCED_STATIC_MESH;
 }
 
 InstancedStaticMesh::InstancedStaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds, const unsigned int instCount)
 {
-	meshType = INSTANCED_STATIC_MESH;
+	objectType = INSTANCED_STATIC_MESH;
 	instanceCount = instCount;
 	vertices = verts;
 	indices = inds;

@@ -19,7 +19,6 @@ public:
 	virtual void DrawMesh(int shaderID) = 0;
 
 public:
-	ObjectType meshType = NONE;
 	Transform transform = {};
 	std::map<std::string, Texture> textures;
 	std::vector<Vertex> vertices;

@@ -2,7 +2,6 @@
 #include "glm/glm.hpp"
 #include <glm/gtx/transform.hpp>
 #include <vector>
-#include <geometry/Object.h>
 
 enum ObjectType
 {
@@ -16,15 +15,11 @@ enum ObjectType
 	LIGHT_MESH,
 	LIGHT_SHADOW,
 	POINT_LIGHT_SHADOW,
-	GIZMO
-};
-
-struct HitData
-{
-	bool hit;
-	glm::vec3 hitLocation;
-	Object hitObject;
-	float distance;
+	GIZMO,
+	POINT_LIGHT,
+	SPOT_LIGHT,
+	DIRECTIONAL_LIGHT,
+	CAMERA
 };
 
 enum RenderMode
@@ -32,14 +27,9 @@ enum RenderMode
 	LIT, UNLIT, DEPTH, NORMAL
 };
 
-enum LightType
-{
-	POINT_LIGHT, SPOT_LIGHT, DIRECTIONAL_LIGHT
-};
-
 struct LightDetails
 {
-	LightType lightType = DIRECTIONAL_LIGHT;
+	ObjectType lightType = DIRECTIONAL_LIGHT;
 	float intensity = 1.0f;
 	float innerCone = 10.0f;
 	float outerCone = 40.0f;

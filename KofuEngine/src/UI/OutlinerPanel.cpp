@@ -22,7 +22,7 @@ void OutlinerPanel::RenderUI(Scene* activeScene)
         for (int i = 0; i < activeScene->meshes.size(); i++)
         {
             Object* obj = activeScene->meshes[i];
-            std::string typeName = Util::EnumToString(activeScene->meshes[i]->meshType);
+            std::string typeName = Util::EnumToString(activeScene->meshes[i]->objectType);
             int typeIndex = indexMap[typeName]++;
             std::string uniqueID = typeName + "_" + std::to_string(typeIndex);
             obj->objectID = uniqueID;

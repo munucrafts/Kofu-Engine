@@ -110,9 +110,9 @@ void Scene::RenderScene(const float deltaTime)
     ObjectType prevMeshType = NONE;
     for (Mesh* mesh : meshes)
     {
-        if (mesh->meshType != prevMeshType)
+        if (mesh->objectType != prevMeshType)
         {
-            prevMeshType = mesh->meshType;
+            prevMeshType = mesh->objectType;
             shaderID = shaders[prevMeshType].Activate();
             UploadLightData(shaderID);
             playerCamera.ApplyCamMatrix(shaderID);
@@ -218,7 +218,7 @@ void Scene::SortObjectsByType()
 {
     std::sort(meshes.begin(), meshes.end(), [](Mesh* a, Mesh* b)
         {
-            return a->meshType < b->meshType;
+            return a->objectType < b->objectType;
         }
     );
 

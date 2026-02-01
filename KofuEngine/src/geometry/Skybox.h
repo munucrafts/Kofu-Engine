@@ -7,7 +7,7 @@
 class Skybox : public Object
 {
 public:
-	Skybox() = default;
+	Skybox();
 	~Skybox() = default;
 	void LoadSkybox();
 	void DrawSkybox(const GLuint& shaderID);

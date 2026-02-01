@@ -2,6 +2,11 @@
 #include <Engine.h>
 #include <glm/gtc/type_ptr.hpp>
 
+Camera::Camera()
+{
+	objectType = CAMERA;
+}
+
 void Camera::ApplyCamMatrix(int shaderID)
 {
 	Engine& engine = Engine::GetEngine();

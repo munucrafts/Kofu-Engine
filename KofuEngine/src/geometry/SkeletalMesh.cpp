@@ -6,12 +6,12 @@
 
 SkeletalMesh::SkeletalMesh()
 {
-    meshType = SKELETAL_MESH;
+    objectType = SKELETAL_MESH;
 }
 
 SkeletalMesh::SkeletalMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds)
 {
-    meshType = SKELETAL_MESH;
+    objectType = SKELETAL_MESH;
     vertices = verts;
     indices = inds;
 }

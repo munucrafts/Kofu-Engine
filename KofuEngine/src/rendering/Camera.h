@@ -5,7 +5,7 @@
 class Camera : public Object
 {
 public:
-	Camera() = default;
+	Camera();
 	~Camera() = default;
 	void ApplyCamMatrix(int shaderID);
 	void ApplyGizmoCamMatrix(int shaderID);

@@ -22,17 +22,21 @@ namespace Util
         {
             switch (value)
             {
-            case STATIC_MESH:           return "Static_Mesh";
-            case SKELETAL_MESH:         return "Skeletal_Mesh";
-            case INSTANCED_STATIC_MESH: return "Instanced_Static_Mesh";
-            case SKY_BOX:               return "Skybox";
-            case SCREEN:                return "Screen";
-            case GRID:                  return "Grid";
-            case LIGHT_MESH:            return "Light_Mesh";
-            case LIGHT_SHADOW:          return "Light_Shadow";
-            case POINT_LIGHT_SHADOW:    return "Point_Light_Shadow";
-            case GIZMO:                 return "Gizmo";
-            default:                    return "None";
+                case STATIC_MESH:           return "Static_Mesh";
+                case SKELETAL_MESH:         return "Skeletal_Mesh";
+                case INSTANCED_STATIC_MESH: return "Instanced_Static_Mesh";
+                case SKY_BOX:               return "Skybox";
+                case SCREEN:                return "Screen";
+                case GRID:                  return "Grid";
+                case LIGHT_MESH:            return "Light_Mesh";
+                case LIGHT_SHADOW:          return "Light_Shadow";
+                case POINT_LIGHT_SHADOW:    return "Point_Light_Shadow";
+                case GIZMO:                 return "Gizmo";
+                case DIRECTIONAL_LIGHT:     return "Directional_Light";
+                case SPOT_LIGHT:            return "Spot_Light";
+                case POINT_LIGHT:           return "Point_Light";
+                case CAMERA:                return "Camera";
+                default:                    return "None";
             }
         }
 
@@ -40,22 +44,11 @@ namespace Util
         {
             switch (value)
             {
-            case LIT:    return "Lit";
-            case UNLIT:  return "Unlit";
-            case DEPTH:  return "Depth";
-            case NORMAL: return "Normal";
-            default:     return "None";
-            }
-        }
-
-        else if constexpr (std::is_same_v<T, LightType>)
-        {
-            switch (value)
-            {
-            case POINT_LIGHT:       return "Point_Light";
-            case SPOT_LIGHT:        return "Spot_Light";
-            case DIRECTIONAL_LIGHT: return "Directional_Light";
-            default:                return "None";
+                case LIT:    return "Lit";
+                case UNLIT:  return "Unlit";
+                case DEPTH:  return "Depth";
+                case NORMAL: return "Normal";
+                default:     return "None";
             }
         }
 

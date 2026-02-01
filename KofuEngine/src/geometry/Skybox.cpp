@@ -6,6 +6,11 @@
 #include <Stats/StatsHelper.h>
 
 
+Skybox::Skybox()
+{
+	objectType = SKY_BOX;
+}
+
 void Skybox::LoadSkybox()
 {
 	float skyboxVertices[] =
