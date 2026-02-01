@@ -1,11 +1,13 @@
 #pragma once
 #include "UIPanel.h"
+#include <glm/fwd.hpp>
+#include <components/Components.h>
 
-class TransformPanel : public UIPanel
+class TransformPanel
 {
 public:
 	TransformPanel() = default;
 	~TransformPanel() = default;
-	virtual void RenderUI() override;
+	void RenderUI(Transform& transform, bool needLoc, bool needRot, bool needScl);
 };
 

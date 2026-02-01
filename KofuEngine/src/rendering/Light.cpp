@@ -41,6 +41,7 @@ void Light::Init()
 {
 	lightMesh = { lightVertices, lightIndices };
 	lightMesh.transform.location = lightDetails.location;
+	lightMesh.transform.rotation = lightDetails.rotation;
 	lightMesh.transform.scale = glm::vec3(5.0f);
 	lightMesh.InitMeshManually();
 
@@ -49,6 +50,10 @@ void Light::Init()
 
 void Light::DrawLightMesh(int shaderID)
 {
+    lightMesh.transform.location = lightDetails.location;
+    lightMesh.transform.rotation = lightDetails.rotation;
+    lightMesh.transform.scale = glm::vec3(5.0f);
+
 	lightMesh.DrawMesh(shaderID);
 }
 

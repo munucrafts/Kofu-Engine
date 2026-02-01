@@ -14,12 +14,14 @@ out vec4 fragPosLight[MAX_LIGHTS];
 
 uniform int lightCount;
 uniform mat4 lightProjections[MAX_LIGHTS];
+uniform mat4 modelMat;
 uniform mat4 viewMat;
 uniform mat4 projMat;
 
 void main()
 {
-    vec4 worldPos = instanceMatrices * vec4(aPosition, 1.0);
+    mat4 instWorldMat = modelMat * instanceMatrices;
+    vec4 worldPos = instWorldMat * vec4(aPosition, 1.0);
     currentPos = worldPos.xyz;
     normal = normalize(mat3(transpose(inverse(instanceMatrices))) * aNormal);
     texCoord = aTexCoord;

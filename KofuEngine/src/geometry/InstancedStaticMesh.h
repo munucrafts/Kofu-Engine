@@ -6,7 +6,7 @@
 class InstancedStaticMesh : public StaticMesh
 {
 public:
-	unsigned int instanceCount = 0;
+	int instanceCount = 0;
 	std::vector<glm::mat4> instanceMatrices;
 	VBO instancedVBO;
 
