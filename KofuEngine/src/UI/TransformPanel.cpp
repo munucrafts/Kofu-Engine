@@ -1,6 +1,7 @@
 #include "TransformPanel.h"
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <functional>
 
 
 void TransformPanel::RenderUI(Transform& transform, bool needLoc, bool needRot, bool needScl)
@@ -17,99 +18,49 @@ void TransformPanel::RenderUI(Transform& transform, bool needLoc, bool needRot, 
         ImVec4 zCol = ImVec4(0.2f, 0.4f, 0.9f, 1.0f);
         ImVec4 xyzTextCol = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
+        auto axisFunc = [&](const char* buttonText, const char* buttonIcon, float* valuePtr, ImVec4 col, bool last = false)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
+                ImGui::PushStyleColor(ImGuiCol_Button, col);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, col );
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, col);
+
+                ImGui::Button(buttonText, { btnSize, btnSize });
+                ImGui::PopStyleColor(4);
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(inputWidth);
+                ImGui::DragFloat(buttonIcon, valuePtr, 0.1f);
+
+                if (!last) ImGui::SameLine();
+            };
+
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 5));
 
         ImGui::BeginDisabled(!needLoc);
+        ImGui::AlignTextToFramePadding();
         ImGui::Text("Location");
         ImGui::SameLine(labelWidth);
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, xCol);
-        ImGui::Button("X", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##LX", &transform.location.x, 0.1f);
-        ImGui::SameLine();
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, yCol);
-        ImGui::Button("Y", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##LY", &transform.location.y, 0.1f);
-        ImGui::SameLine();
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, zCol);
-        ImGui::Button("Z", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##LZ", &transform.location.z, 0.1f);
+        axisFunc("X##L", "##LX", &transform.location.x, xCol);
+        axisFunc("Y##L", "##LY", &transform.location.y, yCol);
+        axisFunc("Z##L", "##LZ", &transform.location.z, zCol, true);
         ImGui::EndDisabled();
 
         ImGui::BeginDisabled(!needRot);
+        ImGui::AlignTextToFramePadding();
         ImGui::Text("Rotation");
         ImGui::SameLine(labelWidth);
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, xCol);
-        ImGui::Button("X##R", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##RX", &transform.rotation.x, 0.1f);
-        ImGui::SameLine();
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, yCol);
-        ImGui::Button("Y##R", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##RY", &transform.rotation.y, 0.1f);
-        ImGui::SameLine();
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, zCol);
-        ImGui::Button("Z##R", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##RZ", &transform.rotation.z, 0.1f);
+        axisFunc("X##R", "##RX", &transform.rotation.x, xCol);
+        axisFunc("Y##R", "##RY", &transform.rotation.y, yCol);
+        axisFunc("Z##R", "##RZ", &transform.rotation.z, zCol, true);
         ImGui::EndDisabled();
 
         ImGui::BeginDisabled(!needScl);
+        ImGui::AlignTextToFramePadding();
         ImGui::Text("Scale");
         ImGui::SameLine(labelWidth);
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, xCol);
-        ImGui::Button("X##S", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##SX", &transform.scale.x, 0.1f);
-        ImGui::SameLine();
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, yCol);
-        ImGui::Button("Y##S", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##SY", &transform.scale.y, 0.1f);
-        ImGui::SameLine();
-
-        ImGui::PushStyleColor(ImGuiCol_Text, xyzTextCol);
-        ImGui::PushStyleColor(ImGuiCol_Button, zCol);
-        ImGui::Button("Z##S", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragFloat("##SZ", &transform.scale.z, 0.1f);
+        axisFunc("X##S", "##SX", &transform.scale.x, xCol);
+        axisFunc("Y##S", "##SY", &transform.scale.y, yCol);
+        axisFunc("Z##S", "##SZ", &transform.scale.z, zCol, true);
         ImGui::EndDisabled();
 
         ImGui::PopStyleVar();

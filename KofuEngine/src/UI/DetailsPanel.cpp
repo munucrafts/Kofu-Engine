@@ -13,26 +13,28 @@ void DetailsPanel::RenderUI(Scene* activeScene)
 {
 	ImGui::Begin("Details");
 
-	if (activeScene->selectedObject == nullptr || activeScene->selectedObject->objectID == "None")
-	{
-		ImGui::Text("No Selection");
-		ImGui::End();
-		return;
-	}
+    if (activeScene->selectedObject == nullptr || activeScene->selectedObject->objectID == "None")
+    {
+        ImGui::TextDisabled("No Selection");
+        ImGui::End();
+        return;
+    }
 
-	Object* obj = activeScene->selectedObject;
-	ObjectType objType = obj->objectType;
-	std::string objIDText = "Object ID : " + obj->objectID;
-	std::string objTypeText = "Object Type : " + Util::EnumToString(objType);
+    Object* obj = activeScene->selectedObject;
+    ObjectType objType = obj->objectType;
 
-	ImVec4 normalColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, normalColor);
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, normalColor);
+    ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Header));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::GetStyleColorVec4(ImGuiCol_Header));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyleColorVec4(ImGuiCol_Header));
 
-	ImGui::Button(objIDText.c_str());
-	ImGui::Button(objTypeText.c_str());
+    float fullWidth = ImGui::GetContentRegionAvail().x;
 
-	ImGui::PopStyleColor(2);
+    ImGui::Button(("ID : " + obj->objectID).c_str(), { fullWidth, 0 });
+    ImGui::Button(("Type : " + Util::EnumToString(objType)).c_str(), { fullWidth, 0 });
+
+    ImGui::PopStyleColor(3);
+    ImGui::Spacing();
+    ImGui::Separator();
 
 	TransformPanel transformPanel;
 

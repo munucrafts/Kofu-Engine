@@ -19,52 +19,44 @@ void MeshPanel::RenderUI(Mesh* mesh, ObjectType meshType)
         int indCount = (int)mesh->indices.size();
         int triCount = indCount / 3;
 
+        auto meshRow = [&](const char* label, const char* btnIcon, const char* id, int* val)
+            {
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text(label);
+                ImGui::SameLine(labelWidth);
+
+                ImGui::PushStyleColor(ImGuiCol_Text, textWhite);
+                ImGui::PushStyleColor(ImGuiCol_Button, labelCol);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, labelCol);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, labelCol);
+
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 3));
+                ImGui::Button(btnIcon, { btnSize, btnSize });
+                ImGui::PopStyleVar();
+
+                ImGui::PopStyleColor(4);
+
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(inputWidth);
+                ImGui::DragInt(id, val, 0, 0, 0, "%d");
+            };
+
         ImGui::BeginDisabled(true);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 5));
 
-        ImGui::Text("Vertices");
-        ImGui::SameLine(labelWidth);
-        ImGui::PushStyleColor(ImGuiCol_Text, textWhite);
-        ImGui::PushStyleColor(ImGuiCol_Button, labelCol);
-        ImGui::Button("V", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragInt("##V", &vertCount, 0, 0, 0, "%d");
-
-        ImGui::Text("Indices");
-        ImGui::SameLine(labelWidth);
-        ImGui::PushStyleColor(ImGuiCol_Text, textWhite);
-        ImGui::PushStyleColor(ImGuiCol_Button, labelCol);
-        ImGui::Button("I", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragInt("##I", &indCount, 0, 0, 0, "%d");
-
-        ImGui::Text("Triangles");
-        ImGui::SameLine(labelWidth);
-        ImGui::PushStyleColor(ImGuiCol_Text, textWhite);
-        ImGui::PushStyleColor(ImGuiCol_Button, labelCol);
-        ImGui::Button("T", { btnSize, btnSize });
-        ImGui::PopStyleColor(2);
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(inputWidth);
-        ImGui::DragInt("##T", &triCount, 0, 0, 0, "%d");
+        meshRow("Vertices", "V", "##V", &vertCount);
+        meshRow("Indices", "I", "##I", &indCount);
+        meshRow("Triangles", "T", "##T", &triCount);
 
         if (meshType == INSTANCED_STATIC_MESH)
         {
-            ImGui::Text("Instances");
-            ImGui::SameLine(labelWidth);
-            ImGui::PushStyleColor(ImGuiCol_Text, textWhite);
-            ImGui::PushStyleColor(ImGuiCol_Button, labelCol);
-            ImGui::Button("IC", { btnSize, btnSize });
-            ImGui::PopStyleColor(2);
-            ImGui::SameLine();
-            ImGui::SetNextItemWidth(inputWidth);
-
             InstancedStaticMesh* ISM = static_cast<InstancedStaticMesh*>(mesh);
-            ImGui::DragInt("##IC", &ISM->instanceCount, 0, 0, 0, "%d");
+            meshRow("Instances", "IC", "##IC", &ISM->instanceCount);
+        }
+        else
+        {
+            int IC = 1;
+            meshRow("Instances", "IC", "##IC", &IC);
         }
 
         ImGui::PopStyleVar();
