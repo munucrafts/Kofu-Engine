@@ -4,35 +4,36 @@
 #include <string>
 #include <utilities/Util.h>
 #include <imgui.h>
+#include <Engine.h>
 
 
 void SettingsPanel::RenderUI(Scene* activeScene)
 {
     ImGui::Begin("Settings");
 
+    static bool vsyncState = true;
+
+    if (ImGui::Checkbox("Enable VSync", &vsyncState)) 
+        Engine::GetEngine().EnableVSync(vsyncState);
+
     RenderMode& renderMode = activeScene->renderMode;
-
     std::string currentModeText = Util::EnumToString(renderMode);
-    const unsigned int numModes = 4;
-    const char* renderModeTexts[numModes] = { "Lit", "Unlit", "Depth", "Normal" };
-    RenderMode modes[numModes] = { LIT, UNLIT, DEPTH, NORMAL };
 
-    float itemWidth = 100.0f;
-    float posX = ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - itemWidth;
+    const char* renderModeTexts[] = { "Lit", "Unlit", "Depth", "Normal" };
+    RenderMode modes[] = { LIT, UNLIT, DEPTH, NORMAL };
 
-    ImGui::SetCursorPosX(posX);
-    ImGui::SetNextItemWidth(itemWidth);
+    ImGui::Text("Render Mode");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
     if (ImGui::BeginCombo("##RenderModes", currentModeText.c_str()))
     {
-        for (int i = 0; i < numModes; i++)
+        for (int i = 0; i < 4; i++)
         {
-            bool isSelected = (renderMode == modes[i]);
-            if (ImGui::Selectable(renderModeTexts[i], isSelected))
+            if (ImGui::Selectable(renderModeTexts[i], renderMode == modes[i]))
             {
                 renderMode = modes[i];
             }
-            if (isSelected) ImGui::SetItemDefaultFocus();
         }
 
         ImGui::EndCombo();
@@ -40,4 +41,3 @@ void SettingsPanel::RenderUI(Scene* activeScene)
 
     ImGui::End();
 }
-

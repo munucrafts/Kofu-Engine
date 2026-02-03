@@ -20,6 +20,7 @@ public:
 	void ClearWindow(const unsigned int width, const unsigned height, const glm::vec4& clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	float GetWindowAspectRatio();
 	std::string GetOGLVersionText();
+	void EnableVSync(bool enable);
 
 private:
 	bool engineInitialized = false;
@@ -29,7 +30,6 @@ public:
 	std::unique_ptr<Scene> activeScene = nullptr;
 	static int windowWidth;
 	static int windowHeight;
-	static bool enableVsync;
 
 private:
 	Engine() = default;

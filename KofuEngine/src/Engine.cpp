@@ -9,7 +9,6 @@
 
 int Engine::windowWidth = 1024;
 int Engine::windowHeight = 720;
-bool Engine::enableVsync = false;
 
 constexpr char engineName[12] = "Kofu Engine";
 constexpr int OGLMajor = 4;
@@ -39,7 +38,7 @@ void Engine::InitEngine()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(enableVsync);
+    EnableVSync(true);
     gladLoadGL();
 
     activeScene = std::make_unique<Scene>();
@@ -112,4 +111,9 @@ float Engine::GetWindowAspectRatio()
 std::string Engine::GetOGLVersionText()
 {
     return ("#version " + std::to_string(OGLMajor) + std::to_string(OGLMinor) + "0 core");
+}
+
+void Engine::EnableVSync(bool enable)
+{
+    glfwSwapInterval(enable);
 }
