@@ -55,6 +55,7 @@ private:
 	friend class ViewportPanel;
 	friend class DetailsPanel;
 	friend class StatsPanel;
+	friend class SettingsPanel;
 };
 
 

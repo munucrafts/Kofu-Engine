@@ -3,6 +3,7 @@
 #include "ViewportPanel.h"
 #include "DetailsPanel.h"
 #include "StatsPanel.h"
+#include "SettingsPanel.h"
 
 class Scene;
 
@@ -26,4 +27,5 @@ private:
 	ViewportPanel viewportPanel;
 	DetailsPanel detailsPanel;
 	StatsPanel statsPanel;
+	SettingsPanel settingsPanel;
 };

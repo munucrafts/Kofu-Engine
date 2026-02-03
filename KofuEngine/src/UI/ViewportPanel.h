@@ -14,9 +14,6 @@ public:
 	bool IsMouseHoveringOnViewport();
 
 private:
-	void RenderRenderModeUI(RenderMode& renderMode);
-
-private:
 	bool mouseHovering = false;
 };
 

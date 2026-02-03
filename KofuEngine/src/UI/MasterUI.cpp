@@ -52,28 +52,30 @@ void MasterUI::RenderMasterUI(Scene* activeScene)
         ImGui::DockBuilderSetNodeSize(dockspaceID, ImGui::GetMainViewport()->Size);
 
         ImGuiID dockCenterID = dockspaceID;
+
+        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockCenterID, ImGuiDir_Left, 0.25f, nullptr, &dockCenterID);
+        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockCenterID, ImGuiDir_Right, 0.40f, nullptr, &dockCenterID);
+
+        ImGuiID dockLeftBottomID;
+        ImGuiID dockLeftTopID = ImGui::DockBuilderSplitNode(dockLeftID, ImGuiDir_Up, 0.5f, nullptr, &dockLeftBottomID);
+
+        ImGuiID dockRightBottomID;
+        ImGuiID dockRightTopID = ImGui::DockBuilderSplitNode(dockRightID, ImGuiDir_Up, 0.5f, nullptr, &dockRightBottomID);
+
         ImGui::DockBuilderDockWindow("Viewport", dockCenterID);
-
-        ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Left, 0.25f, nullptr, &dockCenterID);
-        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockspaceID, ImGuiDir_Right, 0.35f, nullptr, &dockCenterID);
-
-        ImGui::DockBuilderDockWindow("Outliner", dockLeftID);
-        ImGui::DockBuilderDockWindow("Properties", dockRightID);
-
-        ImGuiID dockRightTopID = ImGui::DockBuilderSplitNode(dockRightID, ImGuiDir_Up, 0.5f, nullptr, &dockRightID);
-        ImGuiID dockRightBottomID = ImGui::DockBuilderSplitNode(dockRightID, ImGuiDir_Down, 0.5f, nullptr, &dockRightID);
-
+        ImGui::DockBuilderDockWindow("Outliner", dockLeftTopID);
+        ImGui::DockBuilderDockWindow("Settings", dockLeftBottomID);
         ImGui::DockBuilderDockWindow("Details", dockRightTopID);
         ImGui::DockBuilderDockWindow("Statistics", dockRightBottomID);
-        ImGui::DockBuilderFinish(dockspaceID);
 
         ImGui::DockBuilderFinish(dockspaceID);
     }
 
-    outlinerPanel.RenderUI(activeScene);
+    outlinerPanel.RenderUI(activeScene); 
     viewportPanel.RenderUI(activeScene);
     detailsPanel.RenderUI(activeScene);
     statsPanel.RenderUI(activeScene);
+    settingsPanel.RenderUI(activeScene);
 
     ImGui::Render();
 

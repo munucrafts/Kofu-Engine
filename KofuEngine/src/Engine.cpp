@@ -9,6 +9,7 @@
 
 int Engine::windowWidth = 1024;
 int Engine::windowHeight = 720;
+bool Engine::enableVsync = false;
 
 constexpr char engineName[12] = "Kofu Engine";
 constexpr int OGLMajor = 4;
@@ -38,7 +39,7 @@ void Engine::InitEngine()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    glfwSwapInterval(enableVsync);
     gladLoadGL();
 
     activeScene = std::make_unique<Scene>();

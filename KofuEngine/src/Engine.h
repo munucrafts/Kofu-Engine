@@ -29,6 +29,7 @@ public:
 	std::unique_ptr<Scene> activeScene = nullptr;
 	static int windowWidth;
 	static int windowHeight;
+	static bool enableVsync;
 
 private:
 	Engine() = default;
