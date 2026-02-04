@@ -142,6 +142,12 @@ void MasterUI::SetUITheme()
     colors[ImGuiCol_HeaderHovered] = limeHover;                          // Darker hover
     colors[ImGuiCol_HeaderActive] = limeActive;                         // Deep green selection
 
+    // --- SCROLLBARS (Polished Lime) ---
+    colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.00f);
+    colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.40f, 0.70f, 0.20f, 0.80f);
+    colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.40f, 0.70f, 0.20f, 0.90f);
+    colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.20f, 0.50f, 0.10f, 1.00f);
+
     // --- WIDGET ACCENTS ---
     colors[ImGuiCol_CheckMark] = limeHover;
     colors[ImGuiCol_SliderGrab] = limeHover;
