@@ -1,3 +1,4 @@
-![KE Shot 1](KofuEngine/assets/others/Shot_1.png)
-![KE Shot 2](KofuEngine/assets/others/Shot_2.png)
-![KE Shot - Normal Batman](KofuEngine/assets/others/Shot_3.png)
+![Medieval](KofuEngine/assets/others/Medieval.png)
+![Ruel](KofuEngine/assets/others/Ruel.png)
+![Normal](KofuEngine/assets/others/Normal.png)
+![Selection](KofuEngine/assets/others/Selection.png)
