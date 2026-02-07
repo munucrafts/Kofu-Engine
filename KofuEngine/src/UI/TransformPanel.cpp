@@ -29,7 +29,7 @@ void TransformPanel::RenderUI(Transform& transform, bool needLoc, bool needRot, 
                 ImGui::PopStyleColor(4);
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(inputWidth);
-                ImGui::DragFloat(buttonIcon, valuePtr, 0.1f);
+                ImGui::DragFloat(buttonIcon, valuePtr, 0.5f);
 
                 if (!last) ImGui::SameLine();
             };

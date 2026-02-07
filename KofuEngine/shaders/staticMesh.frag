@@ -18,6 +18,7 @@ uniform float farClip;
 uniform float lightFarPlane;
 
 uniform int renderMode;
+uniform bool selected;
 uniform vec3 camPos;
 
 uniform int lightCount;
@@ -182,43 +183,59 @@ vec4 SpotLight(int lightIndex)
 
 void main()
 {
+    vec4 selectColor = vec4(0.85, 0.9, 1.0, 1.0);
+    float selectMix = selected ? 0.9 : 0;
+    vec4 finalCol = vec4(0.0);
+
     switch (renderMode)
     {
         // Lit mode
+
         case 0:
         {
-            vec4 finalCol = vec4(0.0);
+            finalCol = vec4(0.0);
 
             for (int i = 0; i < lightCount; i++)
             {
                 finalCol += lightTypes[i] == 0 ? PointLight(i) : lightTypes[i] == 1 ? SpotLight(i) : DirectionalLight(i);
             }
 
-            fragColor = finalCol;
+            fragColor = mix(finalCol, selectColor, selectMix);
         }
         break;
 
         // Unlit mode
+
         case 1:
-            fragColor = texture(baseTex, texCoord);
-            break;
+        {
+            finalCol = texture(baseTex, texCoord);
+            fragColor = mix(finalCol, selectColor, selectMix);
+        }
+        break;
 
         // Depth view mode
+
         case 2:
         {
             float linearDepth = MakeLinearDepth(gl_FragCoord.z);
-            fragColor = vec4(vec3(linearDepth / farClip), 1.0f);
+            finalCol = vec4(vec3(linearDepth / farClip), 1.0f);
+            fragColor = mix(finalCol, selectColor, selectMix);
         }
         break;
 
         // Normal mode
+
         case 3:
-            fragColor = vec4(normalize(normal) * 0.5f + 0.5f, 1.0f);
-            break;
+        {
+            finalCol = vec4(normalize(normal) * 0.5f + 0.5f, 1.0f);
+            fragColor = fragColor = mix(finalCol, selectColor, selectMix);
+        }
+        break;
 
         // Default fallback
+
         default:
-            fragColor = vec4(1.0f, 0.0f, 1.0f, 1.0f);
-            break;
+        fragColor = vec4(1.0f, 0.0f, 1.0f, 1.0f);
+        break;
     }
 }

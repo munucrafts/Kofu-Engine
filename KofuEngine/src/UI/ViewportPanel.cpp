@@ -13,6 +13,9 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 
 	mouseHovering = ImGui::IsWindowHovered();
 
+	if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && mouseHovering)
+		activeScene->selectedObject = nullptr;
+
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 	int& viewWidth = activeScene->viewportWidth;
 	int& viewHeight = activeScene->viewportHeight;
