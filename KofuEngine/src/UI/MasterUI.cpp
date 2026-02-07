@@ -54,7 +54,7 @@ void MasterUI::RenderMasterUI(Scene* activeScene)
         ImGuiID dockCenterID = dockspaceID;
 
         ImGuiID dockLeftID = ImGui::DockBuilderSplitNode(dockCenterID, ImGuiDir_Left, 0.25f, nullptr, &dockCenterID);
-        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockCenterID, ImGuiDir_Right, 0.50f, nullptr, &dockCenterID);
+        ImGuiID dockRightID = ImGui::DockBuilderSplitNode(dockCenterID, ImGuiDir_Right, 0.5f, nullptr, &dockCenterID);
 
         ImGuiID dockLeftBottomID;
         ImGuiID dockLeftTopID = ImGui::DockBuilderSplitNode(dockLeftID, ImGuiDir_Up, 0.5f, nullptr, &dockLeftBottomID);
