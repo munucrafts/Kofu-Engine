@@ -101,7 +101,11 @@ void Scene::RenderScene(const float deltaTime)
     glDisable(GL_CULL_FACE);
     shaderID = shaders[LIGHT_MESH].Activate();
     playerCamera.ApplyCamMatrix(shaderID);
-    for (Light* light : lights) light->DrawLightMesh(shaderID);
+    for (Light* light : lights)
+    {
+        UploadObjectSelectionData(shaderID, light);
+        light->DrawLightMesh(shaderID);
+    }
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -120,11 +124,7 @@ void Scene::RenderScene(const float deltaTime)
             playerCamera.ApplyCamMatrix(shaderID);
         }
 
-        glm::vec4 selectedColor = glm::vec4(0.9f, 0.95f, 1.0f, 1.0f);
-        bool isSelected = mesh == selectedObject ? 1 : 0;
-        glUniform1i(glGetUniformLocation(shaderID, "isSelected"), isSelected);
-        glUniform1f(glGetUniformLocation(shaderID, "selectMix"), isSelected * 0.75f);
-        glUniform4fv(glGetUniformLocation(shaderID, "selectColor"), 1, glm::value_ptr(selectedColor));
+        UploadObjectSelectionData(shaderID, mesh);
         mesh->DrawMesh(shaderID);
     }
 
@@ -178,17 +178,17 @@ void Scene::EndScene()
     for (Light* light : lights) delete light;
 }
 
-void Scene::UploadLightData(const GLuint shaderId)
+void Scene::UploadLightData(const GLuint shaderID)
 {
-    glUniform1i(glGetUniformLocation(shaderId, "renderMode"), (int)renderMode);
-    glUniform1f(glGetUniformLocation(shaderId, "lightFarPlane"), lights[0]->farPlane);
-    glUniform1i(glGetUniformLocation(shaderId, "lightCount"), lights.size());
+    glUniform1i(glGetUniformLocation(shaderID, "renderMode"), (int)renderMode);
+    glUniform1f(glGetUniformLocation(shaderID, "lightFarPlane"), lights[0]->farPlane);
+    glUniform1i(glGetUniformLocation(shaderID, "lightCount"), lights.size());
 
     unsigned int reservedSlots = reservedTexSlots.size();
 
     for (const std::pair<std::string, unsigned int>& slot : reservedTexSlots)
     {
-        glUniform1i(glGetUniformLocation(shaderId, slot.first.c_str()), slot.second);
+        glUniform1i(glGetUniformLocation(shaderID, slot.first.c_str()), slot.second);
     }
 
     for (int i = 0; i < lights.size(); i++)
@@ -200,24 +200,34 @@ void Scene::UploadLightData(const GLuint shaderId)
 
         glActiveTexture(GL_TEXTURE0 + nextTexUnit);
         glBindTexture(isPointLight ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D, shadowMapFBOs[i].depthTex);
-        glUniform1i(glGetUniformLocation(shaderId, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(i) + "]").c_str()), nextTexUnit);
-        glUniform3fv(glGetUniformLocation(shaderId, ("lightPositions[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.location));
-        glUniform4fv(glGetUniformLocation(shaderId, ("lightColors[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.color));
-        glUniform1i(glGetUniformLocation(shaderId, ("lightTypes[" + std::to_string(i) + "]").c_str()), (int)lights[i]->lightDetails.lightType);
-        glUniform1f(glGetUniformLocation(shaderId, ("lightIntensities[" + std::to_string(i) + "]").c_str()), lights[i]->lightDetails.intensity);
+        glUniform1i(glGetUniformLocation(shaderID, ((isPointLight ? "shadowCubeMap[" : "shadowMap[") + std::to_string(i) + "]").c_str()), nextTexUnit);
+        glUniform3fv(glGetUniformLocation(shaderID, ("lightPositions[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.location));
+        glUniform4fv(glGetUniformLocation(shaderID, ("lightColors[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->lightDetails.color));
+        glUniform1i(glGetUniformLocation(shaderID, ("lightTypes[" + std::to_string(i) + "]").c_str()), (int)lights[i]->lightDetails.lightType);
+        glUniform1f(glGetUniformLocation(shaderID, ("lightIntensities[" + std::to_string(i) + "]").c_str()), lights[i]->lightDetails.intensity);
 
         if (lights[i]->lightDetails.lightType == SPOT_LIGHT)
         {
-            glUniform3fv(glGetUniformLocation(shaderId, ("lightDirections[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->GetDirection()));
-            glUniform1f(glGetUniformLocation(shaderId, ("lightInnerCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.innerCone)));
-            glUniform1f(glGetUniformLocation(shaderId, ("lightOuterCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.outerCone)));
+            glUniform3fv(glGetUniformLocation(shaderID, ("lightDirections[" + std::to_string(i) + "]").c_str()), 1, glm::value_ptr(lights[i]->GetDirection()));
+            glUniform1f(glGetUniformLocation(shaderID, ("lightInnerCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.innerCone)));
+            glUniform1f(glGetUniformLocation(shaderID, ("lightOuterCones[" + std::to_string(i) + "]").c_str()), std::cos(glm::radians(lights[i]->lightDetails.outerCone)));
         }
 
         if (!isPointLight)
         {
-            glUniformMatrix4fv(glGetUniformLocation(shaderId, ("lightProjections[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
+            glUniformMatrix4fv(glGetUniformLocation(shaderID, ("lightProjections[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(lights[i]->lightDetails.lightProjs[0]));
         }
     }
+}
+
+void Scene::UploadObjectSelectionData(const GLuint shaderID, const Object* obj)
+{
+    glm::vec4 selectedColor = glm::vec4(0.9f, 0.95f, 1.0f, 1.0f);
+    bool isSelected = obj == selectedObject ? 1 : 0;
+
+    glUniform1i(glGetUniformLocation(shaderID, "isSelected"), isSelected);
+    glUniform1f(glGetUniformLocation(shaderID, "selectMix"), isSelected * 0.75f);
+    glUniform4fv(glGetUniformLocation(shaderID, "selectColor"), 1, glm::value_ptr(selectedColor));
 }
 
 void Scene::ResizeFBOs(const int viewWidth, const int viewHeight)

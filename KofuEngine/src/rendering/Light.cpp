@@ -1,6 +1,7 @@
 #pragma once
 #include "rendering/Light.h"
 #include "glad/glad.h"
+#include <geometry/GLTFLoader.h>
 
 Light::Light(const LightDetails details)
 {
@@ -39,22 +40,23 @@ Light::Light(const LightDetails details)
 
 void Light::Init()
 {
-	lightMesh = { lightVertices, lightIndices };
-	lightMesh.transform.location = lightDetails.location;
-	lightMesh.transform.rotation = lightDetails.rotation;
-	lightMesh.transform.scale = glm::vec3(5.0f);
-	lightMesh.InitMeshManually();
+    lightMesh = std::make_unique<StaticMesh>(lightVertices, lightIndices);
+
+	lightMesh->transform.location = lightDetails.location;
+	lightMesh->transform.rotation = lightDetails.rotation;
+	lightMesh->transform.scale = glm::vec3(5.0f);
+	lightMesh->InitMesh();
 
     CalculateLightProjection();
 }
 
 void Light::DrawLightMesh(int shaderID)
 {
-    lightMesh.transform.location = lightDetails.location;
-    lightMesh.transform.rotation = lightDetails.rotation;
-    lightMesh.transform.scale = glm::vec3(5.0f);
-
-	lightMesh.DrawMesh(shaderID);
+    lightMesh->transform.location = lightDetails.location;
+    lightMesh->transform.rotation = lightDetails.rotation;
+    lightMesh->transform.scale = glm::vec3(5.0f);
+           
+	lightMesh->DrawMesh(shaderID);
 }
 
 glm::vec3 Light::GetDirection()

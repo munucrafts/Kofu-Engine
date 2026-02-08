@@ -13,7 +13,7 @@ public:
     const float farPlane = 50.0f;
 
 private:
-	StaticMesh lightMesh;
+	std::unique_ptr<StaticMesh> lightMesh;
     std::vector<Vertex> lightVertices;
     std::vector<GLuint> lightIndices;
 

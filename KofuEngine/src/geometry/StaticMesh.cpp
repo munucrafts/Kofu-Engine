@@ -16,30 +16,6 @@ StaticMesh::StaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint
     indices = inds;
 }
 
-void StaticMesh::InitMeshManually()
-{
-    vao.Init();
-    vao.Bind();
-    vbo.Init(vertices);
-    vbo.Bind();
-    ebo.Init(indices);
-    ebo.Bind();
-
-    vao.LinkAttribs(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
-    vao.LinkAttribs(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
-    vao.LinkAttribs(vbo, 2, 4, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
-    vao.LinkAttribs(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(10 * sizeof(float)));
-
-    vao.Unbind();
-    vbo.Unbind();
-    ebo.Unbind();
-
-    for (std::pair<const std::string, Texture>& tex : textures)
-    {
-        tex.second.Unbind();
-    }
-}
-
 void StaticMesh::InitMesh()
 {
     vao.Init();

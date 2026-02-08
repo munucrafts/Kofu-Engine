@@ -18,7 +18,6 @@ public:
 	StaticMesh();
 	StaticMesh(const std::vector<Vertex> verts, const std::vector<GLuint> inds);
 	~StaticMesh() = default;
-	void InitMeshManually();
 	virtual void InitMesh() override;
 	virtual void ClearMesh() override;
 	virtual void DrawMesh(int shaderID) override;

@@ -24,6 +24,7 @@ public:
 
 private:
 	void UploadLightData(const GLuint shaderId);
+	void UploadObjectSelectionData(const GLuint shaderID, const Object* obj);
 	void ResizeFBOs(const int viewWidth, const int viewHeight);
 	void SortObjectsByType();
 
