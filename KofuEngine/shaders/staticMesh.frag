@@ -18,7 +18,9 @@ uniform float farClip;
 uniform float lightFarPlane;
 
 uniform int renderMode;
-uniform bool selected;
+uniform bool isSelected;
+uniform vec4 selectColor;
+uniform float selectMix;
 uniform vec3 camPos;
 
 uniform int lightCount;
@@ -183,8 +185,6 @@ vec4 SpotLight(int lightIndex)
 
 void main()
 {
-    vec4 selectColor = vec4(0.85, 0.9, 1.0, 1.0);
-    float selectMix = selected ? 0.9 : 0;
     vec4 finalCol = vec4(0.0);
 
     switch (renderMode)
