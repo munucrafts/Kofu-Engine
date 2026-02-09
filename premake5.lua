@@ -38,4 +38,3 @@ group "Dependencies"
 group ""
 
 include "KofuEngine"
-include "KofuEngine"
