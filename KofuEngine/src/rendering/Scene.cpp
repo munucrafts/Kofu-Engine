@@ -223,10 +223,11 @@ void Scene::UploadLightData(const GLuint shaderID)
 void Scene::UploadObjectSelectionData(const GLuint shaderID, const Object* obj)
 {
     glm::vec4 selectedColor = glm::vec4(0.9f, 0.95f, 1.0f, 1.0f);
+    float selectedMix = 0.75f;
     bool isSelected = obj == selectedObject ? 1 : 0;
 
     glUniform1i(glGetUniformLocation(shaderID, "isSelected"), isSelected);
-    glUniform1f(glGetUniformLocation(shaderID, "selectMix"), isSelected * 0.75f);
+    glUniform1f(glGetUniformLocation(shaderID, "selectMix"), isSelected * selectedMix);
     glUniform4fv(glGetUniformLocation(shaderID, "selectColor"), 1, glm::value_ptr(selectedColor));
 }
 
