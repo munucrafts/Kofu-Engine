@@ -58,7 +58,7 @@ void DetailsPanel::RenderUI(Scene* activeScene)
     {
         Light* light = static_cast<Light*>(obj);
         Transform lightTrans(light->lightDetails.location, light->lightDetails.rotation);
-        transformPanel.RenderUI(lightTrans, true, true, false);
+        transformPanel.RenderUI(lightTrans, true, false, false);
         light->lightDetails.location = lightTrans.location;
         light->lightDetails.rotation = lightTrans.rotation;
 

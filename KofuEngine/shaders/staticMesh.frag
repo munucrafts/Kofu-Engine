@@ -153,7 +153,7 @@ vec4 SpotLight(int lightIndex)
 		specular = specAmount * specularLight;
 	};
 
-    float angle = dot(lightDirections[lightIndex], -lightVecDir);
+    float angle = dot(lightDirections[lightIndex], lightVecDir);
     float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
     float shadow = 0.0;
