@@ -143,7 +143,6 @@ void Scene::RenderScene(const float deltaTime)
 
     shaderID = shaders[GRID].Activate();
     playerCamera.ApplyCamMatrix(shaderID);
-    gridQuad.vao.Bind();
     gridQuad.DrawQuad(shaderID);
     glDepthMask(GL_TRUE);
 

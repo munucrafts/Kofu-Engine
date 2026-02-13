@@ -28,7 +28,7 @@ void ViewportPanel::RenderUI(Scene* activeScene)
 	}
 
 	GLuint textureID = activeScene->screenTexFBO.colorTex;
-	ImGui::Image((void*)(intptr_t)textureID, ImVec2((float)viewWidth, (float)viewHeight), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
+	ImGui::Image((void*)textureID, ImVec2((float)viewWidth, (float)viewHeight), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 
 	ImGui::End();
 	ImGui::PopStyleColor();
