@@ -67,7 +67,7 @@ struct Direction
 
 struct MeshData
 {
-	ObjectType meshType = STATIC_MESH;
+	ObjectType meshType = NONE;
 	Transform transform;
 	unsigned int instanceCount = 1;
 };

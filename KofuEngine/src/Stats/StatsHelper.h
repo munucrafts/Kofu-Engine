@@ -6,18 +6,18 @@ class StatsHelper
 {
 public:
 	static StatsHelper& GetStatsHelper();
-	int GetTotalVertexCount(const std::vector<Mesh*> meshes);
-	int GetTotalIndexCount(const std::vector<Mesh*> meshes);
-	int GetTotalTriangleCount(const std::vector<Mesh*> meshes);
-	int GetFPS();
+	unsigned int GetTotalVertexCount(const std::vector<Mesh*> meshes);
+	unsigned int GetTotalIndexCount(const std::vector<Mesh*> meshes);
+	unsigned int GetTotalTriangleCount(const std::vector<Mesh*> meshes);
+	unsigned int GetFPS();
+	unsigned int GetDrawCallCount();
 	float GetDeltaMS();
-	int GetDrawCallCount();
 	void AppendDrawCallCount();
 	void ClearDrawCallCount();
 
 private:
-	int drawCalls = 0;
-	int FPS = 0;
+	unsigned int drawCalls = 0;
+	unsigned int FPS = 0;
 	float deltaSecs = 0.0f;
 
 private:

@@ -6,9 +6,9 @@ StatsHelper& StatsHelper::GetStatsHelper()
 	return instance;
 }
 
-int StatsHelper::GetTotalVertexCount(const std::vector<Mesh*> meshes)
+unsigned int StatsHelper::GetTotalVertexCount(const std::vector<Mesh*> meshes)
 {
-	int count = 0;
+	unsigned int count = 0;
 
 	for (Mesh* mesh : meshes)
 	{
@@ -18,9 +18,9 @@ int StatsHelper::GetTotalVertexCount(const std::vector<Mesh*> meshes)
 	return count;
 }
 
-int StatsHelper::GetTotalIndexCount(const std::vector<Mesh*> meshes)
+unsigned int StatsHelper::GetTotalIndexCount(const std::vector<Mesh*> meshes)
 {
-	int count = 0;
+	unsigned int count = 0;
 
 	for (Mesh* mesh : meshes)
 	{
@@ -30,9 +30,9 @@ int StatsHelper::GetTotalIndexCount(const std::vector<Mesh*> meshes)
 	return count;
 }
 
-int StatsHelper::GetTotalTriangleCount(const std::vector<Mesh*> meshes)
+unsigned int StatsHelper::GetTotalTriangleCount(const std::vector<Mesh*> meshes)
 {
-	int count = 0;
+	unsigned int count = 0;
 
 	for (Mesh* mesh : meshes)
 	{
@@ -42,7 +42,7 @@ int StatsHelper::GetTotalTriangleCount(const std::vector<Mesh*> meshes)
 	return count / 3;
 }
 
-int StatsHelper::GetFPS()
+unsigned int StatsHelper::GetFPS()
 {
 	return FPS;
 }
@@ -62,7 +62,7 @@ void StatsHelper::ClearDrawCallCount()
 	drawCalls = 0;
 }
 
-int StatsHelper::GetDrawCallCount()
+unsigned int StatsHelper::GetDrawCallCount()
 {
 	return drawCalls;
 }
