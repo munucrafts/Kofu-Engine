@@ -1,6 +1,6 @@
 # **Kofu Engine**
 
-<img align="right" alt="Coding" width="235" src="KofuEngine/assets/others/logo.png">
+<img align="right" alt="Coding" width="235" src="KofuEngine/assets/others/Logo.png">
 
 * **Kofu Engine** is a **Hobby Game Engine** designed to render **3D scenes**.
 * The Engine is powered by **OprnGL** and **C++**.
