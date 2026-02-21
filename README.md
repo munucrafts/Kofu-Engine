@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  A <b>Hobby 3D Game Engine</b> built with <b>C++</b> and <b>OpenGL</b><br>
-  Designed for <b>Real-time 3D Scene</b> rendering
+  A <b>Hobby 3D Graphics Engine</b> built with <b>C++</b> and <b>OpenGL</b><br>
+  Designed for <b>Real-time 3D Scene</b> Rendering
 </p>
 
 <h1 align="center">Screenshots</h1>
