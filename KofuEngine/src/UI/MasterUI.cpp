@@ -23,7 +23,7 @@ void MasterUI::InitMasterUI()
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/Open_Sans/static/OpenSans-Medium.ttf", 20.0f);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-SemiBoldItalic.ttf", 20.0f);
 
     Engine& engine = Engine::GetEngine();
     ImGui_ImplGlfw_InitForOpenGL(engine.window, true);
