@@ -10,6 +10,6 @@ public:
 	void DrawGizmo(GLuint shaderID);
 
 private:
-	Mesh* gizmoMesh;
+	StaticMesh* gizmoMesh;
 };
 
