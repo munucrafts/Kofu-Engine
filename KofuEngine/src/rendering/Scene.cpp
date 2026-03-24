@@ -40,8 +40,8 @@ void Scene::BeginScene()
         meshes.insert(meshes.end(), newMeshes.begin(), newMeshes.end());
     }
 
-    lights.emplace_back(new Light({.lightType = SPOT_LIGHT, .intensity = 0.2f, .location = glm::vec3(-7.0f, 15.0f, -18.0f)}));
-    lights.emplace_back(new Light({.lightType = POINT_LIGHT, .intensity = 0.1f, .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
+    //lights.emplace_back(new Light({.lightType = SPOT_LIGHT, .intensity = 0.2f, .location = glm::vec3(-7.0f, 15.0f, -18.0f)}));
+    //lights.emplace_back(new Light({.lightType = POINT_LIGHT, .intensity = 0.1f, .location = glm::vec3(0.0f, 10.0f, 0.0f)}));
     lights.emplace_back(new Light({.lightType = DIRECTIONAL_LIGHT, .intensity = 1.0f, .location = glm::vec3(10.0f, 10.0f, 10.0f)}));
 
     SortObjectsByType();

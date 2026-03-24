@@ -25,8 +25,8 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
     }
     else
     {
-        std::string msg = vertPath.length() == 0 ? "Empty Shader Path" : vertPath;
-        std::cerr << "Failed to Load Shader - (" + msg + ")" << std::endl;
+        std::string msg = vertPath.length() == 0 ? "Empty Vertex Shader Path" : vertPath;
+        std::cerr << "Failed to Load Vertex Shader - (" + msg + ")" << std::endl;
     }
 
     if (fragLoaded)
@@ -39,8 +39,8 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
     }
     else
     {
-        std::string msg = fragPath.length() == 0 ? "Empty Shader Path" : fragPath;
-        std::cerr << "Failed to Load Shader - (" + msg + ")" << std::endl;
+        std::string msg = fragPath.length() == 0 ? "Empty Fragment Shader Path" : fragPath;
+        std::cerr << "Failed to Load Fragment Shader - (" + msg + ")" << std::endl;
     }
 
     if (geomLoaded)
@@ -53,8 +53,8 @@ Shader::Shader(const std::string& vertPath, const std::string& fragPath, const s
     }
     else
     {
-        std::string msg = geomPath.length() == 0 ? "Empty Shader Path" : geomPath;
-        std::cerr << "Failed to Load Shader - (" + msg + ")" << std::endl;
+        std::string msg = geomPath.length() == 0 ? "Empty Geometry Shader Path" : geomPath;
+        std::cerr << "Failed to Load Geometry Shader - (" + msg + ")" << std::endl;
     }
 
     glLinkProgram(shaderProgram);
@@ -91,7 +91,7 @@ bool Shader::LoadShader(const std::string& shaderPath, std::string& shaderRef)
 	}
     else
     {
-        std::cerr << "No Shader to Load. Shader Path is Empty" << std::endl;
+        std::cerr << "Shader Path is Empty. No Shader Loaded." << std::endl;
         return false;
     }
 }
