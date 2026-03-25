@@ -10,7 +10,7 @@ protected:
 
 public:
 	Shader() = default;
-	Shader(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
+	Shader(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath = {});
     GLuint Activate();
     GLuint GetShaderID();
 

@@ -16,14 +16,14 @@ void Scene::BeginScene()
 
     renderMode = LIT;
 
-    shaders.emplace(STATIC_MESH, Shader("./shaders/staticMesh.vert", "./shaders/staticMesh.frag", ""));
-    shaders.emplace(GIZMO, Shader("./shaders/gizmo.vert", "./shaders/gizmo.frag", ""));
-    shaders.emplace(INSTANCED_STATIC_MESH, Shader("./shaders/instancedStaticMesh.vert", "./shaders/instancedStaticMesh.frag", ""));
-    shaders.emplace(SKY_BOX, Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag", ""));
-    shaders.emplace(SCREEN, Shader("./shaders/screen.vert", "./shaders/screen.frag", ""));
-    shaders.emplace(GRID, Shader("./shaders/grid.vert", "./shaders/grid.frag", ""));
-    shaders.emplace(LIGHT_MESH, Shader("./shaders/lightMesh.vert", "./shaders/lightMesh.frag", ""));
-    shaders.emplace(LIGHT_SHADOW, Shader("./shaders/shadow.vert", "./shaders/shadow.frag", ""));
+    shaders.emplace(STATIC_MESH, Shader("./shaders/staticMesh.vert", "./shaders/staticMesh.frag"));
+    shaders.emplace(GIZMO, Shader("./shaders/gizmo.vert", "./shaders/gizmo.frag"));
+    shaders.emplace(INSTANCED_STATIC_MESH, Shader("./shaders/instancedStaticMesh.vert", "./shaders/instancedStaticMesh.frag"));
+    shaders.emplace(SKY_BOX, Shader("./shaders/skyBox.vert", "./shaders/skyBox.frag"));
+    shaders.emplace(SCREEN, Shader("./shaders/screen.vert", "./shaders/screen.frag"));
+    shaders.emplace(GRID, Shader("./shaders/grid.vert", "./shaders/grid.frag"));
+    shaders.emplace(LIGHT_MESH, Shader("./shaders/lightMesh.vert", "./shaders/lightMesh.frag"));
+    shaders.emplace(LIGHT_SHADOW, Shader("./shaders/shadow.vert", "./shaders/shadow.frag"));
     shaders.emplace(POINT_LIGHT_SHADOW, Shader("./shaders/pointLightShadow.vert", "./shaders/pointLightShadow.frag", "./shaders/pointLightShadow.geom"));
 
     playerCamera.location = glm::vec3(0.0f, 10.0f, 50.0f);
