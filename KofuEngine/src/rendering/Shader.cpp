@@ -91,7 +91,7 @@ bool Shader::LoadShader(const std::string& shaderPath, std::string& shaderRef)
 	}
     else
     {
-        std::cerr << "Shader Path is Empty. No Shader Loaded." << std::endl;
+        std::cerr << "Shader Path (" + std::string(shaderPath.length() == 0 ? "Empty Path" : shaderPath) + ") is Empty. No Shader Loaded." << std::endl;
         return false;
     }
 }

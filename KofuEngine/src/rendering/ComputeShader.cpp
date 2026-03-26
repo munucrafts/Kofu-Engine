@@ -25,6 +25,6 @@ ComputeShader::ComputeShader(const std::string& shaderPath)
 		return;
 	}
 
-	std::string msg = shaderPath.length() == 0 ? "Empty Shader Path" : shaderPath;
-	std::cerr << "failed to load shader - ( " + msg + " )" << std::endl;
+	std::string msg = shaderPath.length() == 0 ? "Empty Compute Shader Path" : shaderPath;
+	std::cerr << "Failed to Load Compute Shader - ( " + msg + " )" << std::endl;
 }
