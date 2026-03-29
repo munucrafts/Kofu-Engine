@@ -99,7 +99,7 @@ void Scene::RenderScene(const float deltaTime)
     Engine::GetEngine().ClearWindow(viewportWidth, viewportHeight);
 
     glDisable(GL_CULL_FACE);
-    shaderID = shaders[LIGHT_MESH].Activate();
+    shaderID = shaders.at(LIGHT_MESH).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
     for (Light* light : lights)
     {
@@ -119,7 +119,7 @@ void Scene::RenderScene(const float deltaTime)
         if (mesh->objectType != prevMeshType)
         {
             prevMeshType = mesh->objectType;
-            shaderID = shaders[prevMeshType].Activate();
+            shaderID = shaders.at(prevMeshType).Activate();
             UploadLightData(shaderID);
             playerCamera.ApplyCamMatrix(shaderID);
         }
@@ -132,7 +132,7 @@ void Scene::RenderScene(const float deltaTime)
 
     if (renderMode == LIT || renderMode == UNLIT)
     {
-        shaderID = shaders[SKY_BOX].Activate();
+        shaderID = shaders.at(SKY_BOX).Activate();
         skyBox.DrawSkybox(shaderID);
     }
 
@@ -141,7 +141,7 @@ void Scene::RenderScene(const float deltaTime)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(GL_FALSE);
 
-    shaderID = shaders[GRID].Activate();
+    shaderID = shaders.at(GRID).Activate();
     playerCamera.ApplyCamMatrix(shaderID);
     gridQuad.DrawQuad(shaderID);
     glDepthMask(GL_TRUE);
@@ -151,7 +151,7 @@ void Scene::RenderScene(const float deltaTime)
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    shaderID = shaders[GIZMO].Activate();
+    shaderID = shaders.at(GIZMO).Activate();
     playerCamera.ApplyGizmoCamMatrix(shaderID);
     worldGizmo.DrawGizmo(shaderID);
 
