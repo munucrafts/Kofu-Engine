@@ -66,4 +66,3 @@ unsigned int StatsHelper::GetDrawCallCount()
 {
 	return drawCalls;
 }
-
