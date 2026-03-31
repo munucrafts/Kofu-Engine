@@ -2,7 +2,7 @@ in vec3 worldPos;
 out vec4 fragColor;
 
 float gridMinPixelsBetweenCells = 3.0;
-float gridCellSize = 0.2;
+float gridCellSize = 0.1;
 
 vec4 gridBackgroundColor = vec4(0.2);
 vec4 gridColorThin = vec4(1.0, 1.0, 1.0, 0.25);       
