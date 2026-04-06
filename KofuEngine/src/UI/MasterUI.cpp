@@ -158,6 +158,7 @@ void MasterUI::SetUITheme()
     colors[ImGuiCol_SeparatorHovered] = limeHover;
     colors[ImGuiCol_SeparatorActive] = limeActive;
 
+
     // --- STYLE CONFIGURATION ---
     style.WindowRounding = 0.0f;
     style.FrameRounding = 0.0f;

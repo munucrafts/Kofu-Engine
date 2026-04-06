@@ -10,7 +10,7 @@
 int Engine::windowWidth = 1024;
 int Engine::windowHeight = 720;
 
-constexpr char engineName[25] = "Munucrafts - Kofu Engine";
+constexpr char engineName[12] = "Kofu Engine";
 constexpr int OGLMajor = 4;
 constexpr int OGLMinor = 6;
 
