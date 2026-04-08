@@ -45,6 +45,8 @@ void Engine::InitEngine()
     activeScene->BeginScene();
 
     engineInitialized = true;
+
+    std::cout << "Kofu Engine Initialized." << std::endl;
 }
 
 void Engine::WindowResize(GLFWwindow* window, int width, int height)
@@ -89,6 +91,8 @@ void Engine::QuitEngine()
     activeScene->EndScene();
     glfwDestroyWindow(window);
     glfwTerminate();
+
+    std::cout << "Kofu Engine Terminated." << std::endl;
 }
 
 void Engine::ClearWindow(const unsigned int width, const unsigned height, const glm::vec4& clearColor)

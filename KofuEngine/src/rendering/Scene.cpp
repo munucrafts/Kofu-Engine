@@ -61,6 +61,8 @@ void Scene::BeginScene()
     gridQuad.Init(Transform(glm::vec3(0.0f), glm::vec3(90.0f, 0.0f, 0.0f), glm::vec3(20000.0f)));
     msaaSceneFBO = RenderTarget::CreateMSAATarget(viewportWidth, viewportHeight, 8);
     screenTexFBO = RenderTarget::CreateSceneTarget(viewportWidth, viewportHeight);
+
+    std::cout << "Scene Initialized." << std::endl;
 }
 
 void Scene::RenderScene(const float deltaTime)
@@ -175,6 +177,8 @@ void Scene::EndScene()
 {
     for (Mesh* mesh : meshes) delete mesh;
     for (Light* light : lights) delete light;
+
+    std::cout << "Scene Terminated." << std::endl;
 }
 
 void Scene::UploadLightData(const GLuint shaderID)
