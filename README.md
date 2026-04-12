@@ -39,3 +39,7 @@
   <img src="KofuEngine/assets/others/Normal.png" width="48%" />
   <img src="KofuEngine/assets/others/Selection.png" width="48%" />
 </p>
+
+## How to Build
+
+* Kofu-Engine → Scripts → Run Setup.bat
