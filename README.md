@@ -6,32 +6,40 @@
 
 <p align="center">
   <b>A 3D Hobby Graphics Engine built with C++ and OpenGL 4.6.</b><br>
-  <b>Focused on Real-time Rendering and Graphics Engine fundamentals.</b>
 </p>
 
-## Features
+## Features 🤖
 
 * **Core Framework:** GLFW-based windowing and Glad-based OpenGL 4.6 loading.
 * **Rendering Architecture:** Custom abstractions for Vertex Buffers (VBO), Index Buffers (EBO), Vertex Arrays (VAO), and Framebuffers (FBO).
 * **Scene Management:** Supports Static Meshes, Instanced Static Meshes, Quads, Lights, Skyboxes, and Shadow Maps.
+* **View Modes:** Toggle between LIT, UNLIT, DEPTH, and NORMAL visualization modes.
+* **Anti-aliasing:** Multi-Sample Anti-Aliasing (MSAA) support for improved visual fidelity.
 * **Asset Pipeline:** Custom GLTF mesh parser using **tinygltf** and texture loading via **stb_image**.
 * **Lighting & Shadows:** Directional, Point, and Spot light support with integrated Shadow Mapping.
-* **Environment:** Skybox implementation using Cubemap textures and a quad-based grid with X/Z axis visualization.
+* **Skybox:** Environment implementation using Cubemap textures.
+* **Axes Grid:** Quad-based infinite grid with X/Z axis visualization.
 * **Shaders:** Dedicated Shader class for managing Vertex, Fragment, and Geometry GLSL shaders.
 * **Camera System:** Perspective camera featuring smooth mouse-look and standard WASDQE movement controls.
 * **Audio Engine:** OpenAL-based spatial audio with Source and Listener component architecture.
-* **User Interface:** Comprehensive editor suite built with **ImGui**:
-    * **Primary Panels:** Viewport, Scene Outliner, Engine Stats (Draw calls, Triangle count, etc.), and Settings.
+* **User Interface:** Comprehensive editor suite built with **Dear ImGui**:
+    * **Primary Panels:** Viewport, Scene Outliner, Engine Statistics (FPS, Draw calls, Triangle count), and Settings.
     * **Detail Panels:** Transform, Mesh, Light, and Camera property editors.
-* **Gizmos:** Custom-built world-direction gizmo for intuitive viewport navigation.
+* **Gizmos:** Integrated world-direction gizmo for intuitive viewport navigation.
 
-## Tech Stack
+## Axis Convention 🧭
+
+* **X** → Left to Right
+* **Y** → Bottom to Top
+* **Z** → Screen to Eye
+
+## Tech Stack 🛠️
 
 * **Language:** C++
-* **Graphics API:** OpenGL 4.6
-* **Libraries:** Glad, GLFW, ImGui, TinyGltf, JsonParser, OpenAL, StbImage
+* **Graphics API:** OpenGL 4.6 (Core Profile)
+* **Libraries:** Glad, GLFW, GLM, ImGui, TinyGltf, JsonParser, OpenAL, StbImage
 
-## Screenshots
+## Screenshots 🖼️
 
 <p align="center">
   <img src="KofuEngine/assets/others/Medieval.png" width="48%" />
@@ -40,6 +48,7 @@
   <img src="KofuEngine/assets/others/Selection.png" width="48%" />
 </p>
 
-## How to Build
+## How to Build 🔨
 
-* Kofu-Engine → Scripts → Run Setup.bat
+1. Navigate to: `Kofu-Engine` → `Scripts`
+2. Run: `Setup.bat`
