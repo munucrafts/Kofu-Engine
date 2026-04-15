@@ -1,12 +1,14 @@
-<h1 align="center">Kofu Engine</h1>
+<p align="center">
+  <h1 align="center">KOFU ENGINE</h1>
+</p>
 
 <p align="center">
   <img src="KofuEngine/assets/others/Logo.png" width="260" alt="Kofu Engine Logo">
 </p>
 
-<p align="center">
-  <b>A 3D Hobby Graphics Engine built with C++ and OpenGL 4.6.</b><br>
-</p>
+<h3 align="center">
+  A 3D Hobby Graphics Engine built with C++ and OpenGL 4.6.
+</h3>
 
 ## Features 🤖
 
@@ -35,7 +37,7 @@
 
 ## Tech Stack 🛠️
 
-* **Language:** C++
+* **Language:** C++ 20
 * **Graphics API:** OpenGL 4.6 (Core Profile)
 * **Libraries:** Glad, GLFW, GLM, ImGui, TinyGltf, JsonParser, OpenAL, StbImage
 
@@ -48,7 +50,24 @@
   <img src="KofuEngine/assets/others/Selection.png" width="48%" />
 </p>
 
+## Prerequisites ⚙️
+
+Ensure the following tools are installed before building:
+
+### 1. Visual Studio 2022
+
+- Install the **Desktop development with C++** workload
+
+### 2. Premake5 (v5.0.0-beta7)
+
+- Download from: `https://premake.github.io/download/`
+- Extract the archive
+- Place `premake5.exe` in: `Kofu-Engine/vendor/premake/`
+
 ## How to Build 🔨
 
-1. Navigate to: `Kofu-Engine` → `Scripts`
-2. Run: `Setup.bat`
+- Clone the Repo: `git clone https://github.com/munucrafts/Kofu-Engine.git`
+- Navigate to: `Kofu-Engine` → `Scripts`
+- Run: `Setup.bat`
+- `Setup.bat` runs `vendor/premake/premake5.exe vs2022`
+- `KofuEngine.sln` gets created
