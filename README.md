@@ -22,10 +22,10 @@
 * **Skybox:** Environment implementation using Cubemap textures.
 * **Axes Grid:** Quad-based infinite grid with X/Z axis visualization.
 * **Shaders:** Dedicated Shader class for managing Vertex, Fragment, and Geometry GLSL shaders.
-* **Camera System:** Perspective camera featuring smooth mouse-look and standard WASDQE movement controls.
+* **Camera System:** Perspective camera featuring smooth mouse and standard WASDQE movement controls.
 * **Audio Engine:** OpenAL-based spatial audio with Source and Listener component architecture.
-* **User Interface:** Comprehensive editor suite built with **Dear ImGui**:
-    * **Primary Panels:** Viewport, Scene Outliner, Engine Statistics (FPS, Draw calls, Triangle count), and Settings.
+* **User Interface:** **Dear ImGui** based User Interface:
+    * **Primary Panels:** Viewport, Scene Outliner, Engine Statistics (FPS, Draw calls, Triangle count, etc.), and Settings.
     * **Detail Panels:** Transform, Mesh, Light, and Camera property editors.
 * **Gizmos:** Integrated world-direction gizmo for intuitive viewport navigation.
 
