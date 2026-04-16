@@ -10,6 +10,11 @@
   A 3D Hobby Graphics Engine built with C++ and OpenGL 4.6.
 </h3>
 
+## Demo 🎨
+
+![Kofu Engine Demo-01](KofuEngine/assets/others/demogif-01.gif)
+![Kofu Engine Demo-02](KofuEngine/assets/others/demogif-02.gif)
+
 ## Features 🤖
 
 * **Core Framework:** GLFW-based windowing and Glad-based OpenGL 4.6 loading.
